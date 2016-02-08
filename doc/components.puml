@@ -1,0 +1,7 @@
+@startuml
+[User]
+[Skill]
+[Quest]
+[Step]
+[Achievement]
+@enduml

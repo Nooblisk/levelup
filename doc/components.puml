@@ -1,0 +1,9 @@
+@startuml
+[User] -down-> [Skill]: создает, редактирует, наблюдает
+[User] -down-> [Quest]: создает, редактирует, наблюдает
+[User] -down-> [Step]: отмечает
+[Quest] -> [Skill]: включается в, заполняет
+[Step] --> [Quest]: включается в, заполняет
+[Skill] --> [Lvl]: повышает уровень
+[Achievement] <- [Lvl]: даётся за уровни
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+
+class User {
+    Collection Skills
+    Collection Quests
+    Collection Steps
+    string username
+    int level
+}
+
+class Skill {
+    Collection Quests
+    string title
+    string description
+    string imageUrl
+    int level
+}
+
+class Quest {
+    Collection Steps
+    string title
+    string description
+    string imageUrl
+}
+
+class Step {
+    string comment
+    DateTime completedAt
+    User user
+    Quest quest
+}
+
+class Achievement {
+    User user
+    string title
+    string description
+    string imageUrl
+    DateTime awardedAt
+}
+
+User <-left-> Skill
+User <--> Quest
+User <-> Step
+User <-down- Achievement
+
+Skill --> Quest
+Quest <--> Step
+
+@enduml

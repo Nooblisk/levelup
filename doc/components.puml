@@ -1,12 +1,9 @@
 @startuml
-[User] -> [Skill]: выбирает
-[User] -> [Quest]: выбирает
-[Quest] -> [Skill]: относятся к
-[Quest] -> [Step]: состоит из
-[User] -> [Step]: проходит
-[Step] --> [Quest]: заполняет
-[Quest] -> [Skill]: повышает уровень
-[Skill] -> [Lvl]: повышает уровень
-[Skill] -> [Quest]: состоит из
-[Achievement] -> [Lvl]: даётся за уровни
+[User] -down-> [Skill]: создает, редактирует, наблюдает
+[User] -down-> [Quest]: создает, редактирует, наблюдает
+[User] -down-> [Step]: отмечает
+[Quest] -> [Skill]: включается в, заполняет
+[Step] --> [Quest]: включается в, заполняет
+[Skill] --> [Lvl]: повышает уровень
+[Achievement] <- [Lvl]: даётся за уровни
 @enduml

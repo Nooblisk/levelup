@@ -75,3 +75,8 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: AppBundle\Entity\User
+
+hautelook_alice:
+    db_drivers:
+        orm: ~          # Enable Doctrine ORM if is registered
+    locale: ru_RU       # Locale to used for faker; must be a valid Faker locale otherwise will fallback to en_EN

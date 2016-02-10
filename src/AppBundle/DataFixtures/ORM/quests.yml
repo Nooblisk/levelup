@@ -1,0 +1,7 @@
+AppBundle\Entity\Quest:
+    quest{1..5}:
+        title: <word()>
+        description: <sentence()>
+        maxSteps: <numberBetween(10,30)>
+        user: "@user1"
+        feature: "@feature*"

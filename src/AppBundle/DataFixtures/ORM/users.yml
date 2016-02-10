@@ -1,0 +1,5 @@
+AppBundle\Entity\User:
+    user1:
+        username: <userName()>
+        password: <password()>
+        email: <email()>

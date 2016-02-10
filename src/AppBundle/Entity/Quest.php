@@ -43,6 +43,13 @@ class Quest
     private $level = 0;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $maxSteps;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="quests")
      */
     private $user;
@@ -227,5 +234,24 @@ class Quest
     public function getSteps()
     {
         return $this->steps;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaxSteps()
+    {
+        return $this->maxSteps;
+    }
+
+    /**
+     * @param mixed $maxSteps
+     * @return $this
+     */
+    public function setMaxSteps($maxSteps)
+    {
+        $this->maxSteps = $maxSteps;
+
+        return $this;
     }
 }

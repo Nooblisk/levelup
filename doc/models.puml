@@ -1,14 +1,14 @@
 @startuml
 
 class User {
-    Collection Skills
+    Collection Features
     Collection Quests
     Collection Steps
     string username
     int level
 }
 
-class Skill {
+class Feature {
     Collection Quests
     string title
     string description
@@ -38,12 +38,12 @@ class Achievement {
     DateTime awardedAt
 }
 
-User <-left-> Skill
+User <-left-> Feature
 User <--> Quest
 User <-> Step
 User <-down- Achievement
 
-Skill --> Quest
+Feature --> Quest
 Quest <--> Step
 
 @enduml

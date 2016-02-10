@@ -70,7 +70,10 @@ swiftmailer:
 
 fos_rest:
     disable_csrf_role: ROLE_API
-
+    view:
+        view_response_listener: force
+        formats:
+            json: true
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main

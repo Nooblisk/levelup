@@ -4,9 +4,12 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity
+ * @Serializer\ExclusionPolicy("none")
+ *
  */
 class User extends BaseUser
 {
@@ -20,21 +23,25 @@ class User extends BaseUser
     /**
      * @var ArrayCollection
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Feature", mappedBy="user")
+     * @Serializer\Exclude()
      */
     private $features;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Quest", mappedBy="user")
+     * @Serializer\Exclude()
      */
     private $quests;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Step", mappedBy="user")
+     * @Serializer\Exclude()
      */
     private $steps;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Achievement", mappedBy="user")
+     * @Serializer\Exclude()
      */
     private $achievements;
 

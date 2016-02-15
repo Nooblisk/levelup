@@ -1,0 +1,6 @@
+AppBundle\Entity\Feature:
+    feature{1..5}:
+        title: <word()>
+        description: <sentence()>
+        imageUrl: <imageUrl()>
+        user: "@user1"

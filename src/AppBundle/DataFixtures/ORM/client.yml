@@ -1,0 +1,5 @@
+AppBundle\Entity\Client:
+    client1:
+        randomId: web
+        secret: web
+        allowedGrantTypes: [password]

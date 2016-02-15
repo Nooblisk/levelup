@@ -1,0 +1,6 @@
+AppBundle\Entity\Step:
+    step{1..20}:
+        comment: <sentence()>
+        completedAt: <dateTimeThisMonth()>
+        user: "@user1"
+        quest: "@quest*"

@@ -1,0 +1,19 @@
+default:
+    resource: "@AppBundle/Controller/DefaultController.php"
+    type:     annotation
+
+feature:
+    type:     rest
+    resource: "@AppBundle/Controller/FeatureController.php"
+    prefix: /api
+
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/doc
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+fos_oauth_server_token:
+    resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
+    prefix: /api

@@ -2,9 +2,9 @@
 
 ##Installation
 composer install
-php app/console doctrine:schema:create
-php app/console hautelook_alice:doctrine:fixtures:load
-php app/console server:run
+php bin/console doctrine:schema:create
+php bin/console hautelook_alice:doctrine:fixtures:load
+php bin/console server:run
 
 ##OAuth2
 ###Auth request example

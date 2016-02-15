@@ -1,5 +1,13 @@
 AppBundle\Entity\User:
     user1:
         username: test
-        password: test
+        plainPassword: test
         email: <email()>
+        roles: [ROLE_USER]
+        enabled: true
+    user2:
+        username: test2
+        plainPassword: test2
+        email: <email()>
+        roles: [ROLE_USER]
+        enabled: true

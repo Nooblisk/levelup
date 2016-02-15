@@ -4,11 +4,13 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Feature
  *
  * @ORM\Entity(repositoryClass="AppBundle\Repository\FeatureRepository")
+ * @Serializer\ExclusionPolicy("none")
  */
 class Feature
 {
@@ -51,12 +53,14 @@ class Feature
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="features")
+     * @Serializer\Exclude()
      */
     private $user;
 
     /**
      * @var ArrayCollection
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Quest", mappedBy="feature")
+     * @Serializer\Exclude()
      */
     private $quests;
 

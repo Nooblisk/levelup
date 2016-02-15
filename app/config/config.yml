@@ -94,5 +94,5 @@ fos_oauth_server:
 
 hautelook_alice:
     db_drivers:
-        orm: ~          # Enable Doctrine ORM if is registered
-    locale: ru_RU       # Locale to used for faker; must be a valid Faker locale otherwise will fallback to en_EN
+        orm: ~
+    locale: ru_RU

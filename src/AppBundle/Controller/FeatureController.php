@@ -26,6 +26,7 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      *      Authorization: Bearer <token>
      *
      * @ApiDoc(
+     *  section="Features",
      *  resource=true,
      *  description="Returns current user's feature"
      * )
@@ -35,8 +36,7 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      */
     public function getAction($featureId)
     {
-        $user = $this->getUser();
-        $feature = $this->getFeatureRepository()->findOneBy(['user'=>$user, 'id' => $featureId]);
+        $feature = $this->getFeatureRepository()->findOneBy(['user'=> $this->getUser(), 'id' => $featureId]);
         return ['feature' => $feature];
     }
 
@@ -48,6 +48,7 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      *      Authorization: Bearer <token>
      *
      * @ApiDoc(
+     *  section="Features",
      *  resource=true,
      *  description="Returns current user's features"
      * )
@@ -58,6 +59,23 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
         return ['features' => $this->getFeatureRepository()->findByUser($this->getUser())];
     }
 
+    /**
+     * Request fields for a new form
+     *
+     * **Request header**
+     *
+     *      Authorization: Bearer <token>
+
+     * @ApiDoc(
+     *  section="Features",
+     *  resource=true,
+     *  description="Return new form"
+     * )
+     */
+    public function newAction()
+    {
+        return ['form' => $this->createForm(FeatureType::class)];
+    }
 
     /**
      * Post a new feature
@@ -68,6 +86,7 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      *
      * @param Request $request
      * @ApiDoc(
+     *  section="Features",
      *  description="Creates new feature"
      * )
      *
@@ -91,21 +110,66 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
     }
 
     /**
-     * Request fields for a new form
+     * Request edit form for an existing feature
      *
      * **Request header**
      *
      *      Authorization: Bearer <token>
-
      * @ApiDoc(
+     *  section="Features",
      *  resource=true,
-     *  description="Return new form"
+     *  description="Return edit form for a feature"
      * )
+     *
+     * @param $featureId feature id
+     *
+     * @return \Symfony\Component\Form\Form
      */
-    public function newAction()
+    public function editAction($featureId)
     {
-        return ['form' => $this->createForm(FeatureType::class)];
+        $feature = $this->getFeatureRepository()->findOneBy(['user'=> $this->getUser(), 'id' => $featureId]);
+        if (!$feature) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->createForm(FeatureType::class, $feature);
     }
+
+    /**
+     * Updates a feature
+     *
+     * **Request header**
+     *
+     *      Authorization: Bearer <token>
+     *
+     * @ApiDoc(
+     *  section="Features",
+     *  description="Updates a feature"
+     * )
+     *
+     * @param $featureId feature id
+     *
+     * @return array
+     */
+    public function putAction($featureId)
+    {
+        $feature = $this->getFeatureRepository()->findOneBy(['user'=> $this->getUser(), 'id' => $featureId]);
+        if (!$feature) {
+            throw $this->createNotFoundException();
+        }
+
+        $form = $this->createForm(FeatureType::class, $feature);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($feature);
+            $em->flush();
+            return ['feature' => $feature];
+        }
+
+        return ['form' => $form];
+    }
+
     /**
      * @return \AppBundle\Repository\FeatureRepository
      */

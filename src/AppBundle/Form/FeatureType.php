@@ -27,7 +27,8 @@ class FeatureType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Feature'
+            'data_class' => 'AppBundle\Entity\Feature',
+            'csrf_protection' => false,
         ));
     }
 }

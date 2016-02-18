@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
+
+</head>
+<body>
+<h1></h1>
+<div class="ui container">
+
+    <button id="buttonLogin" class="ui button" type="submit">Login</button>
+
+    <form id="loginForm" class="ui form" style="display: none">
+        <div id="loginField" class="field">
+            <label>Login</label>
+            <input type="text" name="first-name" placeholder="">
+        </div>
+        <div id="passwordField" class="field">
+            <label>Password</label>
+            <input type="text" name="last-name" placeholder="">
+        </div>
+    </form>
+
+
+    <button id="buttonHide" class="ui button">
+        Hide
+    </button>
+
+
+<button id="buttonPost" class="ui button" type="submit">Post</button>
+    <button id="buttonGet" class="ui button" type="submit">Get</button>
+
+
+
+
+
+
+
+    <h4 id="headerText" class="ui header"></h4>
+    <h4 id="headerText2" class="ui header"></h4>
+    <h4 id="headerText3" class="ui header"></h4>
+    <h4 id="headerText4" class="ui header"></h4>
+</div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="js/semantic.min.js"></script>
+<script>
+    $( "#buttonLogin" ).click(function(){
+        //alert("asasdasdasd");
+        $( "#loginForm" ).fadeIn();
+    });
+    $( "#buttonHide" ).click(function(){
+        //alert("asasdasdasd");
+        $( "#loginForm" ).fadeOut();
+    });
+</script>
+<script>
+    var Obj, Obj2;
+    $( "#buttonPost").click(function(){
+        $.post("/app_dev.php/api/oauth/v2/token", {grant_type: "password", client_id: "1_web", client_secret: "web", username: "test", password: "test"}).success(function(a){
+            Obj=a;
+            var s = '{\n';
+            for (var p in a)
+                s += '    "' + p + '": "' + a[p] + '"\n';
+            $("#headerText").text( s + '}');
+            $("#headerText2").text($(Obj[1]));
+
+        });
+    })
+
+
+
+    $( "#buttonGet").click(function() {
+        $.ajax({
+            method: "GET",
+            url: "/app_dev.php/api/features",
+            headers: { Authorization: 'Bearer ' + Obj.access_token}
+        }).success(function(z) {
+            Obj2 = z;
+            $("#headerText3").text(JSON.stringify(Obj2));
+            $("#headerText4").text($(Obj2[0]));
+        });
+    })
+
+/*function Ucfirst(str){
+    if (!str) return str;
+    return str[0].toUpperCase() + str.substring(1);
+}*/
+
+
+</script>
+
+
+</body>
+</html>

@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Feature
@@ -25,28 +26,29 @@ class Feature
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 64)
      * @ORM\Column(type="string", length=64)
      */
     private $title;
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 255)
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
 
     /**
      * @var string
-     *
+     * @Assert\Url()
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $imageUrl;
 
     /**
      * @var int
-     *
      * @ORM\Column(name="level", type="integer")
      */
     private $level = 0;

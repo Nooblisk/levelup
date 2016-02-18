@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Feature;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,6 +20,11 @@ class FeatureType extends AbstractType
             ->add('description')
             ->add('imageUrl')
         ;
+
+        $data = $builder->getData();
+        if ($data instanceof Feature && $data->getId()) {
+           $builder->add('id');
+        }
     }
     
     /**
@@ -27,7 +33,8 @@ class FeatureType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Feature'
+            'data_class' => 'AppBundle\Entity\Feature',
+            'csrf_protection' => false,
         ));
     }
 }

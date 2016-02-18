@@ -2,4 +2,4 @@ AppBundle\Entity\Client:
     client1:
         randomId: web
         secret: web
-        allowedGrantTypes: [password]
+        allowedGrantTypes: [password,refresh_token]

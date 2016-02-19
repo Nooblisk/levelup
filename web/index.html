@@ -9,8 +9,51 @@
 <body>
 <h1></h1>
 <div class="ui container">
+    <div class="ui three column grid">
+        <div class="row">
+            <div class="left floated three wide column">
+                <div class="ui red huge left label">
+                    Мой уровень
+                </div>
+            </div>
+            <div class="right floated twelve wide column">
+                <table class="ui fixed right celled table">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="center aligned">1</td>
+                        <td class="disabled center aligned">2</td>
+                        <td class="disabled center aligned">3</td>
+                        <td class="disabled center aligned">4</td>
+                        <td class="disabled center aligned">5</td>
+                        <td class="disabled center aligned">6</td>
+                        <td class="disabled center aligned">7</td>
+                        <td class="disabled center aligned">8</td>
+                        <td class="disabled center aligned">9</td>
+                        <td class="disabled center aligned">10</td>
+                        <td class="disabled center aligned">11</td>
+                        <td class="disabled center aligned">12</td>
+                        <td class="disabled center aligned">13</td>
+                        <td class="disabled center aligned">14</td>
+                        <td class="disabled center aligned">15</td>
+                        <td class="disabled center aligned">16</td>
+                        <td class="disabled center aligned">17</td>
+                        <td class="disabled center aligned">18</td>
+                        <td class="disabled center aligned">19</td>
+                        <td class="disabled center aligned">20</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="right floated one wide column">
+                <button id="buttonSignIn" class="ui button" type="submit">Sign In</button>
+            </div>
+        </div>
+    </div>
 
-    <button id="buttonSignIn" class="ui button" type="submit">Sign In</button>
+
+
 
     <form id="loginForm" class="ui form" style="display: none">
         <div id="loginField" class="required field">
@@ -30,7 +73,7 @@
 
 
 <button id="buttonLogin" class="ui button" type="submit" style="display: none">Login</button>
-    <button id="buttonGet" class="ui button" type="submit">Get</button>
+    <!--<button id="buttonGet" class="ui button" type="submit">Get</button>-->
     <button id="buttonUpdateFeatures" class="ui button" type="submit">Update Features</button>
 
 
@@ -39,46 +82,61 @@
 
 
 
-    <h4 id="headerText" class="ui header"></h4>
-    <h4 id="headerText2" class="ui header"></h4>
-    <h4 id="headerText3" class="ui header"></h4>
-    <h4 id="headerText4" class="ui header"></h4>
+
 
     <div class="ui equal width grid">
         <div class="ui row">
             <div class="column">
-                <div id="labelSkill0" class="ui image green large label">
+                <div id="labelSkill0" class="ui image green huge label">
                     <img id="imgSkill0" src="http://lorempixel.com/640/480/?3457">
                     Скилл
                 </div>
             </div>
             <div class="column">
-                <div id="labelSkill1" class="ui green image large label">
+                <div id="labelSkill1" class="ui green image huge label">
                     <img id="imgSkill1" src="http://lorempixel.com/640/480/?3457">
                     Скилл
                 </div>
             </div>
             <div class="column">
-                <div id="labelSkill2" class="ui image green large label">
+                <div id="labelSkill2" class="ui image green huge label">
                     <img id="imgSkill2" src="http://lorempixel.com/640/480/?3457">
                     Скилл
                 </div>
             </div>
             <div class="column">
-                <div id="labelSkill3" class="ui image green large label">
+                <div id="labelSkill3" class="ui image green huge label">
                     <img id="imgSkill3" src="http://lorempixel.com/640/480/?3457">
                     Скилл
                 </div>
             </div>
             <div class="column">
-                <div id="labelSkill4" class="ui image green large label">
+                <div id="labelSkill4" class="ui image green huge label">
                     <img id="imgSkill4" src="http://lorempixel.com/640/480/?3457">
+                    Скилл
+                </div>
+            </div>
+            <div class="column">
+                <div id="labelSkill5" class="ui image green huge label">
+                    <img id="imgSkill5" src="http://lorempixel.com/640/480/?3457">
                     Скилл
                 </div>
             </div>
         </div>
         </div>
+
+    <h4 id="headerText" class="ui header"></h4>
+    <h4 id="headerText2" class="ui header"></h4>
+    <h4 id="headerText3" class="ui header"></h4>
+    <h4 id="headerText4" class="ui header"></h4>
 </div>
+
+
+
+
+
+
+
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="js/semantic.min.js"></script>
@@ -125,7 +183,7 @@ var username1, password1;
 
 
 
-    $( "#buttonGet").click(function() {
+   /* $( "#buttonGet").click(function() {
         $.ajax({
             method: "GET",
             url: "/app_dev.php/api/features",
@@ -137,14 +195,23 @@ var username1, password1;
 
 
         });
-    });
+    });*/
 
 
     $( "#buttonUpdateFeatures").click(function() {
-        for(var i=0; i<5; i++){
-            $("#imgSkill" + i).attr("src", Obj2.features[i].image_url);
-            $("#labelSkill" + i).contents().last().replaceWith(Obj2.features[i].title + " lvl " + Obj2.features[i].level);
-        }
+        $.ajax({
+            method: "GET",
+            url: "/app_dev.php/api/features",
+            headers: {Authorization: 'Bearer ' + Obj.access_token}
+        }).success(function (z) {
+            Obj2 = z;
+            $("#headerText3").text(JSON.stringify(Obj2));
+            //$("#headerText4").text(Obj2.features[0].image_url);
+            for (var i = 0; i < Obj2.features.length; i++) {
+                $("#imgSkill" + i).attr("src", Obj2.features[i].image_url);
+                $("#labelSkill" + i).contents().last().replaceWith(Obj2.features[i].title + " lvl " + Obj2.features[i].level);
+            }
+        });
     });
 
 

@@ -31,6 +31,7 @@
 
 <button id="buttonPost" class="ui button" type="submit">Post</button>
     <button id="buttonGet" class="ui button" type="submit">Get</button>
+    <button id="buttonUpdateFeatures" class="ui button" type="submit">Update Features</button>
 
 
 
@@ -42,6 +43,41 @@
     <h4 id="headerText2" class="ui header"></h4>
     <h4 id="headerText3" class="ui header"></h4>
     <h4 id="headerText4" class="ui header"></h4>
+
+    <div class="ui equal width grid">
+        <div class="ui row">
+            <div class="column">
+                <div id="labelSkill0" class="ui image green large label">
+                    <img id="imgSkill0" src="http://lorempixel.com/640/480/?3457">
+                    Скилл
+                </div>
+            </div>
+            <div class="column">
+                <div id="labelSkill1" class="ui green image large label">
+                    <img id="imgSkill1" src="http://lorempixel.com/640/480/?3457">
+                    Скилл
+                </div>
+            </div>
+            <div class="column">
+                <div id="labelSkill2" class="ui image green large label">
+                    <img id="imgSkill2" src="http://lorempixel.com/640/480/?3457">
+                    Скилл
+                </div>
+            </div>
+            <div class="column">
+                <div id="labelSkill3" class="ui image green large label">
+                    <img id="imgSkill3" src="http://lorempixel.com/640/480/?3457">
+                    Скилл
+                </div>
+            </div>
+            <div class="column">
+                <div id="labelSkill4" class="ui image green large label">
+                    <img id="imgSkill4" src="http://lorempixel.com/640/480/?3457">
+                    Скилл
+                </div>
+            </div>
+        </div>
+        </div>
 </div>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
@@ -81,7 +117,8 @@ var username1, password1;
             for (var p in a)
                 s += '    "' + p + '": "' + a[p] + '"\n';*/
             $("#headerText").text(JSON.stringify(Obj));
-            $("#headerText2").text(username1 + " " + password1);
+            //$("#headerText2").text(username1 + " " + password1);
+            $( "#loginForm" ).fadeOut();
 
         });
     });
@@ -96,9 +133,23 @@ var username1, password1;
         }).success(function(z) {
             Obj2 = z;
             $("#headerText3").text(JSON.stringify(Obj2));
-            $("#headerText4").text($(Obj2[0]));
+            //$("#headerText4").text(Obj2.features[0].image_url);
+
+
         });
     });
+
+
+    $( "#buttonUpdateFeatures").click(function() {
+        for(var i=0; i<5; i++){
+            $("#imgSkill" + i).attr("src", Obj2.features[i].image_url);
+            $("#labelSkill" + i).contents().last().replaceWith(Obj2.features[i].title + " lvl " + Obj2.features[i].level);
+        }
+    });
+
+
+
+
 
 /*function Ucfirst(str){
     if (!str) return str;

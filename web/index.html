@@ -13,20 +13,20 @@
     <button id="buttonLogin" class="ui button" type="submit">Login</button>
 
     <form id="loginForm" class="ui form" style="display: none">
-        <div id="loginField" class="field">
+        <div id="loginField" class="required field">
             <label>Login</label>
-            <input type="text" name="first-name" placeholder="">
+            <input id= "loginInput" type="text" name="first-name" placeholder="test">
         </div>
-        <div id="passwordField" class="field">
+        <div id="passwordField" class="required field">
             <label>Password</label>
-            <input type="text" name="last-name" placeholder="">
+            <input id="passwordInput" type="text" name="last-name" placeholder="test">
         </div>
     </form>
 
 
-    <button id="buttonHide" class="ui button">
+   <!-- <button id="buttonHide" class="ui button">
         Hide
-    </button>
+    </button>-->
 
 
 <button id="buttonPost" class="ui button" type="submit">Post</button>
@@ -51,24 +51,40 @@
         //alert("asasdasdasd");
         $( "#loginForm" ).fadeIn();
     });
-    $( "#buttonHide" ).click(function(){
+
+var username1, password1;
+    $( "#loginInput" )
+            .keyup(function(){
+                username1 = $( this ).val();
+            }).keyup();
+
+    $( "#passwordInput" )
+            .keyup(function(){
+                password1 = $( this ).val();
+            }).keyup();
+
+
+
+
+
+    /*$( "#buttonHide" ).click(function(){
         //alert("asasdasdasd");
         $( "#loginForm" ).fadeOut();
-    });
+    });*/
 </script>
 <script>
     var Obj, Obj2;
     $( "#buttonPost").click(function(){
-        $.post("/app_dev.php/api/oauth/v2/token", {grant_type: "password", client_id: "1_web", client_secret: "web", username: "test", password: "test"}).success(function(a){
+        $.post("/app_dev.php/api/oauth/v2/token", {grant_type: "password", client_id: "1_web", client_secret: "web", username: username1, password: password1}).success(function(a){
             Obj=a;
-            var s = '{\n';
+            /*var s = '{\n';
             for (var p in a)
-                s += '    "' + p + '": "' + a[p] + '"\n';
-            $("#headerText").text( s + '}');
-            $("#headerText2").text($(Obj[1]));
+                s += '    "' + p + '": "' + a[p] + '"\n';*/
+            $("#headerText").text(JSON.stringify(Obj));
+            $("#headerText2").text(username1 + " " + password1);
 
         });
-    })
+    });
 
 
 
@@ -82,7 +98,7 @@
             $("#headerText3").text(JSON.stringify(Obj2));
             $("#headerText4").text($(Obj2[0]));
         });
-    })
+    });
 
 /*function Ucfirst(str){
     if (!str) return str;

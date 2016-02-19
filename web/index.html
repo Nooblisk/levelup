@@ -10,7 +10,7 @@
 <h1></h1>
 <div class="ui container">
 
-    <button id="buttonLogin" class="ui button" type="submit">Login</button>
+    <button id="buttonSignIn" class="ui button" type="submit">Sign In</button>
 
     <form id="loginForm" class="ui form" style="display: none">
         <div id="loginField" class="required field">
@@ -29,7 +29,7 @@
     </button>-->
 
 
-<button id="buttonPost" class="ui button" type="submit">Post</button>
+<button id="buttonLogin" class="ui button" type="submit" style="display: none">Login</button>
     <button id="buttonGet" class="ui button" type="submit">Get</button>
     <button id="buttonUpdateFeatures" class="ui button" type="submit">Update Features</button>
 
@@ -83,9 +83,10 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="js/semantic.min.js"></script>
 <script>
-    $( "#buttonLogin" ).click(function(){
+    $( "#buttonSignIn" ).click(function(){
         //alert("asasdasdasd");
         $( "#loginForm" ).fadeIn();
+        $( "#buttonLogin").fadeIn();
     });
 
 var username1, password1;
@@ -110,15 +111,14 @@ var username1, password1;
 </script>
 <script>
     var Obj, Obj2;
-    $( "#buttonPost").click(function(){
+    $( "#buttonLogin").click(function(){
         $.post("/app_dev.php/api/oauth/v2/token", {grant_type: "password", client_id: "1_web", client_secret: "web", username: username1, password: password1}).success(function(a){
             Obj=a;
-            /*var s = '{\n';
-            for (var p in a)
-                s += '    "' + p + '": "' + a[p] + '"\n';*/
+            $( "#buttonSignIn").text("Вход выполнен");
             $("#headerText").text(JSON.stringify(Obj));
             //$("#headerText2").text(username1 + " " + password1);
             $( "#loginForm" ).fadeOut();
+            $( "#buttonLogin").fadeOut();
 
         });
     });

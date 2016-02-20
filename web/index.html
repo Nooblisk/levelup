@@ -83,7 +83,6 @@
     <div class="row">
         <div class="left floated two wide column">
               <button id="buttonLogin" class="ui button" type="submit" style="display: none">Login</button>
-    <!--<button id="buttonGet" class="ui button" type="submit">Get</button>-->
         </div>
         <div class="two wide column">
             <button id="buttonUpdateFeatures" class="ui button" type="submit">Update Features</button>
@@ -213,17 +212,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 <script>
 
-
-
-
-
-
-
-
-
-
     $( "#buttonSignIn" ).click(function(){
-        //alert("asasdasdasd");
         $( "#loginForm" ).fadeIn();
         $( "#buttonLogin").fadeIn();
     });
@@ -241,12 +230,6 @@ var username1, password1;
 
 
 
-
-
-    /*$( "#buttonHide" ).click(function(){
-        //alert("asasdasdasd");
-        $( "#loginForm" ).fadeOut();
-    });*/
 </script>
 <script>
     var Obj, Obj2;
@@ -264,21 +247,6 @@ var username1, password1;
 
 
 
-   /* $( "#buttonGet").click(function() {
-        $.ajax({
-            method: "GET",
-            url: "/app_dev.php/api/features",
-            headers: { Authorization: 'Bearer ' + Obj.access_token}
-        }).success(function(z) {
-            Obj2 = z;
-            $("#headerText3").text(JSON.stringify(Obj2));
-            //$("#headerText4").text(Obj2.features[0].image_url);
-
-
-        });
-    });*/
-
-
     $( "#buttonUpdateFeatures").click(function() {
         $.ajax({
             method: "GET",
@@ -294,30 +262,21 @@ var username1, password1;
             var template = Handlebars.compile( $('#template').html() );
             for (var i = 1; i <= Obj2.features.length; i++) {
 
-                /*$("#imgSkill" + i).attr("src", Obj2.features[i].image_url);
-                $("#avatarSkill" + i).attr("src", Obj2.features[i].image_url);
-                $("#labelSkill" + i).contents().last().replaceWith(Obj2.features[i].title + " lvl " + Obj2.features[i].level);
-                $("#headerSkill" + i).text(Obj2.features[i].title);
-                $("#contentSkill" + i).contents().last().replaceWith(" уровень " + Obj2.features[i].level);
-                $("#itemSkill" + i).attr({
-                    "data-title": Obj2.features[i].title,
-                    "data-content": Obj2.features[i].description
-                });*/
 
-                if (Update == 1){
+                //if (Update == 1){
                     $('#templateList').append( template(Obj2.features[i-1]) );
                     $("#itemFeature" + i).attr({
                         "data-title": Obj2.features[i-1].title,
                         "data-content": Obj2.features[i-1].description
                     });
-                }
-                else {
-                    $("#itemFeature" + i).replaceWith(template(Obj2.features[i-1]));
-                    $("#itemFeature" + i).attr({
-                        "data-title": Obj2.features[i-1].title,
-                        "data-content": Obj2.features[i-1].description
-                    });
-                }
+                //}
+                //else {
+                  //  $("#itemFeature" + i).replaceWith(template(Obj2.features[i-1]));
+                   // $("#itemFeature" + i).attr({
+                    //    "data-title": Obj2.features[i-1].title,
+                   //     "data-content": Obj2.features[i-1].description
+                   // });
+               // }
                 $("#itemFeature" + i)
                         .popup({
                             on: 'click'

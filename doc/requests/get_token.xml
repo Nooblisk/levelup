@@ -4,7 +4,7 @@
   </option>
   <option name="httpMethod" value="POST" />
   <option name="urlBase" value="http://localhost:8000" />
-  <option name="urlPath" value="/api/features" />
+  <option name="urlPath" value="app_dev.php/api/oauth/v2/token" />
   <option name="headers">
     <list>
       <KeyValuePair>
@@ -15,25 +15,29 @@
         <option name="key" value="Cache-Control" />
         <option name="value" value="no-cache" />
       </KeyValuePair>
-      <KeyValuePair>
-        <option name="key" value="Authorization" />
-        <option name="value" value="Bearer NjNjZjEzZDNmOGU4ZWUyMjQ4OTM5NjA1YWEyZThlYzdkMDc5OTMyYzVkNzE1ZWU3NmZjYWM4Yzg4MWFkMjk4Nw" />
-      </KeyValuePair>
     </list>
   </option>
   <option name="parameters">
     <list>
       <KeyValuePair>
-        <option name="key" value="feature[title]" />
-        <option name="value" value="qweqwe" />
+        <option name="key" value="grant_type" />
+        <option name="value" value="password" />
       </KeyValuePair>
       <KeyValuePair>
-        <option name="key" value="feature[imageUrl]" />
-        <option name="value" value="asdfasdfasdf" />
+        <option name="key" value="client_id" />
+        <option name="value" value="1_web" />
       </KeyValuePair>
       <KeyValuePair>
-        <option name="key" value="feature[description]" />
-        <option name="value" value="zxcvzxcvzxcv" />
+        <option name="key" value="client_secret" />
+        <option name="value" value="web" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="username" />
+        <option name="value" value="test" />
+      </KeyValuePair>
+      <KeyValuePair>
+        <option name="key" value="password" />
+        <option name="value" value="test" />
       </KeyValuePair>
     </list>
   </option>

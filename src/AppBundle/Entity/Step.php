@@ -3,11 +3,13 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Step
  *
- * @ORM\Table(name="step")
+ * @Serializer\ExclusionPolicy("none")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\StepRepository")
  */
 class Step
@@ -23,25 +25,27 @@ class Step
 
     /**
      * @var string
-     *
+     * @Assert\Length(min = 2, max = 255)
      * @ORM\Column(name="comment", type="string", length=255, nullable=true)
      */
     private $comment;
 
     /**
      * @var \DateTime
-     *
+     * @Assert\DateTime()
      * @ORM\Column(name="completedAt", type="datetime")
      */
     private $completedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="steps")
+     * @Serializer\Exclude()
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Quest", inversedBy="steps")
+     * @Serializer\Exclude()
      */
     private $quest;
 

@@ -4,11 +4,14 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Quest
  *
  * @ORM\Entity(repositoryClass="AppBundle\Repository\QuestRepository")
+ * @Serializer\ExclusionPolicy("none")
  */
 class Quest
 {
@@ -23,14 +26,15 @@ class Quest
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, max = 64)
      * @ORM\Column(type="string", length=64)
      */
     private $title;
 
     /**
      * @var string
-     *
+     * @Assert\Length(min = 2, max = 255)
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $description;
@@ -51,11 +55,13 @@ class Quest
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="quests")
+     * @Serializer\Exclude()
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Feature", inversedBy="quests")
+     * @Serializer\Exclude()
      */
     private $feature;
 

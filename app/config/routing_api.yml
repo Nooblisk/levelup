@@ -1,0 +1,8 @@
+feature:
+    type:     rest
+    resource: "@AppBundle/Controller/FeatureController.php"
+
+quest:
+    type:     rest
+    parent:   feature
+    resource: "@AppBundle/Controller/QuestController.php"

@@ -2,9 +2,9 @@ default:
     resource: "@AppBundle/Controller/DefaultController.php"
     type:     annotation
 
-feature:
+api:
     type:     rest
-    resource: "@AppBundle/Controller/FeatureController.php"
+    resource: "routing_api.yml"
     prefix: /api
 
 NelmioApiDocBundle:

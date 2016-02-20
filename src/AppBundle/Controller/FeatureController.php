@@ -11,6 +11,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Feature;
 use AppBundle\Entity\User;
 use AppBundle\Form\FeatureType;
+use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -169,6 +170,34 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
 
         return ['form' => $form];
     }
+
+    /**
+     * Deletes a feature
+     *
+     * **Request header**
+     *
+     *      Authorization: Bearer <token>
+     *
+     * @ApiDoc(
+     *  section="Features",
+     *  description="Deletes a feature"
+     * )
+     *
+     * @param $featureId feature id
+     *
+     * @View(statusCode=204)
+     */
+    public function deleteAction($featureId)
+    {
+        $feature = $this->getFeatureRepository()->findOneBy(['user'=> $this->getUser(), 'id' => $featureId]);
+        if (!$feature) {
+            throw $this->createNotFoundException();
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($feature);
+        $em->flush();
+    }
+
 
     /**
      * @return \AppBundle\Repository\FeatureRepository

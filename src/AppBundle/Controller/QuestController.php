@@ -33,7 +33,11 @@ class QuestController extends FOSRestController implements ClassResourceInterfac
      * @ApiDoc(
      *  section="Quests",
      *  resource=true,
-     *  description="Returns current user's quest"
+     *  description="Returns current user's quest",
+     *  statusCodes = {
+     *    200 = "Returned when successful",
+     *    404 = "Returned when the quest or feature is not found"
+     *  }
      * )
      * @param integer $featureId Id of a feature
      * @param integer $questId   Id of a quest
@@ -42,7 +46,14 @@ class QuestController extends FOSRestController implements ClassResourceInterfac
      */
     public function getAction($featureId, $questId)
     {
-        $quest = $this->getQuestRepository()->findOneBy(['user'=> $this->getUser(), 'feature' => $featureId, 'id' => $questId]);
+        $quest = $this->getQuestRepository()->findOneBy([
+            'user'=> $this->getUser(),
+            'feature' => $featureId,
+            'id' => $questId
+        ]);
+        if (!$quest) {
+            throw $this->createNotFoundException();
+        }
         return ['quest' => $quest];
     }
 
@@ -56,7 +67,10 @@ class QuestController extends FOSRestController implements ClassResourceInterfac
      * @ApiDoc(
      *  section="Quests",
      *  resource=true,
-     *  description="Returns current user's quests"
+     *  description="Returns current user's quests",
+     *  statusCodes = {
+     *    200 = "Returned when successful"
+     *  }
      * )
      * @param integer $featureId Id of a feature
      *
@@ -64,7 +78,8 @@ class QuestController extends FOSRestController implements ClassResourceInterfac
      */
     public function cgetAction($featureId)
     {
-        return ['quests' => $this->getQuestRepository()->findBy(['user'=> $this->getUser(), 'feature' => $featureId])];
+        $quests = $this->getQuestRepository()->findBy(['user' => $this->getUser(), 'feature' => $featureId]);
+        return ['quests' => $quests];
     }
 
 }

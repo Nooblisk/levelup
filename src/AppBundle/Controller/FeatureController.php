@@ -29,7 +29,11 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      * @ApiDoc(
      *  section="Features",
      *  resource=true,
-     *  description="Returns current user's feature"
+     *  description="Returns current user's feature",
+     *  statusCodes = {
+     *    200 = "Returned when successful",
+     *    404 = "Returned when the feature is not found"
+     *  }
      * )
      * @param integer $featureId Id of current user's feature
      *
@@ -38,6 +42,9 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
     public function getAction($featureId)
     {
         $feature = $this->getFeatureRepository()->findOneBy(['user'=> $this->getUser(), 'id' => $featureId]);
+        if (!$feature) {
+            throw $this->createNotFoundException();
+        }
         return ['feature' => $feature];
     }
 
@@ -51,13 +58,17 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      * @ApiDoc(
      *  section="Features",
      *  resource=true,
-     *  description="Returns current user's features"
+     *  description="Returns current user's features",
+     *  statusCodes = {
+     *    200 = "Returned when successful"
+     *  }
      * )
      * @return array
      */
     public function cgetAction()
     {
-        return ['features' => $this->getFeatureRepository()->findByUser($this->getUser())];
+        $features = $this->getFeatureRepository()->findByUser($this->getUser());
+        return ['features' => $features];
     }
 
     /**
@@ -70,7 +81,10 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      * @ApiDoc(
      *  section="Features",
      *  resource=true,
-     *  description="Return new form"
+     *  description="Return new form",
+     *  statusCodes = {
+     *    200 = "Returned when successful"
+     *  }
      * )
      */
     public function newAction()
@@ -88,7 +102,11 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      * @param Request $request
      * @ApiDoc(
      *  section="Features",
-     *  description="Creates new feature"
+     *  description="Creates new feature",
+     *  statusCodes = {
+     *    200 = "Returned when successful",
+     *    400 = "Returned when the form contains an error"
+     *  }
      * )
      *
      * @return array
@@ -145,7 +163,11 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      *
      * @ApiDoc(
      *  section="Features",
-     *  description="Updates a feature"
+     *  description="Updates a feature",
+     *  statusCodes = {
+     *    200 = "Returned when successful",
+     *    404 = "Returned when the feature is not found"
+     *  }
      * )
      *
      * @param $featureId feature id
@@ -180,7 +202,11 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      *
      * @ApiDoc(
      *  section="Features",
-     *  description="Deletes a feature"
+     *  description="Deletes a feature",
+     *  statusCodes = {
+     *    204 = "Returned when successful",
+     *    404 = "Returned when the feature is not found"
+     *  }
      * )
      *
      * @param $featureId feature id

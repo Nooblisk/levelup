@@ -5,6 +5,21 @@
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="css/semantic.min.css">
 
+    <style type="text/css">
+        body {
+            background-color: #ffffff;
+            background-size: cover;
+        }
+        .layer {
+            overflow-x: auto; /* Добавляем полосу прокрутки */
+            width: auto; /* Ширина блока */
+            height: auto; /* Высота блока */
+            padding: 5px; /* Поля вокруг текста */
+            border: solid 1px white; /* Параметры рамки */
+            white-space: nowrap; /* Запрещаем перенос строк */
+        }
+
+    </style>
 </head>
 <body>
 <h1></h1>
@@ -51,10 +66,7 @@
             </div>
         </div>
     </div>
-
-
-
-
+    <div class="row">
     <form id="loginForm" class="ui form" style="display: none">
         <div id="loginField" class="required field">
             <label>Login</label>
@@ -65,16 +77,12 @@
             <input id="passwordInput" type="text" name="last-name" placeholder="test">
         </div>
     </form>
-
-
-   <!-- <button id="buttonHide" class="ui button">
-        Hide
-    </button>-->
-
-
-<button id="buttonLogin" class="ui button" type="submit" style="display: none">Login</button>
+    </div>
+    <div class="row">
+         <button id="buttonLogin" class="ui button" type="submit" style="display: none">Login</button>
     <!--<button id="buttonGet" class="ui button" type="submit">Get</button>-->
     <button id="buttonUpdateFeatures" class="ui button" type="submit">Update Features</button>
+    </div>
 
 
 
@@ -83,8 +91,7 @@
 
 
 
-
-    <div class="ui equal width grid">
+   <!-- <div class="ui equal width grid">
         <div class="ui row">
             <div class="column">
                 <div id="labelSkill0" class="ui image green huge label">
@@ -123,7 +130,55 @@
                 </div>
             </div>
         </div>
+        </div>-->
+    <div class="layer">
+    <div class="ui massive horizontal list">
+        <div id="itemSkill0" class="item" data-title="Using click events" data-content="Clicked popups will close if you click away, but not if you click inside the popup">
+        <img id="avatarSkill0" class="ui avatar image" src="http://lorempixel.com/640/480/?3457">
+        <div id="contentSkill0" class="content">
+            <div id="headerSkill0" class="header">Скилл</div>
+            уровень 1
         </div>
+    </div>
+        <div id="itemSkill1" class="item">
+            <img id="avatarSkill1" class="ui avatar image" src="http://lorempixel.com/640/480/?3457">
+            <div id="contentSkill1" class="content">
+                <div id="headerSkill1" class="header">Скилл</div>
+                уровень 1
+            </div>
+        </div>
+        <div id="itemSkill2" class="item">
+            <img id="avatarSkill2" class="ui avatar image" src="http://lorempixel.com/640/480/?3457">
+            <div id="contentSkill2" class="content">
+                <div id="headerSkill2" class="header">Скилл</div>
+                уровень 1
+            </div>
+        </div>
+        <div id="itemSkill3" class="item">
+            <img id="avatarSkill3" class="ui avatar image" src="http://lorempixel.com/640/480/?3457">
+            <div id="contentSkill3" class="content">
+                <div id="headerSkill3" class="header">Скилл</div>
+                уровень 1
+            </div>
+        </div>
+        <div id="itemSkill4" class="item">
+            <img id="avatarSkill4" class="ui avatar image" src="http://lorempixel.com/640/480/?3457">
+            <div id="contentSkill4" class="content">
+                <div id="headerSkill4" class="header">Скилл</div>
+                уровень 1
+            </div>
+        </div>
+        <div id="itemSkill5" class="item">
+            <img id="avatarSkill5" class="ui avatar image" src="http://lorempixel.com/640/480/?3457">
+            <div id="contentSkill5" class="content">
+                <div id="headerSkill5" class="header">Скилл</div>
+                уровень 1
+            </div>
+        </div>
+    </div>
+    </div>
+
+
 
     <h4 id="headerText" class="ui header"></h4>
     <h4 id="headerText2" class="ui header"></h4>
@@ -140,7 +195,16 @@
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="js/semantic.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 <script>
+
+    $('.item')
+            .popup({
+                on: 'click'
+            })
+    ;
+
+
     $( "#buttonSignIn" ).click(function(){
         //alert("asasdasdasd");
         $( "#loginForm" ).fadeIn();
@@ -172,7 +236,6 @@ var username1, password1;
     $( "#buttonLogin").click(function(){
         $.post("/app_dev.php/api/oauth/v2/token", {grant_type: "password", client_id: "1_web", client_secret: "web", username: username1, password: password1}).success(function(a){
             Obj=a;
-            $( "#buttonSignIn").text("Вход выполнен");
             $("#headerText").text(JSON.stringify(Obj));
             //$("#headerText2").text(username1 + " " + password1);
             $( "#loginForm" ).fadeOut();
@@ -209,7 +272,14 @@ var username1, password1;
             //$("#headerText4").text(Obj2.features[0].image_url);
             for (var i = 0; i < Obj2.features.length; i++) {
                 $("#imgSkill" + i).attr("src", Obj2.features[i].image_url);
+                $("#avatarSkill" + i).attr("src", Obj2.features[i].image_url);
                 $("#labelSkill" + i).contents().last().replaceWith(Obj2.features[i].title + " lvl " + Obj2.features[i].level);
+                $("#headerSkill" + i).text(Obj2.features[i].title);
+                $("#contentSkill" + i).contents().last().replaceWith(" уровень " + Obj2.features[i].level);
+                $("#itemSkill" + i).attr({
+                    "data-title": Obj2.features[i].title,
+                    "data-content": Obj2.features[i].description
+                });
             }
         });
     });

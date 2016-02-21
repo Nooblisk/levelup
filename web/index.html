@@ -62,7 +62,7 @@
                 </table>
             </div>
             <div class="right floated one wide column">
-                <button id="buttonSignIn" class="ui button" type="submit">Sign In</button>
+                <button id="buttonSignIn" class="ui button" type="submit" style="display: none">Sign In</button>
             </div>
         </div>
     </div>
@@ -184,15 +184,7 @@
 
     <div class="layer">
     <div id="templateList" class="ui massive horizontal list">
-        <script id="template" type="text/x-handlebars-template">
-              <div id="itemFeature{{id}}" class="item">
-                    <img class="ui avatar image" src={{image_url}}>
-                    <div class="content">
-                         <div class="header">{{title}}</div>
-                         уровень {{level}}
-                    </div>
-              </div>
-       </script>
+
     </div>
 </div>
 
@@ -206,7 +198,15 @@
     <h4 id="headerText3" class="ui header"></h4>
 </div>
 
-
+<script id="template" type="text/x-handlebars-template">
+    <div id="itemFeature{{id}}" class="item">
+        <img class="ui avatar image" src={{image_url}}>
+        <div class="content">
+            <div class="header">{{title}}</div>
+            уровень {{level}}
+        </div>
+    </div>
+</script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="js/semantic.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
@@ -232,51 +232,70 @@ var username1, password1;
 
 </script>
 <script>
-    var Obj, Obj2;
-    var Update = 0;
+    var AuthInfo, FeatureInfo;
+
     $( "#buttonLogin").click(function(){
-        $.post("/app_dev.php/api/oauth/v2/token", {grant_type: "password", client_id: "1_web", client_secret: "web", username: username1, password: password1}).success(function(a){
-            Obj=a;
-            $("#headerText").text(JSON.stringify(Obj));
+        $.post("/app_dev.php/api/oauth/v2/token", {
+            grant_type: "password",
+            client_id: "1_web",
+            client_secret: "web",
+            username: username1,
+            password: password1
+        }).success(function(a){
+            AuthInfo=a;
+            localStorage.setItem('AuthInfo',JSON.stringify(AuthInfo));
+            $("#headerText").text(JSON.stringify(AuthInfo));
             //$("#headerText2").text(username1 + " " + password1);
             $( "#loginForm" ).fadeOut();
+            $( "#buttonSignIn" ).fadeOut();
             $( "#buttonLogin").fadeOut();
-
+            updateFeatures();
         });
     });
 
+    var isAuthorized = function() {
+        if(AuthInfo !== undefined) {
+            return AuthInfo;
+        }
 
+        AuthInfo = JSON.parse(localStorage.getItem('AuthInfo'));
+        if(AuthInfo !== null) {
+            return AuthInfo;
+        }
 
-    $( "#buttonUpdateFeatures").click(function() {
+        $( "#buttonSignIn" ).fadeIn();
+        return false;
+    };
+
+    var updateFeatures = function() {
         $.ajax({
             method: "GET",
             url: "/app_dev.php/api/features",
-            headers: {Authorization: 'Bearer ' + Obj.access_token}
+            headers: {Authorization: 'Bearer ' + AuthInfo.access_token}
         }).success(function (z) {
-            Update+=1;
-            Obj2 = z;
-            $("#headerText3").text(JSON.stringify(Obj2));
+            FeatureInfo = z;
+            $("#headerText3").text(JSON.stringify(FeatureInfo));
 
-            //$( "#templateList" ).empty();
+            $( "#templateList" ).empty();
 
             var template = Handlebars.compile( $('#template').html() );
-            for (var i = 1; i <= Obj2.features.length; i++) {
+            for (var i = 1; i <= FeatureInfo.features.length; i++) {
 
 
                 //if (Update == 1){
-                    $('#templateList').append( template(Obj2.features[i-1]) );
-                    $("#itemFeature" + i).attr({
-                        "data-title": Obj2.features[i-1].title,
-                        "data-content": Obj2.features[i-1].description
-                    });
+                $('#templateList').append( template(FeatureInfo.features[i-1]) );
+                $("#itemFeature" + i).attr({
+                    "data-title": FeatureInfo.features[i-1].title,
+                    "data-content": FeatureInfo.features[i-1].description
+                });
                 //}
                 //else {
-                  //  $("#itemFeature" + i).replaceWith(template(Obj2.features[i-1]));
-                   // $("#itemFeature" + i).attr({
-                    //    "data-title": Obj2.features[i-1].title,
-                   //     "data-content": Obj2.features[i-1].description
-                   // });
-               // }
+                //  $("#itemFeature" + i).replaceWith(template(FeatureInfo.features[i-1]));
+                // $("#itemFeature" + i).attr({
+                //    "data-title": FeatureInfo.features[i-1].title,
+                //     "data-content": FeatureInfo.features[i-1].description
+                // });
+                // }
                 $("#itemFeature" + i)
                         .popup({
                             on: 'click'
@@ -284,8 +303,28 @@ var username1, password1;
                 ;
             }
 
+        }).fail(function(xhr) {
+            console.log(xhr);
+            if(xhr.status == 401) {
+                $.post("/app_dev.php/api/oauth/v2/token", {
+                    grant_type: "refresh_token",
+                    client_id: "1_web",
+                    client_secret: "web",
+                    refresh_token: AuthInfo.refresh_token,
+                }).success(function(a){
+                    AuthInfo=a;
+                    localStorage.setItem('AuthInfo',JSON.stringify(AuthInfo));
+                    $( "#buttonSignIn" ).fadeOut();
+                    updateFeatures();
+                });
+            }
         });
-    });
+    };
+    $( "#buttonUpdateFeatures").click(updateFeatures);
+
+    if (isAuthorized()) {
+        updateFeatures();
+    }
 
 //    $('.item')
 //            .popup({

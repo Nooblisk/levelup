@@ -31,165 +31,60 @@
                     Мой уровень
                 </div>
             </div>
-            <div class="right floated twelve wide column">
-                <table class="ui fixed right celled table">
-                    <thead>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td class="center aligned">1</td>
-                        <td class="disabled center aligned">2</td>
-                        <td class="disabled center aligned">3</td>
-                        <td class="disabled center aligned">4</td>
-                        <td class="disabled center aligned">5</td>
-                        <td class="disabled center aligned">6</td>
-                        <td class="disabled center aligned">7</td>
-                        <td class="disabled center aligned">8</td>
-                        <td class="disabled center aligned">9</td>
-                        <td class="disabled center aligned">10</td>
-                        <td class="disabled center aligned">11</td>
-                        <td class="disabled center aligned">12</td>
-                        <td class="disabled center aligned">13</td>
-                        <td class="disabled center aligned">14</td>
-                        <td class="disabled center aligned">15</td>
-                        <td class="disabled center aligned">16</td>
-                        <td class="disabled center aligned">17</td>
-                        <td class="disabled center aligned">18</td>
-                        <td class="disabled center aligned">19</td>
-                        <td class="disabled center aligned">20</td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="right floated two wide column">
+                <button id="buttonDeleteFeature" class="ui button" type="submit">Delete feature</button>
             </div>
-            <div class="right floated one wide column">
+            <div class="right floated two wide column">
                 <button id="buttonSignIn" class="ui button" type="submit" style="display: none">Sign In</button>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="left floated column">
-    <form id="loginForm" class="ui form" style="display: none">
-        <div id="loginField" class="required field">
-            <label>Login</label>
-            <input id= "loginInput" type="text" name="first-name" placeholder="test">
+
+
+    <div id="modalLogin" class="ui small modal">
+        <div class="content">
+            <form id="loginForm" class="ui form">
+                <div id="loginField" class="required field">
+                    <label>Login</label>
+                    <input id= "loginInput" type="text" name="first-name" placeholder="test" maxlength="50">
+                </div>
+                <div id="passwordField" class="required field">
+                    <label>Password</label>
+                    <input id="passwordInput" type="text" name="last-name" placeholder="test" maxlength="50">
+                    </div>
+            </form>
+
         </div>
-        <div id="passwordField" class="required field">
-            <label>Password</label>
-            <input id="passwordInput" type="text" name="last-name" placeholder="test">
-        </div>
-    </form>
+        <div class="actions">
+            <div id="buttonLogin" class="ui bottom attached positive button">
+                Login
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="left floated two wide column">
-              <button id="buttonLogin" class="ui button" type="submit" style="display: none">Login</button>
+
+    <div id="modalDeleteFeature" class="ui small modal">
+        <div class="content">
+            <div id ="testdropdown" class="ui selection dropdown">
+                <input name="gender" type="hidden">
+                <i class="dropdown icon"></i>
+                <div class="default text">Choose a feature</div>
+                <div id="templateMenuDeleteFeature" class="menu">
+                </div>
+            </div>
+
         </div>
-        <div class="two wide column">
-            <button id="buttonUpdateFeatures" class="ui button" type="submit">Update Features</button>
+        <div class="actions">
+            <div id="buttonDelete" class="ui bottom attached positive button">
+                Delete
+            </div>
         </div>
     </div>
-
-
-
-
-   <!-- <div class="ui equal width grid">
-        <div class="ui row">
-            <div class="column">
-                <div id="labelSkill0" class="ui image green huge label">
-                    <img id="imgSkill0" src="http://lorempixel.com/640/480/?3457">
-                    Скилл
-                </div>
-            </div>
-            <div class="column">
-                <div id="labelSkill1" class="ui green image huge label">
-                    <img id="imgSkill1" src="http://lorempixel.com/640/480/?3457">
-                    Скилл
-                </div>
-            </div>
-            <div class="column">
-                <div id="labelSkill2" class="ui image green huge label">
-                    <img id="imgSkill2" src="http://lorempixel.com/640/480/?3457">
-                    Скилл
-                </div>
-            </div>
-            <div class="column">
-                <div id="labelSkill3" class="ui image green huge label">
-                    <img id="imgSkill3" src="http://lorempixel.com/640/480/?3457">
-                    Скилл
-                </div>
-            </div>
-            <div class="column">
-                <div id="labelSkill4" class="ui image green huge label">
-                    <img id="imgSkill4" src="http://lorempixel.com/640/480/?3457">
-                    Скилл
-                </div>
-            </div>
-            <div class="column">
-                <div id="labelSkill5" class="ui image green huge label">
-                    <img id="imgSkill5" src="http://lorempixel.com/640/480/?3457">
-                    Скилл
-                </div>
-            </div>
-        </div>
-        </div>-->
-    <!--<div class="layer">
-    <div class="ui massive horizontal list">
-        <div id="itemSkill0" class="item">
-            <img id="avatarSkill0" class="ui avatar image" src="http://lorempixel.com/640/480/?3457">
-            <div id="contentSkill0" class="content">
-                <div id="headerSkill0" class="header">Скилл</div>
-                уровень 1
-            </div>
-        </div>
-        <div id="itemSkill1" class="item" data-title="Using click events" data-content="Clicked popups will close if you click away, but not if you click inside the popup">
-            <img id="avatarSkill1" class="ui avatar image" src="http://lorempixel.com/640/480/?3457">
-            <div id="contentSkill1" class="content">
-                <div id="headerSkill1" class="header">Скилл</div>
-                уровень 1
-            </div>
-        </div>
-        <div id="itemSkill2" class="item">
-            <img id="avatarSkill2" class="ui avatar image" src="http://lorempixel.com/640/480/?3457">
-            <div id="contentSkill2" class="content">
-                <div id="headerSkill2" class="header">Скилл</div>
-                уровень 1
-            </div>
-        </div>
-        <div id="itemSkill3" class="item">
-            <img id="avatarSkill3" class="ui avatar image" src="http://lorempixel.com/640/480/?3457">
-            <div id="contentSkill3" class="content">
-                <div id="headerSkill3" class="header">Скилл</div>
-                уровень 1
-            </div>
-        </div>
-        <div id="itemSkill4" class="item">
-            <img id="avatarSkill4" class="ui avatar image" src="http://lorempixel.com/640/480/?3457">
-            <div id="contentSkill4" class="content">
-                <div id="headerSkill4" class="header">Скилл</div>
-                уровень 1
-            </div>
-        </div>
-        <div id="itemSkill5" class="item">
-            <img id="avatarSkill5" class="ui avatar image" src="http://lorempixel.com/640/480/?3457">
-            <div id="contentSkill5" class="content">
-                <div id="headerSkill5" class="header">Скилл</div>
-                уровень 1
-            </div>
-        </div>
-
-    </div>
-    </div>-->
 
 
 
     <div class="layer">
-    <div id="templateList" class="ui massive horizontal list">
-
+        <div id="templateList" class="ui massive horizontal list"></div>
     </div>
-</div>
-
-
-
 
 
 
@@ -198,7 +93,7 @@
     <h4 id="headerText3" class="ui header"></h4>
 </div>
 
-<script id="template" type="text/x-handlebars-template">
+<script id="templateFeature" type="text/x-handlebars-template">
     <div id="itemFeature{{id}}" class="item">
         <img class="ui avatar image" src={{image_url}}>
         <div class="content">
@@ -207,17 +102,24 @@
         </div>
     </div>
 </script>
+
+<script id="templateDeleteFeature" type="text/x-handlebars-template">
+    <div class="item" data-value="0">{{title}}</div>
+</script>
+
+
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="js/semantic.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+
+
 <script>
 
-    $( "#buttonSignIn" ).click(function(){
-        $( "#loginForm" ).fadeIn();
-        $( "#buttonLogin").fadeIn();
-    });
-
 var username1, password1;
+var AuthInfo, FeatureInfo;
+//var featureid;
+
+
     $( "#loginInput" )
             .keyup(function(){
                 username1 = $( this ).val();
@@ -228,30 +130,51 @@ var username1, password1;
                 password1 = $( this ).val();
             }).keyup();
 
+$( "#buttonSignIn" ).click(function(){
+    $("#modalLogin")
+            .modal({
+                autofocus : true,
+                transition : 'fade down',
+                onApprove : function(){
+                    if(username1=="" || password1 ==""){
+                        return false;
+                    }
+                    else{
+                        firstAuthorization();
+                    }
+                }
+            })
+            .modal('show')
+    ;
+});
 
+$( "#buttonDeleteFeature").click(function(){
+   $("#modalDeleteFeature")
+           .modal({
+               autofocus : true,
+               transition : 'fade down',
+               onShow : function(){
 
-</script>
-<script>
-    var AuthInfo, FeatureInfo;
+                   $( "#templateMenuDeleteFeature" ).empty();
+                   var template = Handlebars.compile( $('#templateDeleteFeature').html() );
+                   for (var i = 0; i < FeatureInfo.features.length; i++) {
 
-    $( "#buttonLogin").click(function(){
-        $.post("/app_dev.php/api/oauth/v2/token", {
-            grant_type: "password",
-            client_id: "1_web",
-            client_secret: "web",
-            username: username1,
-            password: password1
-        }).success(function(a){
-            AuthInfo=a;
-            localStorage.setItem('AuthInfo',JSON.stringify(AuthInfo));
-            $("#headerText").text(JSON.stringify(AuthInfo));
-            //$("#headerText2").text(username1 + " " + password1);
-            $( "#loginForm" ).fadeOut();
-            $( "#buttonSignIn" ).fadeOut();
-            $( "#buttonLogin").fadeOut();
-            updateFeatures();
-        });
-    });
+                       $('#templateMenuDeleteFeature').append(template(FeatureInfo.features[i]));
+                   }
+               }
+           })
+           .modal('show')
+});
+
+$('.ui.dropdown')
+       .dropdown({
+           //placeholder: value
+//            onChange : function(value, text, $selectedItem){
+//                alert(value, text, $selectedItem);
+//            }
+       })
+        .dropdown()
+;
 
     var isAuthorized = function() {
         if(AuthInfo !== undefined) {
@@ -278,24 +201,14 @@ var username1, password1;
 
             $( "#templateList" ).empty();
 
-            var template = Handlebars.compile( $('#template').html() );
+            var template = Handlebars.compile( $('#templateFeature').html() );
             for (var i = 1; i <= FeatureInfo.features.length; i++) {
 
-
-                //if (Update == 1){
                 $('#templateList').append( template(FeatureInfo.features[i-1]) );
                 $("#itemFeature" + i).attr({
                     "data-title": FeatureInfo.features[i-1].title,
                     "data-content": FeatureInfo.features[i-1].description
                 });
-                //}
-                //else {
-                //  $("#itemFeature" + i).replaceWith(template(FeatureInfo.features[i-1]));
-                // $("#itemFeature" + i).attr({
-                //    "data-title": FeatureInfo.features[i-1].title,
-                //     "data-content": FeatureInfo.features[i-1].description
-                // });
-                // }
                 $("#itemFeature" + i)
                         .popup({
                             on: 'click'
@@ -310,7 +223,7 @@ var username1, password1;
                     grant_type: "refresh_token",
                     client_id: "1_web",
                     client_secret: "web",
-                    refresh_token: AuthInfo.refresh_token,
+                    refresh_token: AuthInfo.refresh_token
                 }).success(function(a){
                     AuthInfo=a;
                     localStorage.setItem('AuthInfo',JSON.stringify(AuthInfo));
@@ -320,17 +233,29 @@ var username1, password1;
             }
         });
     };
-    $( "#buttonUpdateFeatures").click(updateFeatures);
+
+    var firstAuthorization = function(){
+        $.post("/app_dev.php/api/oauth/v2/token", {
+            grant_type: "password",
+            client_id: "1_web",
+            client_secret: "web",
+            username: username1,
+            password: password1
+        }).success(function(a){
+            AuthInfo=a;
+            localStorage.setItem('AuthInfo',JSON.stringify(AuthInfo));
+            $("#headerText").text(JSON.stringify(AuthInfo));
+            //$("#headerText2").text(username1 + " " + password1);
+            $( "#buttonSignIn" ).fadeOut();
+            updateFeatures();
+        });
+    };
 
     if (isAuthorized()) {
         updateFeatures();
     }
 
-//    $('.item')
-//            .popup({
-//                on: 'click'
-//            })
-//    ;
+
 
 
 

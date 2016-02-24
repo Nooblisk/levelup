@@ -7,6 +7,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Form\QuestType;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -21,6 +22,14 @@ class QuestController extends FOSRestController implements ClassResourceInterfac
     private function getQuestRepository()
     {
         return $this->getDoctrine()->getRepository('AppBundle:Quest');
+    }
+
+    /**
+     * @return \AppBundle\Repository\FeatureRepository
+     */
+    private function getFeatureRepository()
+    {
+        return $this->getDoctrine()->getRepository('AppBundle:Feature');
     }
 
     /**
@@ -82,4 +91,142 @@ class QuestController extends FOSRestController implements ClassResourceInterfac
         return ['quests' => $quests];
     }
 
+    /**
+     * Request fields for a new form
+     *
+     * **Request header**
+     *
+     *      Authorization: Bearer <token>
+
+     * @ApiDoc(
+     *  section="Quests",
+     *  resource=true,
+     *  description="Returns new form",
+     *  statusCodes = {
+     *    200 = "Returned when successful"
+     *  }
+     * )
+     */
+    public function newAction()
+    {
+        return ['form' => $this->createForm(QuestType::class)];
+    }
+
+    /**
+     * Post a new quest
+     *
+     * **Request header**
+     *
+     *      Authorization: Bearer <token>
+     *
+     * @param Request $request
+     * @param integer $featureId id of a feature
+     *
+     * @return array
+     * @ApiDoc(
+     *  section="Quests",
+     *  description="Creates new quest",
+     *  statusCodes = {
+     *    200 = "Returned when successful",
+     *    400 = "Returned when the form contains an error",
+     *    404 = "Returned when feature is not found"
+     *  }
+     * )
+     *
+     */
+    public function postAction(Request $request, $featureId)
+    {
+        $form = $this->createForm(QuestType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            $feature = $this->getFeatureRepository()->findOneBy(['user'=> $user, 'id' => $featureId]);
+            if (!$feature) {
+                throw $this->createNotFoundException();
+            }
+
+            $quest = $form->getData();
+            $quest->setUser($user);
+            $quest->setFeature($feature);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($quest);
+            $em->flush();
+            return ['quest' => $quest];
+        }
+
+        return ['form' => $form];
+    }
+
+    /**
+     * Updates a quest
+     *
+     * **Request header**
+     *
+     *      Authorization: Bearer <token>
+     *
+     * @ApiDoc(
+     *  section="Quests",
+     *  description="Updates a quest",
+     *  statusCodes = {
+     *    200 = "Returned when successful",
+     *    404 = "Returned when the quest is not found"
+     *  }
+     * )
+     *
+     * @param integer $featureId id of a feature
+     * @param integer $questId quest id
+     *
+     * @return array
+     */
+    public function putAction($featureId, $questId)
+    {
+        $quest = $this->getQuestRepository()->findOneBy(['user'=> $this->getUser(), 'id' => $questId]);
+        if (!$quest) {
+            throw $this->createNotFoundException();
+        }
+
+        $form = $this->createForm(QuestType::class, $quest);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($quest);
+            $em->flush();
+            return ['quest' => $quest];
+        }
+
+        return ['form' => $form];
+    }
+
+    /**
+     * Deletes a quest
+     *
+     * **Request header**
+     *
+     *      Authorization: Bearer <token>
+     *
+     * @ApiDoc(
+     *  section="Quests",
+     *  description="Deletes a quest",
+     *  statusCodes = {
+     *    204 = "Returned when successful",
+     *    404 = "Returned when the quest is not found"
+     *  }
+     * )
+     *
+     * @param integer $featureId id of a feature
+     * @param integer $questId quest id
+     *
+     * @View(statusCode=204)
+     */
+    public function deleteAction($featureId, $questId)
+    {
+        $quest = $this->getQuestRepository()->findOneBy(['user'=> $this->getUser(), 'id' => $questId]);
+        if (!$quest) {
+            throw $this->createNotFoundException();
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($quest);
+        $em->flush();
+    }
 }

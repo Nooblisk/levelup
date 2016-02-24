@@ -140,7 +140,7 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      *  description="Return edit form for a feature"
      * )
      *
-     * @param $featureId feature id
+     * @param integer $featureId feature id
      *
      * @return \Symfony\Component\Form\Form
      */
@@ -170,7 +170,7 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      *  }
      * )
      *
-     * @param $featureId feature id
+     * @param integer $featureId feature id
      *
      * @return array
      */
@@ -209,7 +209,7 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      *  }
      * )
      *
-     * @param $featureId feature id
+     * @param integer $featureId feature id
      *
      * @View(statusCode=204)
      */
@@ -223,7 +223,6 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
         $em->remove($feature);
         $em->flush();
     }
-
 
     /**
      * @return \AppBundle\Repository\FeatureRepository

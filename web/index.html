@@ -24,13 +24,21 @@
 <body>
 <h1></h1>
 <div class="ui container">
-    <div class="ui three column grid">
+    <div class="ui five column grid">
         <div class="row">
             <div class="left floated three wide column">
                 <div class="ui red huge left label">
                     Мой уровень
                 </div>
             </div>
+            <div class="left floated three wide column">
+                <button id="buttonCreateFeature" class="ui button" type="submit">Create new feature</button>
+            </div>
+
+            <div class="left floated two wide column">
+                <button id="buttonCreateRandomFeature" class="ui button" type="submit">Create new random feature</button>
+            </div>
+
             <div class="right floated two wide column">
                 <button id="buttonDeleteFeature" class="ui button" type="submit">Delete feature</button>
             </div>
@@ -53,7 +61,6 @@
                     <input id="passwordInput" type="text" name="last-name" placeholder="test" maxlength="50">
                     </div>
             </form>
-
         </div>
         <div class="actions">
             <div id="buttonLogin" class="ui bottom attached positive button">
@@ -63,19 +70,54 @@
     </div>
 
     <div id="modalDeleteFeature" class="ui small modal">
+        <div class="header">
+            Choose a feature to delete
+        </div>
         <div class="content">
-            <div id ="testdropdown" class="ui selection dropdown">
+            <div id ="deleteDropdown" class="ui selection dropdown">
                 <input name="gender" type="hidden">
                 <i class="dropdown icon"></i>
-                <div class="default text">Choose a feature</div>
+                <div class="default text"></div>
                 <div id="templateMenuDeleteFeature" class="menu">
                 </div>
             </div>
-
         </div>
         <div class="actions">
-            <div id="buttonDelete" class="ui bottom attached positive button">
+            <div id="buttonDelete" class="ui positive button">
                 Delete
+            </div>
+            <div class="ui black deny button">
+                Cancel
+            </div>
+        </div>
+    </div>
+
+    <div id="modalCreateFeature" class="ui small modal">
+        <div class="header">
+            Create feature
+        </div>
+        <div class="content">
+            <form id="createFeatureForm" class="ui form">
+                <div class="required field">
+                    <label>Title</label>
+                    <input id="titleInput" type="text" name="last-name" placeholder="" maxlength="50">
+                </div>
+                <div class="required field">
+                    <label>Description</label>
+                    <input id="descriptionInput" type="text" name="first-name" placeholder="" maxlength="50">
+                </div>
+                <div class="disabled field">
+                    <label>Image</label>
+                    <input type="text" name="first-name" placeholder="" maxlength="50">
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+            <div class="ui positive button">
+                Create
+            </div>
+            <div class="ui black deny button">
+                Cancel
             </div>
         </div>
     </div>
@@ -117,6 +159,7 @@
 
 var username1, password1;
 var AuthInfo, FeatureInfo;
+var title1, description1;
 //var featureid;
 
 
@@ -129,6 +172,15 @@ var AuthInfo, FeatureInfo;
             .keyup(function(){
                 password1 = $( this ).val();
             }).keyup();
+
+$( "#titleInput" )
+        .keyup(function(){
+            title1 = $( this ).val();
+        }).keyup();
+$( "#descriptionInput" )
+        .keyup(function(){
+            description1 = $( this ).val();
+        }).keyup();
 
 $( "#buttonSignIn" ).click(function(){
     $("#modalLogin")
@@ -148,30 +200,75 @@ $( "#buttonSignIn" ).click(function(){
     ;
 });
 
+$("#buttonCreateFeature").click(function(){
+$("#modalCreateFeature")
+        .modal({
+            autofocus: true,
+            transition: 'fade down',
+            onDeny: function(){
+                $( "#titleInput").val("");
+                $( "#descriptionInput").val("");
+
+            },
+            onApprove: function(){
+                if($( "#titleInput").val()=="" || $( "#descriptionInput").val()==""){
+                    alert("минимум одно из полей пустое");
+                    return false;
+                }
+                else{
+                    requestCreateFeature();
+                    return false;
+                }
+            }
+        })
+        .modal('show')
+});
+
 $( "#buttonDeleteFeature").click(function(){
    $("#modalDeleteFeature")
            .modal({
-               autofocus : true,
-               transition : 'fade down',
-               onShow : function(){
+               autofocus: true,
+               transition: 'fade down',
+               onShow: function () {
+                     updateFeatures();
+                     deleteDropdownRefill();
+               },
+               onDeny: function(){
 
-                   $( "#templateMenuDeleteFeature" ).empty();
-                   var template = Handlebars.compile( $('#templateDeleteFeature').html() );
-                   for (var i = 0; i < FeatureInfo.features.length; i++) {
+                   $('#deleteDropdown').dropdown('restore defaults');
+               },
+               onApprove: function () {
+                   if ($('#deleteDropdown').dropdown('get text') == "") {
+                       return false;
+                   }
+                   else {
+                       for (var i = 0; i < FeatureInfo.features.length; i++) {
+                            if (FeatureInfo.features[i].title == $('#deleteDropdown').dropdown('get text')) {
+                                requestDeleteFeature(FeatureInfo.features[i].id);
+                                //alert("Для удаления выбран элемент с id " + FeatureInfo.features[i].id + " и названием " + FeatureInfo.features[i].title);
+                            }
+                       }
 
-                       $('#templateMenuDeleteFeature').append(template(FeatureInfo.features[i]));
+                       return false;
                    }
                }
+
            })
            .modal('show')
 });
+//$("#buttonCreateRandomFeature").click(function(){
+//    $.ajax({
+//        method: "POST",
+//        url: "/app_dev.php/api/features",
+//        headers: {Authorization: 'Bearer ' + AuthInfo.access_token}
+//    }).success(function(){
+//            updateFeatures();
+//            alert("успех?");
+//                    })}
+//);
 
-$('.ui.dropdown')
+$('#deleteDropdown')
        .dropdown({
-           //placeholder: value
-//            onChange : function(value, text, $selectedItem){
-//                alert(value, text, $selectedItem);
-//            }
        })
         .dropdown()
 ;
@@ -250,6 +347,49 @@ $('.ui.dropdown')
             updateFeatures();
         });
     };
+
+
+    var deleteDropdownRefill = function(){
+        $("#templateMenuDeleteFeature").empty();
+        var template = Handlebars.compile($('#templateDeleteFeature').html());
+        for (var i = 0; i < FeatureInfo.features.length; i++) {
+
+            $('#templateMenuDeleteFeature').append(template(FeatureInfo.features[i]));
+        }
+    };
+
+    var requestDeleteFeature = function(featureId){
+        $.ajax({
+            url: "/app_dev.php/api/features/" + featureId,
+            type: 'DELETE',
+            headers: {Authorization: 'Bearer ' + AuthInfo.access_token},
+            success: function() {
+                updateFeatures();
+                deleteDropdownRefill();
+                $('#deleteDropdown').dropdown('restore defaults');
+                alert("Feature " + featureId + " was successfully deleted");
+            }
+        });
+    };
+
+    var requestCreateFeature = function(){
+        $.ajax({
+            method: "POST",
+            url: "/app_dev.php/api/features",
+            headers: {Authorization: 'Bearer ' + AuthInfo.access_token},
+            data: {'feature[title]' : title1, 'feature[imageUrl]' : "http://lorempixel.com/100/100/", 'feature[description]' : description1},
+            success: function(){
+
+                $( "#titleInput").val("");
+                $( "#descriptionInput").val("");
+                updateFeatures();
+                alert("новая фича создана?");
+            }
+        })
+    };
+
+
+
 
     if (isAuthorized()) {
         updateFeatures();

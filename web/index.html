@@ -119,8 +119,10 @@
             <div id="templateList" class="ui massive list"
                  style="overflow-y:auto;white-space:nowrap;width:auto;height:390px;padding:5px;border:solid 1px white;"></div>
         </div>
-        <div id="templateColumn" class="right floated twelve wide column">
+        <div class="right floated twelve wide column">
+            <div id="templateColumn" class="ui raised very padded container segment" style="display: none">
 
+            </div>
 
         </div>
     </div>
@@ -128,14 +130,36 @@
     <h4 id="headerText" class="ui header"></h4>
     <h4 id="headerText2" class="ui header"></h4>
     <h4 id="headerText3" class="ui header"></h4>
+    <h4 id="headerText4" class="ui header"></h4>
 </div>
 
-<script id="templateContainerSegment" type="text/x-handlebars-template">
-    <div id="containerFeature{{id}}" class="ui raised very padded container segment" style="display:none">
-        <h2 class="ui header">{{title}}</h2>
-        <img class="ui avatar image" src={{image_url}}>
-        <p>{{level}}</p>
-        <p>{{description}}</p>
+
+<script id="templateContainerUpSegment" type="text/x-handlebars-template">
+    <div id="containerFeature{{id}}" style="display:none">
+        <div class="ui items">
+            <div class="item">
+                <div class="ui tiny image">
+                    <img src={{image_url}}>
+                </div>
+                <div class="content">
+                    <a class="header">{{title}}</a>
+
+                    <div class="description">
+                        <p>{{description}}</p>
+                    </div>
+                    <div class="extra">
+                        уровень {{level}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="templateContainerDownSegment" type="text/x-handlebars-template">
+    <div id="containerQuest{{id}}" style="display:none">
+        <h2 class="ui header">название квеста {{title}}</h2>
+        <p>описание {{description}}</p>
     </div>
 </script>
 
@@ -164,9 +188,10 @@
 <script>
 
     var username1, password1;
-    var AuthInfo, FeatureInfo;
+    var AuthInfo, FeatureInfo, QuestInfo;
     var title1, description1;
     var title2, description2;
+    var AllQuestInfo =[];
     //var featureid;
 
 
@@ -237,7 +262,7 @@
                     autofocus: true,
                     transition: 'fade down',
                     onShow: function () {
-                        updateFeatures();
+                        //updateFeatures();
                         deleteDropdownRefill();
                     },
                     onDeny: function () {
@@ -291,22 +316,26 @@
             headers: {Authorization: 'Bearer ' + AuthInfo.access_token}
         }).success(function (z) {
             FeatureInfo = z;
+            //updateAllQuests;
             $("#headerText3").text(JSON.stringify(FeatureInfo));
-
             $("#templateList").empty();
-            $("#templateColumn").empty();
+            $("#templateColumn").empty().hide();
 
             var template = Handlebars.compile($('#templateFeature').html());
-            var template2 = Handlebars.compile($('#templateContainerSegment').html());
+            var template2 = Handlebars.compile($('#templateContainerUpSegment').html());
+            //var template3 = Handlebars.compile($('#templateContainerDownSegment').html());
 
             for (var i = 1; i <= FeatureInfo.features.length; i++) {
+                //updateQuests(i);
                 $('#templateList').append(template(FeatureInfo.features[i - 1]));
                 $('#templateColumn').append(template2(FeatureInfo.features[i - 1]));
+                //$('#templateColumn').append(template3(QuestInfo.quests[i - 1]));
             }
             for (var t = 1; t <= FeatureInfo.features.length; t++) {
                 $('#itemFeature' + t).click((function (e) {
                     return function () {
                         onlyOneContainer(e);
+                        updateQuests(e);
                     }
                 })(t));
             }
@@ -332,8 +361,26 @@
     };
 
 
+    var updateAllQuests = function(){
+        for (var i = 1; i <= FeatureInfo.features.length; i++){
+           AllQuestInfo[i-1] = updateQuests(i);
+            //console.log(AllQuestInfo);
+        }
+    };
 
+    var updateQuests = function (featureId) {
+        $.ajax({
+            method: "GET",
+            url: "/app_dev.php/api/features/" + featureId + "/quests",
+            headers: {Authorization: 'Bearer ' + AuthInfo.access_token}
+        }).success(function (x) {
+            QuestInfo = x;
+           $("#headerText4").text(JSON.stringify(QuestInfo));
+            //console.log(QuestInfo);
+            return QuestInfo;
 
+        })
+    };
 
     var firstAuthorization = function () {
         $.post("/app_dev.php/api/oauth/v2/token", {
@@ -419,14 +466,25 @@
 
     var onlyOneContainer = function(featureId) {
         for (var j = 1; j <= FeatureInfo.features.length; j++) {
-            $('#containerFeature' + j).css("display", "none");
+            $('#containerFeature' + j).hide().parent().hide();
         }
-        $('#containerFeature' + featureId).css("display", "block");
+        $('#containerFeature' + featureId).show().parent().show();
     };
 
     if (isAuthorized()) {
         updateFeatures();
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -55,13 +55,6 @@ class Feature
     private $level = 0;
 
     /**
-     * @var int
-     * @Assert\GreaterThan(0)
-     * @ORM\Column(name="max_level", type="integer")
-     */
-    private $maxLevel = 5;
-
-    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="features")
      * @Serializer\Exclude()
      */
@@ -186,10 +179,7 @@ class Feature
     public function incrementLevel()
     {
         $this->level++;
-        if($this->getLevel() >= $this->getMaxLevel()) {
-            $this->getUser()->incrementLevel();
-            $this->setLevel(0);
-        }
+        $this->getUser()->incrementLevel();
 
         return $this;
     }
@@ -200,11 +190,10 @@ class Feature
     public function decrementLevel()
     {
         $user = $this->getUser();
-        if($this->getLevel() === 0 && $user->getLevel() > 0) {
-            $this->setLevel($this->getMaxLevel()-1);
+        if($this->getLevel() > 0 && $user->getLevel() > 0) {
             $user->decrementLevel();
+            $this->level--;
         }
-        $this->level--;
 
         return $this;
     }
@@ -273,25 +262,5 @@ class Feature
     public function getQuests()
     {
         return $this->quests;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMaxLevel()
-    {
-        return $this->maxLevel;
-    }
-
-    /**
-     * @param mixed $maxLevel
-     *
-     * @return Feature
-     */
-    public function setMaxLevel($maxLevel)
-    {
-        $this->maxLevel = $maxLevel;
-
-        return $this;
     }
 }

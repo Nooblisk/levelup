@@ -18,6 +18,7 @@ class FeatureType extends AbstractType
         $builder
             ->add('title')
             ->add('description')
+            ->add('maxLevel')
             ->add('imageUrl')
         ;
 

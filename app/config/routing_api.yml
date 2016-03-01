@@ -1,3 +1,7 @@
+user:
+    type:     rest
+    resource: "@AppBundle/Controller/UserController.php"
+
 feature:
     type:     rest
     resource: "@AppBundle/Controller/FeatureController.php"
@@ -6,3 +10,8 @@ quest:
     type:     rest
     parent:   feature
     resource: "@AppBundle/Controller/QuestController.php"
+
+step:
+    type:     rest
+    parent:   quest
+    resource: "@AppBundle/Controller/StepController.php"

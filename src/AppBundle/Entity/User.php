@@ -5,17 +5,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @Serializer\ExclusionPolicy("none")
- *
+ * @Serializer\ExclusionPolicy("all")
  */
 class User extends BaseUser
 {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
+     * @Serializer\Expose()
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
@@ -23,13 +24,11 @@ class User extends BaseUser
     /**
      * @var ArrayCollection
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Feature", mappedBy="user")
-     * @Serializer\Exclude()
      */
     private $features;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Quest", mappedBy="user")
-     * @Serializer\Exclude()
      */
     private $quests;
 
@@ -41,9 +40,16 @@ class User extends BaseUser
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Achievement", mappedBy="user")
-     * @Serializer\Exclude()
      */
     private $achievements;
+
+    /**
+     * @var int
+     * @Assert\GreaterThanOrEqual(0)
+     * @Serializer\Expose()
+     * @ORM\Column(name="level", type="integer")
+     */
+    private $level = 0;
 
     public function __construct()
     {
@@ -189,4 +195,49 @@ class User extends BaseUser
     {
         return $this->achievements;
     }
+
+    /**
+     * Set level
+     *
+     * @param integer $level
+     *
+     * @return Feature
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * Get level
+     *
+     * @return int
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * @return $this
+     */
+    public function incrementLevel()
+    {
+        $this->level++;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function decrementLevel()
+    {
+        $this->level--;
+
+        return $this;
+    }
+
 }

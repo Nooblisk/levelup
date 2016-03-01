@@ -17,7 +17,7 @@ class QuestType extends AbstractType
         $builder
             ->add('title')
             ->add('description')
-            ->add('maxSteps')
+            ->add('maxLevel')
         ;
     }
     

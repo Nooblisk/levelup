@@ -41,17 +41,17 @@ class Quest
 
     /**
      * @var int
-     *
+     * @Assert\GreaterThanOrEqual(0)
      * @ORM\Column(name="level", type="integer")
      */
     private $level = 0;
 
     /**
      * @var int
-     *
+     * @Assert\GreaterThan(0)
      * @ORM\Column(type="integer")
      */
-    private $maxSteps;
+    private $maxLevel = 10;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="quests")
@@ -152,6 +152,36 @@ class Quest
     {
         return $this->level;
     }
+
+    /**
+     * @return $this
+     */
+    public function incrementLevel()
+    {
+        $this->level++;
+        if ($this->level >= $this->getMaxLevel()) {
+            $this->getFeature()->incrementLevel();
+            $this->setLevel(0);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function decrementLevel()
+    {
+        if($this->getLevel() === 0) {
+            $this->getFeature()->decrementLevel();
+            $this->setLevel($this->getMaxLevel()-1);
+        } else {
+            $this->level--;
+        }
+
+        return $this;
+    }
+
     /**
      * Constructor
      */
@@ -218,6 +248,7 @@ class Quest
     public function addStep(Step $step)
     {
         $this->steps[] = $step;
+        $this->incrementLevel();
 
         return $this;
     }
@@ -235,7 +266,7 @@ class Quest
     /**
      * Get steps
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\Collection|Step[]
      */
     public function getSteps()
     {
@@ -245,18 +276,19 @@ class Quest
     /**
      * @return mixed
      */
-    public function getMaxSteps()
+    public function getMaxLevel()
     {
-        return $this->maxSteps;
+        return $this->maxLevel;
     }
 
     /**
-     * @param mixed $maxSteps
-     * @return $this
+     * @param mixed $maxLevel
+     *
+*@return $this
      */
-    public function setMaxSteps($maxSteps)
+    public function setMaxLevel($maxLevel)
     {
-        $this->maxSteps = $maxSteps;
+        $this->maxLevel = $maxLevel;
 
         return $this;
     }

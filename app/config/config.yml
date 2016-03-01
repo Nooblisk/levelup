@@ -68,6 +68,13 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
+jms_serializer:
+    metadata:
+        directories:
+            FOSUB:
+                namespace_prefix: "FOS\\UserBundle"
+                path: "%kernel.root_dir%/config/serializer/FOSUB"
+
 fos_rest:
     disable_csrf_role: ROLE_API
     view:
@@ -92,7 +99,3 @@ fos_oauth_server:
     service:
         user_provider: fos_user.user_manager
 
-hautelook_alice:
-    db_drivers:
-        orm: ~
-    locale: ru_RU

@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Serializer\ExclusionPolicy("none")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\StepRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Step
 {
@@ -44,14 +45,23 @@ class Step
     private $user;
 
     /**
+     * @var Quest
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Quest", inversedBy="steps")
      * @Serializer\Exclude()
      */
     private $quest;
 
     /**
-     * Get id
+     * Step constructor.
      *
+     */
+    public function __construct()
+    {
+        $this->completedAt = new \DateTime();
+    }
+
+    /**
+     * Get id
      * @return int
      */
     public function getId()
@@ -154,4 +164,14 @@ class Step
     {
         return $this->quest;
     }
+
+
+    /**
+     * @ORM\PreRemove()
+     */
+    public function decrementQuestLevelPreRemove()
+    {
+        $this->getQuest()->decrementLevel();
+    }
+
 }

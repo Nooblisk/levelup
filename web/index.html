@@ -18,7 +18,7 @@
 <h1></h1>
 
 <div class="ui container">
-    <div class="ui four column grid">
+    <div class="ui three column grid">
         <div class="row">
             <div class="left floated three wide column">
                 <div class="ui red huge left label">
@@ -29,9 +29,7 @@
                 <button id="buttonCreateFeature" class="ui button" type="submit">Create new feature</button>
             </div>
 
-            <div class="right floated two wide column">
-                <button id="buttonDeleteFeature" class="ui button" type="submit">Delete feature</button>
-            </div>
+
             <div class="right floated two wide column">
                 <button id="buttonSignIn" class="ui button" type="submit" style="display: none">Sign In</button>
             </div>
@@ -136,8 +134,7 @@
 
 <script id="templateContainerUpSegment" type="text/x-handlebars-template">
     <div id="containerFeature{{id}}" style="display:none">
-        <div class="ui items">
-            <div class="item">
+
                 <div class="ui tiny image">
                     <img src={{image_url}}>
                 </div>
@@ -151,21 +148,16 @@
                         уровень {{level}}
                     </div>
                 </div>
-            </div>
-        </div>
+        <button class="ui feature delete button" data-id="{{id}}">
+            <!--<i class="trash outline icon"></i>-->
+        </button>
     </div>
 </script>
 
-<script id="templateContainerDownSegment" type="text/x-handlebars-template">
-    <div id="containerQuest{{id}}" style="display:none">
-        <h2 class="ui header">название квеста {{title}}</h2>
-        <p>описание {{description}}</p>
-    </div>
-</script>
 
 
 <script id="templateFeature" type="text/x-handlebars-template">
-    <div id="itemFeature{{id}}" class="item">
+    <div class="item feature" data-id="{{id}}">
         <img class="ui avatar image" src={{image_url}}>
 
         <div class="content">
@@ -173,10 +165,6 @@
             уровень {{level}}
         </div>
     </div>
-</script>
-
-<script id="templateDeleteFeature" type="text/x-handlebars-template">
-    <div class="item" data-value="0">{{title}}</div>
 </script>
 
 
@@ -192,7 +180,6 @@
     var title1, description1;
     var title2, description2;
     var AllQuestInfo =[];
-    //var featureid;
 
 
     $("#loginInput")
@@ -249,51 +236,17 @@
                         }
                         else {
                             requestCreateFeature();
-                            return false;
                         }
                     }
                 })
                 .modal('show')
     });
 
-    $("#buttonDeleteFeature").click(function () {
-        $("#modalDeleteFeature")
-                .modal({
-                    autofocus: true,
-                    transition: 'fade down',
-                    onShow: function () {
-                        //updateFeatures();
-                        deleteDropdownRefill();
-                    },
-                    onDeny: function () {
-
-                        $('#deleteDropdown').dropdown('restore defaults');
-                    },
-                    onApprove: function () {
-                        if ($('#deleteDropdown').dropdown('get text') == "") {
-                            return false;
-                        }
-                        else {
-                            for (var i = 0; i < FeatureInfo.features.length; i++) {
-                                if (FeatureInfo.features[i].title == $('#deleteDropdown').dropdown('get text')) {
-                                    requestDeleteFeature(FeatureInfo.features[i].id);
-                                    //alert("Для удаления выбран элемент с id " + FeatureInfo.features[i].id + " и названием " + FeatureInfo.features[i].title);
-                                }
-                            }
-
-                            return false;
-                        }
-                    }
-
-                })
-                .modal('show')
+    $('#templateColumn').on("click", ".ui.feature.delete.button", function (e) {
+        if (window.confirm()) {
+            requestDeleteFeature(e.target.dataset.id);
+        }
     });
-
-
-    $('#deleteDropdown')
-            .dropdown({})
-            .dropdown()
-    ;
 
     var isAuthorized = function () {
         if (AuthInfo !== undefined) {
@@ -316,30 +269,26 @@
             headers: {Authorization: 'Bearer ' + AuthInfo.access_token}
         }).success(function (z) {
             FeatureInfo = z;
-            //updateAllQuests;
+            //updateAllQuests();
             $("#headerText3").text(JSON.stringify(FeatureInfo));
             $("#templateList").empty();
             $("#templateColumn").empty().hide();
 
             var template = Handlebars.compile($('#templateFeature').html());
             var template2 = Handlebars.compile($('#templateContainerUpSegment').html());
-            //var template3 = Handlebars.compile($('#templateContainerDownSegment').html());
+
 
             for (var i = 1; i <= FeatureInfo.features.length; i++) {
-                //updateQuests(i);
                 $('#templateList').append(template(FeatureInfo.features[i - 1]));
                 $('#templateColumn').append(template2(FeatureInfo.features[i - 1]));
-                //$('#templateColumn').append(template3(QuestInfo.quests[i - 1]));
-            }
-            for (var t = 1; t <= FeatureInfo.features.length; t++) {
-                $('#itemFeature' + t).click((function (e) {
-                    return function () {
-                        onlyOneContainer(e);
-                        updateQuests(e);
-                    }
-                })(t));
             }
 
+
+            $('.item.feature').click(function (e) {
+                onlyOneContainer(this.dataset.id);
+                updateQuests(this.dataset.id);
+
+            });
 
 
         }).fail(function (xhr) {
@@ -361,12 +310,12 @@
     };
 
 
-    var updateAllQuests = function(){
-        for (var i = 1; i <= FeatureInfo.features.length; i++){
-           AllQuestInfo[i-1] = updateQuests(i);
-            //console.log(AllQuestInfo);
-        }
-    };
+//    var updateAllQuests = function(){
+//        for (var i = 1; i <= FeatureInfo.features.length; i++){
+//           AllQuestInfo[i-1] = updateQuests(i);
+//            //console.log(AllQuestInfo);
+//        }
+//    };
 
     var updateQuests = function (featureId) {
         $.ajax({
@@ -376,8 +325,9 @@
         }).success(function (x) {
             QuestInfo = x;
            $("#headerText4").text(JSON.stringify(QuestInfo));
-            //console.log(QuestInfo);
+//            //console.log(QuestInfo);
             return QuestInfo;
+//            return x;
 
         })
     };
@@ -400,15 +350,6 @@
     };
 
 
-    var deleteDropdownRefill = function () {
-        $("#templateMenuDeleteFeature").empty();
-        var template = Handlebars.compile($('#templateDeleteFeature').html());
-        for (var i = 0; i < FeatureInfo.features.length; i++) {
-
-            $('#templateMenuDeleteFeature').append(template(FeatureInfo.features[i]));
-        }
-    };
-
     var requestDeleteFeature = function (featureId) {
         $.ajax({
             url: "/app_dev.php/api/features/" + featureId,
@@ -416,8 +357,6 @@
             headers: {Authorization: 'Bearer ' + AuthInfo.access_token},
             success: function () {
                 updateFeatures();
-                deleteDropdownRefill();
-                $('#deleteDropdown').dropdown('restore defaults');
                 alert("Feature " + featureId + " was successfully deleted");
             }
         });
@@ -474,19 +413,6 @@
     if (isAuthorized()) {
         updateFeatures();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

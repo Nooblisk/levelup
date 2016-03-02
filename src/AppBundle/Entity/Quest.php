@@ -261,6 +261,7 @@ class Quest
     public function removeStep(Step $step)
     {
         $this->steps->removeElement($step);
+        $this->decrementLevel();
     }
 
     /**

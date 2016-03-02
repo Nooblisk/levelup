@@ -187,7 +187,7 @@ class QuestController extends FOSRestController implements ClassResourceInterfac
             throw $this->createNotFoundException();
         }
 
-        $form = $this->createForm(QuestType::class, $quest);
+        $form = $this->createForm(QuestType::class, $quest, ['method' => 'PUT']);
 //        $form->submit($request->query->get('feature'));
 
         if ($form->handleRequest($request)->isValid()) {

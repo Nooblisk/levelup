@@ -20,11 +20,6 @@ class FeatureType extends AbstractType
             ->add('description')
             ->add('imageUrl')
         ;
-
-        $data = $builder->getData();
-        if ($data instanceof Feature && $data->getId()) {
-           $builder->add('id');
-        }
     }
     
     /**

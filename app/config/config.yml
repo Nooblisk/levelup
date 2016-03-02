@@ -74,6 +74,9 @@ jms_serializer:
             FOSUB:
                 namespace_prefix: "FOS\\UserBundle"
                 path: "%kernel.root_dir%/config/serializer/FOSUB"
+    visitors:
+        json:
+            options: 256
 
 fos_rest:
     disable_csrf_role: ROLE_API

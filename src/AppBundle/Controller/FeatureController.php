@@ -165,16 +165,17 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
      *  section="Features",
      *  description="Updates a feature",
      *  statusCodes = {
-     *    200 = "Returned when successful",
+     *    204 = "Returned when successful",
      *    404 = "Returned when the feature is not found"
      *  }
      * )
      *
+     * @View(statusCode=204)
+     * @param Request $request
      * @param integer $featureId feature id
-     *
      * @return array
      */
-    public function putAction($featureId)
+    public function putAction(Request $request, $featureId)
     {
         $feature = $this->getFeatureRepository()->findOneBy(['user'=> $this->getUser(), 'id' => $featureId]);
         if (!$feature) {
@@ -182,12 +183,13 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
         }
 
         $form = $this->createForm(FeatureType::class, $feature);
+        $form->submit($request->query->get('feature'));
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($feature);
             $em->flush();
-            return ['feature' => $feature];
+            return null;
         }
 
         return ['form' => $form];

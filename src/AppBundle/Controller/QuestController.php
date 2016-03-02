@@ -169,17 +169,18 @@ class QuestController extends FOSRestController implements ClassResourceInterfac
      *  section="Quests",
      *  description="Updates a quest",
      *  statusCodes = {
-     *    200 = "Returned when successful",
+     *    204 = "Returned when successful",
      *    404 = "Returned when the quest is not found"
      *  }
      * )
      *
+     * @View(statusCode=204)
      * @param integer $featureId id of a feature
      * @param integer $questId quest id
      *
      * @return array
      */
-    public function putAction($featureId, $questId)
+    public function putAction(Request $request, $featureId, $questId)
     {
         $quest = $this->getQuestRepository()->findOneBy(['user'=> $this->getUser(), 'id' => $questId]);
         if (!$quest) {
@@ -187,12 +188,13 @@ class QuestController extends FOSRestController implements ClassResourceInterfac
         }
 
         $form = $this->createForm(QuestType::class, $quest);
+        $form->submit($request->query->get('feature'));
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($quest);
             $em->flush();
-            return ['quest' => $quest];
+            return null;
         }
 
         return ['form' => $form];

@@ -183,9 +183,9 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
         }
 
         $form = $this->createForm(FeatureType::class, $feature);
-        $form->submit($request->query->get('feature'));
+//        $form->submit($request->query->get('feature'));
 
-        if ($form->isValid()) {
+        if ($form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($feature);
             $em->flush();

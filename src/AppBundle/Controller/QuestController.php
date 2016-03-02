@@ -188,9 +188,9 @@ class QuestController extends FOSRestController implements ClassResourceInterfac
         }
 
         $form = $this->createForm(QuestType::class, $quest);
-        $form->submit($request->query->get('feature'));
+//        $form->submit($request->query->get('feature'));
 
-        if ($form->isValid()) {
+        if ($form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($quest);
             $em->flush();

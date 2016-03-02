@@ -1,5 +1,5 @@
 AppBundle\Entity\Step:
-    step{1..30}:
+    step{1..60}:
         comment: <sentence()>
         completedAt: <dateTimeThisMonth()>
         user: "@user1"

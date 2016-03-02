@@ -1,5 +1,5 @@
 AppBundle\Entity\Quest:
-    quest{1..15}:
+    quest{1..10}:
         title: <word()>
         description: <sentence()>
         maxLevel: <numberBetween(10,30)>

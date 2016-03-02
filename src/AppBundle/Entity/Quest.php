@@ -224,6 +224,7 @@ class Quest
     public function setFeature(Feature $feature = null)
     {
         $this->feature = $feature;
+        $feature->incrementLevel();
 
         return $this;
     }

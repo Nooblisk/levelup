@@ -151,6 +151,7 @@ class Step
     public function setQuest(Quest $quest = null)
     {
         $this->quest = $quest;
+        $quest->incrementLevel();
 
         return $this;
     }

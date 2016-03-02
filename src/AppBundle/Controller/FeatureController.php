@@ -182,7 +182,7 @@ class FeatureController extends FOSRestController implements ClassResourceInterf
             throw $this->createNotFoundException();
         }
 
-        $form = $this->createForm(FeatureType::class, $feature);
+        $form = $this->createForm(FeatureType::class, $feature, ['method' => 'PUT']);
 //        $form->submit($request->query->get('feature'));
 
         if ($form->handleRequest($request)->isValid()) {

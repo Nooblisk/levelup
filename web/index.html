@@ -18,11 +18,17 @@
 <h1></h1>
 
 <div class="ui container">
-    <div class="ui three column grid">
+    <div class="ui four column grid">
         <div class="row">
             <div class="left floated three wide column">
-                <div class="ui red huge left label">
-                    Мой уровень
+                <div id="" class="ui card">
+                    <div class="content">
+                        <div id="userUsername" class="header"></div>
+                        <div id="userLevel" class="meta"></div>
+                        <div id="userEmail" class="description">
+
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="left floated three wide column">
@@ -31,8 +37,12 @@
 
 
             <div class="right floated two wide column">
-                <button id="buttonSignIn" class="ui button" type="submit" style="display: none">Sign In</button>
+                <button class="ui button signIn" type="submit" style="display: none">Sign In</button>
             </div>
+            <div class="right floated two wide column">
+                <button class="ui button signOut" type="submit" style="display: none">Sign Out</button>
+            </div>
+
         </div>
     </div>
 
@@ -229,6 +239,7 @@
 </script>
 
 
+
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="js/semantic.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
@@ -287,16 +298,27 @@
                 .modal('show')
     });
 
+    $(".button.signOut").click(function () {
+        localStorage.clear();
+        AuthInfo=null;
+        location.reload();
+    });
+
+
+
 
     var isAuthorized = function () {
         if (AuthInfo !== undefined) {
+            $(".button.signOut").show();
             return AuthInfo;
         }
         AuthInfo = JSON.parse(localStorage.getItem('AuthInfo'));
         if (AuthInfo !== null) {
+            $(".button.signOut").show();
             return AuthInfo;
         }
-        $("#buttonSignIn").fadeIn();
+        $(".button.signIn").show();
+        $(".button.signOut").hide();
         return false;
     };
 
@@ -308,14 +330,22 @@
             headers: {Authorization: 'Bearer ' + AuthInfo.access_token}
         }).success(function (z) {
             FeatureInfo = z;
-            //updateAllQuests();
             $("#headerText3").text(JSON.stringify(FeatureInfo));
+
+
+            requestUser.headers.Authorization = "Bearer " + AuthInfo.access_token;
+            requestUser.Info();
+
+            //requestUserInfo();
             $("#templateList").empty();
             $("#templateColumn").empty().hide();
 
             var template = Handlebars.compile($('#templateFeature').html());
             var template2 = Handlebars.compile($('#templateContainerUpSegment').html());
 
+//            $("#userUsername").text(UserInfo.user.username);
+//            $("#userLevel").text("Уровень " + UserInfo.user.level);
+//            $("#userEmail").text(UserInfo.user.email);
 
             for (var i = 1; i <= FeatureInfo.features.length; i++) {
                 $('#templateList').append(template(FeatureInfo.features[i - 1]));
@@ -323,9 +353,10 @@
             }
 
 
-            $('.item.feature').click(function (e) {
+            $('.item.feature').click(function () {
                 $('#templateListQuests').empty();
                 if (!$('#templateListQuests').html().length) {
+
                     updateQuests(this.dataset.id);
                 }
 
@@ -349,26 +380,41 @@
 //                    $("#buttonSignIn").fadeOut();
 //                    updateFeatures();
 //                });
-                AuthInfo.requestRefresh = requestRefresh;
-                AuthInfo.requestRefresh();
+
+                AuthObject.requestRefresh(AuthInfo.refresh_token);
             }
         });
     };
 
-    function requestRefresh() {
+
+    var AuthObject = {
+        method: "POST",
+        url: "/app_dev.php/api/oauth/v2/token",
+        client_id: "1_web",
+        client_secret: "web"
+    };
+
+
+
+
+    AuthObject.requestRefresh = requestRefresh;
+    AuthObject.firstAuthorization = firstAuthorization;
+
+    function requestRefresh(refresh_token) {
         $.ajax({
-            method: "POST",
-            url: "/app_dev.php/api/oauth/v2/token",
+            method: this.method,
+            url: this.url,
             data: {
                 grant_type: "refresh_token",
-                client_id: "1_web",
-                client_secret: "web",
-                refresh_token: this.refresh_token
+                client_id: this.client_id,
+                client_secret: this.client_secret,
+                refresh_token: refresh_token
             }
         }).success(function (a) {
             AuthInfo = a;
             localStorage.setItem('AuthInfo', JSON.stringify(AuthInfo));
-            $("#buttonSignIn").fadeOut();
+            $(".button.signIn").hide();
+            $(".button.signOut").show();
             updateFeatures();
         });
     }
@@ -403,10 +449,35 @@
     };
 
 
+    var Info = function () {
+        $.ajax({
+            method: this.method,
+            url: this.url,
+            headers: this.headers,
+            success: function (a) {
+                UserInfo=a;
+                console.log(UserInfo);
+                $("#userUsername").text(UserInfo.user.username);
+                $("#userLevel").text("Уровень " + UserInfo.user.level);
+                $("#userEmail").text(UserInfo.user.email);
+            }
+        })
+    };
 
+    //функция-конструктор объекта типа "запрос"
+    function Request(url, method, headers, data){
+        this.url = url;
+        this.method = method;
+        this.headers = headers;
+        this.data = data;
+        this.Info = Info;
+    }
 
+    var requestUser = new Request("/app_dev.php/api/user", "GET", {Authorization : "Bearer "}, "");
+    /*
+    requestUser.Info = Info;
 
-
+    */
 
 
     var requestUpdateFeature = function (featureId) {

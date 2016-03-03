@@ -13,7 +13,7 @@ $("#passwordInput")
 
 
 
-$("#buttonSignIn").click(function () {
+$(".button.signIn").click(function () {
     $("#modalLogin")
         .modal({
             autofocus: true,
@@ -23,7 +23,7 @@ $("#buttonSignIn").click(function () {
                     return false;
                 }
                 else {
-                    firstAuthorization();
+                    AuthObject.firstAuthorization(username1, password1);
                 }
             }
         })
@@ -31,22 +31,25 @@ $("#buttonSignIn").click(function () {
     ;
 });
 
-var firstAuthorization = function () {
+var firstAuthorization = function (username, password) {
     $.ajax({
-        method: "POST",
-        url: "/app_dev.php/api/oauth/v2/token",
+        method: this.method,
+        url: this.url,
         data: {
             grant_type: "password",
-            client_id: "1_web",
-            client_secret: "web",
-            username: username1,
-            password: password1
+            client_id: this.client_id,
+            client_secret: this.client_secret,
+            username: username,
+            password: password
         }
     }).success(function (a) {
         AuthInfo = a;
         localStorage.setItem('AuthInfo', JSON.stringify(AuthInfo));
+        requestUser.headers.Authorization = "Bearer " + AuthInfo.access_token;
+        requestUser.Info();
         $("#headerText").text(JSON.stringify(AuthInfo));
-        $("#buttonSignIn").fadeOut();
+        $(".button.signIn").hide();
+        $(".button.signOut").show();
         updateFeatures();
     });
 };

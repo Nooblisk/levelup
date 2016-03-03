@@ -111,6 +111,43 @@
         </div>
     </div>
 
+    <div id="modalUpdateFeature" class="ui small modal">
+        <div class="header">
+            Update feature
+        </div>
+        <div class="content">
+            <form id="updateFeatureForm" class="ui form">
+                <div class="disabled field">
+                    <label>Id</label>
+                    <input id="idInputUpdate" type="text" name="last-name" placeholder="" maxlength="50">
+                </div>
+                <div class="required field">
+                    <label>Title</label>
+                    <input id="titleInputUpdate" type="text" name="last-name" placeholder="" maxlength="50">
+                </div>
+                <div class="required field">
+                    <label>Description</label>
+                    <input id="descriptionInputUpdate" type="text" name="first-name" placeholder="" maxlength="50">
+                </div>
+                <div class="disabled field">
+                    <label>Image</label>
+                    <input type="text" name="first-name" placeholder="" maxlength="50">
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+            <div class="ui positive button">
+                Update
+            </div>
+            <div class="ui black deny button">
+                Exit
+            </div>
+        </div>
+    </div>
+
+
+
+
 
     <div class="ui two column grid container">
         <div class="left floated four wide column">
@@ -118,7 +155,11 @@
                  style="overflow-y:auto;white-space:nowrap;width:auto;height:390px;padding:5px;border:solid 1px white;"></div>
         </div>
         <div class="right floated twelve wide column">
-            <div id="templateColumn" class="ui raised very padded container segment" style="display: none">
+            <div id="templateColumn" class="ui raised very padded container" style="display: none">
+
+            </div>
+            <div id="templateListQuests" class="ui list"
+                 style="overflow-y:auto;white-space:nowrap;width:auto;height:250px;padding:5px;border:solid 1px white;">
 
             </div>
 
@@ -133,28 +174,48 @@
 
 
 <script id="templateContainerUpSegment" type="text/x-handlebars-template">
-    <div id="containerFeature{{id}}" style="display:none">
+    <div id="containerFeature{{id}}" class="containerfeature" style="display:none" data-id="{{id}}">
+        <div class="ui container">
+            <div class="ui tiny image">
+                <img src={{image_url}}>
+            </div>
+            <div class="content">
+                <a class="header">{{title}}</a>
 
-                <div class="ui tiny image">
-                    <img src={{image_url}}>
+                <div class="description">
+                    <p>{{description}}</p>
                 </div>
-                <div class="content">
-                    <a class="header">{{title}}</a>
-
-                    <div class="description">
-                        <p>{{description}}</p>
-                    </div>
-                    <div class="extra">
-                        уровень {{level}}
-                    </div>
+                <div class="extra">
+                    уровень {{level}}
                 </div>
-        <button class="ui feature delete button" data-id="{{id}}">
-            <!--<i class="trash outline icon"></i>-->
-        </button>
+            </div>
+            <button class="ui feature delete compact negative icon button" data-id="{{id}}">
+                <i class="trash outline icon"></i>
+            </button>
+            <button class="ui feature update compact button" data-id="{{id}}">
+                Изменить
+            </button>
+        </div>
+        <div class="ui container" >
+            <h3>тут будут квесты</h3>
+        </div>
     </div>
 </script>
 
+<script id="templateContainerDownSegment" type="text/x-handlebars-template">
+    <div class="item quest" data-id="{{id}}">
+        <div class="content">
+            <div class="header">{{title}}</div>
+            <div class="meta">
+                <span>уровень {{level}} из {{max_level}}</span>
+            </div>
+            <div class="description">
+                <p>{{description}}</p>
+            </div>
 
+        </div>
+    </div>
+</script>
 
 <script id="templateFeature" type="text/x-handlebars-template">
     <div class="item feature" data-id="{{id}}">
@@ -171,96 +232,74 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="js/semantic.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script src="js/deleteFeature.js"></script>
+<script src="js/createFeature.js"></script>
+<script src="js/signIn.js"></script>
 
 
 <script>
 
     var username1, password1;
-    var AuthInfo, FeatureInfo, QuestInfo;
+    var AuthInfo, FeatureInfo;
     var title1, description1;
     var title2, description2;
-    var AllQuestInfo =[];
+    var UserInfo;
 
 
-    $("#loginInput")
+    $("#titleInputUpdate")
             .keyup(function () {
-                username1 = $(this).val();
+                title2 = $(this).val();
+            }).keyup();
+    $("#descriptionInputUpdate")
+            .keyup(function () {
+                description2 = $(this).val();
             }).keyup();
 
-    $("#passwordInput")
-            .keyup(function () {
-                password1 = $(this).val();
-            }).keyup();
 
-    $("#titleInput")
-            .keyup(function () {
-                title1 = $(this).val();
-            }).keyup();
-    $("#descriptionInput")
-            .keyup(function () {
-                description1 = $(this).val();
-            }).keyup();
 
-    $("#buttonSignIn").click(function () {
-        $("#modalLogin")
+    $('#templateColumn').on("click", ".ui.feature.update.button", function (e) {
+        $("#modalUpdateFeature")
                 .modal({
                     autofocus: true,
                     transition: 'fade down',
-                    onApprove: function () {
-                        if (username1 == "" || password1 == "") {
-                            return false;
-                        }
-                        else {
-                            firstAuthorization();
-                        }
-                    }
-                })
-                .modal('show')
-        ;
-    });
-
-    $("#buttonCreateFeature").click(function () {
-        $("#modalCreateFeature")
-                .modal({
-                    autofocus: true,
-                    transition: 'fade down',
+                    onShow: function () {
+                        $("#idInputUpdate").val(e.target.dataset.id);
+                        $("#titleInputUpdate").val("");
+                        $("#descriptionInputUpdate").val("");
+                    },
                     onDeny: function () {
-                        $("#titleInput").val("");
-                        $("#descriptionInput").val("");
+                        $("#idInputUpdate").val(e.target.dataset.id);
+                        $("#titleInputUpdate").val("");
+                        $("#descriptionInputUpdate").val("");
 
                     },
                     onApprove: function () {
-                        if ($("#titleInput").val() == "" || $("#descriptionInput").val() == "") {
+                        if ($("#titleInputUpdate").val() == "" || $("#descriptionInputUpdate").val() == "") {
                             alert("минимум одно из полей пустое");
                             return false;
                         }
                         else {
-                            requestCreateFeature();
+                            console.log(e.target.dataset.id);
+                            requestUpdateFeature(e.target.dataset.id);
                         }
                     }
                 })
                 .modal('show')
     });
 
-    $('#templateColumn').on("click", ".ui.feature.delete.button", function (e) {
-        if (window.confirm()) {
-            requestDeleteFeature(e.target.dataset.id);
-        }
-    });
 
     var isAuthorized = function () {
         if (AuthInfo !== undefined) {
             return AuthInfo;
         }
-
         AuthInfo = JSON.parse(localStorage.getItem('AuthInfo'));
         if (AuthInfo !== null) {
             return AuthInfo;
         }
-
         $("#buttonSignIn").fadeIn();
         return false;
     };
+
 
     var updateFeatures = function () {
         $.ajax({
@@ -285,37 +324,66 @@
 
 
             $('.item.feature').click(function (e) {
+                $('#templateListQuests').empty();
+                if (!$('#templateListQuests').html().length) {
+                    updateQuests(this.dataset.id);
+                }
+
                 onlyOneContainer(this.dataset.id);
-                updateQuests(this.dataset.id);
-
             });
-
-
         }).fail(function (xhr) {
             console.log(xhr);
             if (xhr.status == 401) {
-                $.post("/app_dev.php/api/oauth/v2/token", {
-                    grant_type: "refresh_token",
-                    client_id: "1_web",
-                    client_secret: "web",
-                    refresh_token: AuthInfo.refresh_token
-                }).success(function (a) {
-                    AuthInfo = a;
-                    localStorage.setItem('AuthInfo', JSON.stringify(AuthInfo));
-                    $("#buttonSignIn").fadeOut();
-                    updateFeatures();
-                });
+//                $.ajax({
+//                    method: "POST",
+//                    url: "/app_dev.php/api/oauth/v2/token",
+//                    data: {
+//                        grant_type: "refresh_token",
+//                        client_id: "1_web",
+//                        client_secret: "web",
+//                        refresh_token: AuthInfo.refresh_token
+//                    }
+//                }).success(function (a) {
+//                    AuthInfo = a;
+//                    localStorage.setItem('AuthInfo', JSON.stringify(AuthInfo));
+//                    $("#buttonSignIn").fadeOut();
+//                    updateFeatures();
+//                });
+                AuthInfo.requestRefresh = requestRefresh;
+                AuthInfo.requestRefresh();
             }
         });
     };
 
+    function requestRefresh() {
+        $.ajax({
+            method: "POST",
+            url: "/app_dev.php/api/oauth/v2/token",
+            data: {
+                grant_type: "refresh_token",
+                client_id: "1_web",
+                client_secret: "web",
+                refresh_token: this.refresh_token
+            }
+        }).success(function (a) {
+            AuthInfo = a;
+            localStorage.setItem('AuthInfo', JSON.stringify(AuthInfo));
+            $("#buttonSignIn").fadeOut();
+            updateFeatures();
+        });
+    }
 
-//    var updateAllQuests = function(){
-//        for (var i = 1; i <= FeatureInfo.features.length; i++){
-//           AllQuestInfo[i-1] = updateQuests(i);
-//            //console.log(AllQuestInfo);
-//        }
-//    };
+//    function AuthInfoConstruct(access_token, expires_in, token_type, scope, refresh_token) {
+//        this.access_token = access_token;
+//        this.expires_in = expires_in;
+//        this.token_type = token_type;
+//        this.scope = scope;
+//        this.refresh_token = refresh_token;
+//        this.requestRefresh = requestRefresh;
+//    }
+
+
+
 
     var updateQuests = function (featureId) {
         $.ajax({
@@ -323,64 +391,23 @@
             url: "/app_dev.php/api/features/" + featureId + "/quests",
             headers: {Authorization: 'Bearer ' + AuthInfo.access_token}
         }).success(function (x) {
-            QuestInfo = x;
-           $("#headerText4").text(JSON.stringify(QuestInfo));
-//            //console.log(QuestInfo);
-            return QuestInfo;
-//            return x;
+            QuestInfo=x;
+            var template3 = Handlebars.compile($('#templateContainerDownSegment').html());
+            for(var i=1; i<=QuestInfo.quests.length; i++) {
+                $('#templateListQuests').append(template3(QuestInfo.quests[i-1]));
+            }
+            $("#headerText4").text(JSON.stringify(QuestInfo));
+
 
         })
     };
 
-    var firstAuthorization = function () {
-        $.post("/app_dev.php/api/oauth/v2/token", {
-            grant_type: "password",
-            client_id: "1_web",
-            client_secret: "web",
-            username: username1,
-            password: password1
-        }).success(function (a) {
-            AuthInfo = a;
-            localStorage.setItem('AuthInfo', JSON.stringify(AuthInfo));
-            $("#headerText").text(JSON.stringify(AuthInfo));
-            //$("#headerText2").text(username1 + " " + password1);
-            $("#buttonSignIn").fadeOut();
-            updateFeatures();
-        });
-    };
 
 
-    var requestDeleteFeature = function (featureId) {
-        $.ajax({
-            url: "/app_dev.php/api/features/" + featureId,
-            type: 'DELETE',
-            headers: {Authorization: 'Bearer ' + AuthInfo.access_token},
-            success: function () {
-                updateFeatures();
-                alert("Feature " + featureId + " was successfully deleted");
-            }
-        });
-    };
 
-    var requestCreateFeature = function () {
-        $.ajax({
-            method: "POST",
-            url: "/app_dev.php/api/features",
-            headers: {Authorization: 'Bearer ' + AuthInfo.access_token},
-            data: {
-                'feature[title]': title1,
-                'feature[imageUrl]': "http://lorempixel.com/100/100/",
-                'feature[description]': description1
-            },
-            success: function () {
 
-                $("#titleInput").val("");
-                $("#descriptionInput").val("");
-                updateFeatures();
-                alert("новая фича создана?");
-            }
-        })
-    };
+
+
 
     var requestUpdateFeature = function (featureId) {
         $.ajax({
@@ -389,21 +416,21 @@
             headers: {Authorization: 'Bearer ' + AuthInfo.access_token},
             data: {
                 'feature[title]': title2,
-                'feature[imageUrl]': "http://lorempixel.com/100/100/",
-                'feature[description]': description2
+                'feature[description]': description2,
+                'feature[imageUrl]': "http://lorempixel.com/100/100/"
             },
             success: function () {
 
                 //$( "#titleInput").val("");
                 //$( "#descriptionInput").val("");
                 updateFeatures();
-                alert("новая фича " + featureId + " изменена");
+                alert("фича " + featureId + " изменена");
             }
         })
     };
 
 
-    var onlyOneContainer = function(featureId) {
+    var onlyOneContainer = function (featureId) {
         for (var j = 1; j <= FeatureInfo.features.length; j++) {
             $('#containerFeature' + j).hide().parent().hide();
         }
@@ -413,7 +440,6 @@
     if (isAuthorized()) {
         updateFeatures();
     }
-
 
 
     /*function Ucfirst(str){

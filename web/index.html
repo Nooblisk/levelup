@@ -245,6 +245,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 <script src="js/deleteFeature.js"></script>
 <script src="js/createFeature.js"></script>
+<script src="js/updateFeature.js"></script>
 <script src="js/signIn.js"></script>
 
 
@@ -257,53 +258,99 @@
     var UserInfo;
 
 
-    $("#titleInputUpdate")
-            .keyup(function () {
-                title2 = $(this).val();
-            }).keyup();
-    $("#descriptionInputUpdate")
-            .keyup(function () {
-                description2 = $(this).val();
-            }).keyup();
+    function ApiClient() {
+        var baseUrl = "/app_dev.php/api";
+        //var accessToken;
+        this.getAuthorizationHeaders = function () {
+            return {Authorization: 'Bearer ' + accessToken};
+        };
 
+        this.setAccessToken = function (token) {
+            accessToken = token;
+        };
+        this.setRefreshToken = function (token) {
+            refreshToken = token;
+        };
+        this.postAuthorization = function(username, password){
+            return $.ajax({
+                method: "POST",
+                url: baseUrl+"/oauth/v2/token",
+                data: {
+                    grant_type: "password",
+                    client_id: "1_web",
+                    client_secret: "web",
+                    username: username,
+                    password: password
+                }
+            })
+        };
+        this.postRefreshToken = function(){
+            return $.ajax({
+                method: "POST",
+                url: baseUrl+"/oauth/v2/token",
+                data: {
+                    grant_type: "refresh_token",
+                    client_id: "1_web",
+                    client_secret: "web",
+                    refresh_token: refreshToken
+                }
+            })
+        };
+        this.getFeatures = function () {
+            return $.ajax({
+                method: "GET",
+                url: baseUrl + "/features",
+                headers: this.getAuthorizationHeaders()
+            })
+        };
+        this.postFeature = function (title, description) {
+            return $.ajax({
+                method: "POST",
+                url: baseUrl + "/features",
+                headers: this.getAuthorizationHeaders(),
+                data: {
+                    'feature[title]': title,
+                    'feature[imageUrl]': "http://lorempixel.com/100/100/",
+                    'feature[description]': description
+                }
+            })
+        };
+        this.putFeature = function (feature, title, description) {
+            return $.ajax({
+                method: "PUT",
+                url: baseUrl + "/features/" + feature,
+                headers: this.getAuthorizationHeaders(),
+                data: {
+                    'feature[title]': title,
+                    'feature[description]': description,
+                    'feature[imageUrl]': "http://lorempixel.com/100/100/"
+                }
+            })
+        };
+        this.deleteFeature = function (feature) {
+            return $.ajax({
+                url: baseUrl + "/features/" + feature,
+                type: 'DELETE',
+                headers: this.getAuthorizationHeaders()
+            })
+        };
+        this.getQuests = function (feature){
+           return $.ajax({
+                method: "GET",
+                url: baseUrl + "/features/" + feature + "/quests",
+                headers: this.getAuthorizationHeaders()
+            })
+        };
+        this.getUser = function(){
+            return $.ajax({
+                method: "GET",
+                url: baseUrl + "/user",
+                headers: this.getAuthorizationHeaders()
+            })
+        };
+    }
 
-
-    $('#templateColumn').on("click", ".ui.feature.update.button", function (e) {
-        $("#modalUpdateFeature")
-                .modal({
-                    autofocus: true,
-                    transition: 'fade down',
-                    onShow: function () {
-                        $("#idInputUpdate").val(e.target.dataset.id);
-                        $("#titleInputUpdate").val("");
-                        $("#descriptionInputUpdate").val("");
-                    },
-                    onDeny: function () {
-                        $("#idInputUpdate").val(e.target.dataset.id);
-                        $("#titleInputUpdate").val("");
-                        $("#descriptionInputUpdate").val("");
-
-                    },
-                    onApprove: function () {
-                        if ($("#titleInputUpdate").val() == "" || $("#descriptionInputUpdate").val() == "") {
-                            alert("минимум одно из полей пустое");
-                            return false;
-                        }
-                        else {
-                            console.log(e.target.dataset.id);
-                            requestUpdateFeature(e.target.dataset.id);
-                        }
-                    }
-                })
-                .modal('show')
-    });
-
-    $(".button.signOut").click(function () {
-        localStorage.clear();
-        AuthInfo=null;
-        location.reload();
-    });
-
+    var apiClient = new ApiClient();
 
 
 
@@ -324,25 +371,14 @@
 
 
     var updateFeatures = function () {
-        $.ajax({
-            method: "GET",
-            url: "/app_dev.php/api/features",
-            headers: {Authorization: 'Bearer ' + AuthInfo.access_token}
-        }).success(function (z) {
+        apiClient.getFeatures().success(function (z) {
             FeatureInfo = z;
             $("#headerText3").text(JSON.stringify(FeatureInfo));
-
-
-            requestUser.headers.Authorization = "Bearer " + AuthInfo.access_token;
-            requestUser.Info();
-
-            //requestUserInfo();
+            requestUserInfo();
             $("#templateList").empty();
             $("#templateColumn").empty().hide();
-
             var template = Handlebars.compile($('#templateFeature').html());
             var template2 = Handlebars.compile($('#templateContainerUpSegment').html());
-
 //            $("#userUsername").text(UserInfo.user.username);
 //            $("#userLevel").text("Уровень " + UserInfo.user.level);
 //            $("#userEmail").text(UserInfo.user.email);
@@ -365,78 +401,22 @@
         }).fail(function (xhr) {
             console.log(xhr);
             if (xhr.status == 401) {
-//                $.ajax({
-//                    method: "POST",
-//                    url: "/app_dev.php/api/oauth/v2/token",
-//                    data: {
-//                        grant_type: "refresh_token",
-//                        client_id: "1_web",
-//                        client_secret: "web",
-//                        refresh_token: AuthInfo.refresh_token
-//                    }
-//                }).success(function (a) {
-//                    AuthInfo = a;
-//                    localStorage.setItem('AuthInfo', JSON.stringify(AuthInfo));
-//                    $("#buttonSignIn").fadeOut();
-//                    updateFeatures();
-//                });
-
-                AuthObject.requestRefresh(AuthInfo.refresh_token);
+                apiClient.postRefreshToken().success(function (a) {
+                    AuthInfo = a;
+                    localStorage.setItem('AuthInfo', JSON.stringify(AuthInfo));
+                    $(".button.signIn").hide();
+                    $(".button.signOut").show();
+                    updateFeatures();
+                });
             }
         });
     };
 
 
-    var AuthObject = {
-        method: "POST",
-        url: "/app_dev.php/api/oauth/v2/token",
-        client_id: "1_web",
-        client_secret: "web"
-    };
 
 
-
-
-    AuthObject.requestRefresh = requestRefresh;
-    AuthObject.firstAuthorization = firstAuthorization;
-
-    function requestRefresh(refresh_token) {
-        $.ajax({
-            method: this.method,
-            url: this.url,
-            data: {
-                grant_type: "refresh_token",
-                client_id: this.client_id,
-                client_secret: this.client_secret,
-                refresh_token: refresh_token
-            }
-        }).success(function (a) {
-            AuthInfo = a;
-            localStorage.setItem('AuthInfo', JSON.stringify(AuthInfo));
-            $(".button.signIn").hide();
-            $(".button.signOut").show();
-            updateFeatures();
-        });
-    }
-
-//    function AuthInfoConstruct(access_token, expires_in, token_type, scope, refresh_token) {
-//        this.access_token = access_token;
-//        this.expires_in = expires_in;
-//        this.token_type = token_type;
-//        this.scope = scope;
-//        this.refresh_token = refresh_token;
-//        this.requestRefresh = requestRefresh;
-//    }
-
-
-
-
-    var updateQuests = function (featureId) {
-        $.ajax({
-            method: "GET",
-            url: "/app_dev.php/api/features/" + featureId + "/quests",
-            headers: {Authorization: 'Bearer ' + AuthInfo.access_token}
-        }).success(function (x) {
+    var updateQuests = function (feature) {
+        apiClient.getQuests(feature).success(function (x) {
             QuestInfo=x;
             var template3 = Handlebars.compile($('#templateContainerDownSegment').html());
             for(var i=1; i<=QuestInfo.quests.length; i++) {
@@ -449,56 +429,17 @@
     };
 
 
-    var Info = function () {
-        $.ajax({
-            method: this.method,
-            url: this.url,
-            headers: this.headers,
-            success: function (a) {
-                UserInfo=a;
-                console.log(UserInfo);
-                $("#userUsername").text(UserInfo.user.username);
-                $("#userLevel").text("Уровень " + UserInfo.user.level);
-                $("#userEmail").text(UserInfo.user.email);
+    var requestUserInfo = function () {
+                apiClient.getUser().success(function (a) {
+                    UserInfo = a;
+                    console.log(UserInfo);
+                    $("#userUsername").text(UserInfo.user.username);
+                    $("#userLevel").text("Уровень " + UserInfo.user.level);
+                    $("#userEmail").text(UserInfo.user.email);
+                })
             }
-        })
-    };
+            ;
 
-    //функция-конструктор объекта типа "запрос"
-    function Request(url, method, headers, data){
-        this.url = url;
-        this.method = method;
-        this.headers = headers;
-        this.data = data;
-        this.Info = Info;
-    }
-
-    var requestUser = new Request("/app_dev.php/api/user", "GET", {Authorization : "Bearer "}, "");
-    /*
-    requestUser.Info = Info;
-
-    */
-
-
-    var requestUpdateFeature = function (featureId) {
-        $.ajax({
-            method: "PUT",
-            url: "/app_dev.php/api/features/" + featureId,
-            headers: {Authorization: 'Bearer ' + AuthInfo.access_token},
-            data: {
-                'feature[title]': title2,
-                'feature[description]': description2,
-                'feature[imageUrl]': "http://lorempixel.com/100/100/"
-            },
-            success: function () {
-
-                //$( "#titleInput").val("");
-                //$( "#descriptionInput").val("");
-                updateFeatures();
-                alert("фича " + featureId + " изменена");
-            }
-        })
-    };
 
 
     var onlyOneContainer = function (featureId) {
@@ -509,42 +450,11 @@
     };
 
     if (isAuthorized()) {
+        apiClient.setAccessToken(AuthInfo.access_token);
+        apiClient.setRefreshToken(AuthInfo.refresh_token);
         updateFeatures();
     }
 
-
-    /*function Ucfirst(str){
-     if (!str) return str;
-     return str[0].toUpperCase() + str.substring(1);
-     }*/
-
-    //    function truncate(str, maxlength){
-    //        if(str.length > maxlength){
-    //           return str.substring(0,maxlength-3)+"...";
-    //        }
-    //        else
-    //        return str;
-    //    }
-    //function isEmpty(obj){
-    //    var counter = 0;
-    //    for (var key in obj){
-    //      counter++
-    //    }
-    //    if (counter){
-    //        return false;
-    //    }
-    //    return true;
-    //};
-    //
-    //function summa(obj){
-    //    var sum =0;
-    //    if (!isEmpty(obj)){
-    //  for (var key in obj){
-    //      sum+=obj[key];
-    //  } return sum; }
-    //    return 0;
-    //
-    //};
 
 </script>
 

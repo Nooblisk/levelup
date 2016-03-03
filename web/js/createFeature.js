@@ -29,7 +29,7 @@ $("#buttonCreateFeature").click(function () {
                     return false;
                 }
                 else {
-                    requestCreateFeature();
+                    requestCreateFeature(title1, description1);
                 }
             }
         })
@@ -37,23 +37,14 @@ $("#buttonCreateFeature").click(function () {
 });
 
 
-var requestCreateFeature = function () {
-    $.ajax({
-        method: "POST",
-        url: "/app_dev.php/api/features",
-        headers: {Authorization: 'Bearer ' + AuthInfo.access_token},
-        data: {
-            'feature[title]': title1,
-            'feature[imageUrl]': "http://lorempixel.com/100/100/",
-            'feature[description]': description1
-        },
-        success: function () {
+var requestCreateFeature = function (title, description) {
+    apiClient.postFeature(title, description).
+    success(function () {
 
-            $("#titleInput").val("");
-            $("#descriptionInput").val("");
-            updateFeatures();
-            alert("новая фича создана?");
-        }
+        $("#titleInput").val("");
+        $("#descriptionInput").val("");
+        updateFeatures();
+        alert("новая фича создана?");
     })
 };
 

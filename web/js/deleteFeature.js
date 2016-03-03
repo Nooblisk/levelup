@@ -1,6 +1,9 @@
 /**
  * Created by Nooblisk on 03.03.2016.
  */
+
+
+
 $('#templateColumn').on("click", ".ui.feature.delete.button", function () {
     if (window.confirm()) {
         requestDeleteFeature(this.dataset.id);
@@ -8,17 +11,10 @@ $('#templateColumn').on("click", ".ui.feature.delete.button", function () {
 });
 
 
-var requestDeleteFeature = function (featureId) {
-    $.ajax({
-        url: "/app_dev.php/api/features/" + featureId,
-        type: 'DELETE',
-        headers: {Authorization: 'Bearer ' + AuthInfo.access_token},
-        success: function () {
+var requestDeleteFeature = function (feature) {
+        apiClient.deleteFeature(feature).success(function () {
             updateFeatures();
-            alert("Feature " + featureId + " was successfully deleted");
-        }
-    });
-};
-
-
-
+            alert("Feature " + feature + " was successfully deleted");
+        })
+    }
+    ;

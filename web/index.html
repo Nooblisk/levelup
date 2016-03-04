@@ -49,12 +49,12 @@
 
     <div id="modalLogin" class="ui small modal">
         <div class="content">
-            <form id="loginForm" class="ui form">
-                <div id="loginField" class="required field">
+            <form class="ui form">
+                <div class="required field">
                     <label>Login</label>
                     <input id="loginInput" type="text" name="first-name" placeholder="test" maxlength="50">
                 </div>
-                <div id="passwordField" class="required field">
+                <div class="required field">
                     <label>Password</label>
                     <input id="passwordInput" type="text" name="last-name" placeholder="test" maxlength="50">
                 </div>
@@ -67,36 +67,13 @@
         </div>
     </div>
 
-    <div id="modalDeleteFeature" class="ui small modal">
-        <div class="header">
-            Choose a feature to delete
-        </div>
-        <div class="content">
-            <div id="deleteDropdown" class="ui selection dropdown">
-                <input name="gender" type="hidden">
-                <i class="dropdown icon"></i>
-
-                <div class="default text"></div>
-                <div id="templateMenuDeleteFeature" class="menu">
-                </div>
-            </div>
-        </div>
-        <div class="actions">
-            <div id="buttonDelete" class="ui positive button">
-                Delete
-            </div>
-            <div class="ui black deny button">
-                Exit
-            </div>
-        </div>
-    </div>
 
     <div id="modalCreateFeature" class="ui small modal">
         <div class="header">
             Create feature
         </div>
         <div class="content">
-            <form id="createFeatureForm" class="ui form">
+            <form class="ui form">
                 <div class="required field">
                     <label>Title</label>
                     <input id="titleInput" type="text" name="last-name" placeholder="" maxlength="50">
@@ -125,11 +102,7 @@
             Create quest
         </div>
         <div class="content">
-            <form id="createQuestForm" class="ui form">
-                <div class="disabled field">
-                    <label>Id</label>
-                    <input id="idInputQuestUpdate" type="text" name="last-name" placeholder="" maxlength="50">
-                </div>
+            <form class="ui form">
                 <div class="required field">
                     <label>Title</label>
                     <input id="titleQuestInput" type="text" name="last-name" placeholder="" maxlength="50">
@@ -141,6 +114,10 @@
                 <div class="required field">
                     <label>maxLevel</label>
                     <input id="maxLevelQuestInput" type="text" name="first-name" placeholder="" maxlength="50">
+                </div>
+                <div class="disabled field">
+                    <label>Id</label>
+                    <input id="idInputQuestUpdate" type="text" name="last-name" placeholder="" maxlength="50">
                 </div>
             </form>
         </div>
@@ -159,7 +136,7 @@
             Update feature
         </div>
         <div class="content">
-            <form id="updateFeatureForm" class="ui form">
+            <form class="ui form">
                 <div class="required field">
                     <label>Title</label>
                     <input id="titleInputUpdate" type="text" name="last-name" placeholder="" maxlength="50">
@@ -183,9 +160,6 @@
             </div>
         </div>
     </div>
-
-
-
 
 
     <div class="ui two column grid container">
@@ -214,7 +188,7 @@
 
 
 <script id="templateContainerUpSegment" type="text/x-handlebars-template">
-    <div id="containerFeature{{id}}" class="containerfeature" style="display:none" data-id="{{id}}">
+    <div id="containerFeature{{id}}" style="display:none" data-id="{{id}}">
         <div class="ui container">
             <div class="ui tiny image">
                 <img src={{image_url}}>
@@ -277,16 +251,19 @@
 </script>
 
 
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="js/jquery-2.2.1.min.js"></script>
 <script src="js/semantic.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script src="js/handlebars-v4.0.5.js"></script>
 
 
 <script>
 
     var FeatureInfo;
     var UserInfo;
+    var QuestInfo;
+    var templateList = $("#templateList");
+    var templateColumn = $("#templateColumn");
+    var templateListQuests = $('#templateListQuests');
 
 
     var template = Handlebars.compile($('#templateFeature').html());
@@ -299,19 +276,19 @@
         var clientId = "1_web";
         var clientSecret = "web";
         var AuthInfo;
-        this.setAuthInfo = function(AuthInfoObject){
-          AuthInfo = AuthInfoObject;
+        this.setAuthInfo = function (AuthInfoObject) {
+            AuthInfo = AuthInfoObject;
         };
-        this.AuthInfo = function(){
+        this.AuthInfo = function () {
             return AuthInfo;
         };
         this.getAuthorizationHeaders = function () {
             return {Authorization: 'Bearer ' + this.AuthInfo().access_token};
         };
-        this.postAuthorization = function(username, password){
+        this.postAuthorization = function (username, password) {
             return $.ajax({
                 method: "POST",
-                url: baseUrl+"/oauth/v2/token",
+                url: baseUrl + "/oauth/v2/token",
                 data: {
                     grant_type: "password",
                     client_id: clientId,
@@ -321,10 +298,10 @@
                 }
             })
         };
-        this.postRefreshToken = function(){
+        this.postRefreshToken = function () {
             return $.ajax({
                 method: "POST",
-                url: baseUrl+"/oauth/v2/token",
+                url: baseUrl + "/oauth/v2/token",
                 data: {
                     grant_type: "refresh_token",
                     client_id: "1_web",
@@ -371,14 +348,14 @@
                 headers: this.getAuthorizationHeaders()
             })
         };
-        this.getQuests = function (feature){
-           return $.ajax({
+        this.getQuests = function (feature) {
+            return $.ajax({
                 method: "GET",
                 url: baseUrl + "/features/" + feature + "/quests",
                 headers: this.getAuthorizationHeaders()
             })
         };
-        this.getUser = function(){
+        this.getUser = function () {
             return $.ajax({
                 method: "GET",
                 url: baseUrl + "/user",
@@ -388,7 +365,7 @@
         this.postQuest = function (feature, title, description, maxLevel) {
             return $.ajax({
                 method: "POST",
-                url: baseUrl + "/features/"+feature+"/quests",
+                url: baseUrl + "/features/" + feature + "/quests",
                 headers: this.getAuthorizationHeaders(),
                 data: {
                     'quest[title]': title,
@@ -397,7 +374,7 @@
                 }
             })
         };
-        this.isAuthorized = function(){
+        this.isAuthorized = function () {
             if (this.AuthInfo() !== undefined) {
                 return true;
             }
@@ -414,8 +391,8 @@
             FeatureInfo = z;
             $("#headerText3").text(JSON.stringify(FeatureInfo));
             requestUserInfo();
-            $("#templateList").empty();
-            $("#templateColumn").empty().hide();
+            templateList.empty();
+            templateColumn.empty().hide();
             $('#templateListQuests').empty();
 
             for (var i = 1; i <= FeatureInfo.features.length; i++) {
@@ -424,8 +401,8 @@
             }
 
             $('.item.feature').click(function () {
-                $('#templateListQuests').empty();
-                if (!$('#templateListQuests').html().length) {
+                templateListQuests.empty();
+                if (!templateListQuests.html().length) {
 
                     updateQuests(this.dataset.id);
                 }
@@ -436,27 +413,25 @@
             console.log(xhr);
             if (xhr.status == 401) {
                 apiClient.postRefreshToken()
-                    .success(function (a) {
-                        apiClient.setAuthInfo(a);
-                        localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
-                        $(".button.signIn").hide();
-                        $(".button.signOut").show();
-                        updateFeatures();
-                    }
-                );
+                        .success(function (a) {
+                                    apiClient.setAuthInfo(a);
+                                    localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
+                                    $(".button.signIn").hide();
+                                    $(".button.signOut").show();
+                                    updateFeatures();
+                                }
+                        );
             }
         });
     };
 
 
-
-
     var updateQuests = function (feature) {
         apiClient.getQuests(feature).success(function (x) {
-            QuestInfo=x;
-            $('#templateListQuests').empty();
-            for(var i=1; i<=QuestInfo.quests.length; i++) {
-                $('#templateListQuests').append(template3(QuestInfo.quests[i-1]));
+            QuestInfo = x;
+            templateListQuests.empty();
+            for (var i = 1; i <= QuestInfo.quests.length; i++) {
+                $('#templateListQuests').append(template3(QuestInfo.quests[i - 1]));
             }
             $("#headerText4").text(JSON.stringify(QuestInfo));
 
@@ -477,7 +452,6 @@
             ;
 
 
-
     var onlyOneContainer = function (featureId) {
         for (var j = 1; j <= FeatureInfo.features.length; j++) {
             $('#containerFeature' + j).hide().parent().hide();
@@ -490,7 +464,7 @@
         $(".button.signIn").hide();
         updateFeatures();
     }
-    else{
+    else {
         $(".button.signIn").show();
         $(".button.signOut").hide();
     }

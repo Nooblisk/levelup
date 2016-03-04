@@ -22,7 +22,7 @@ $('#templateColumn').on("click", ".ui.feature.update.button", function (e) {
             onApprove: function () {
                 var title2 = $("#titleInputUpdate").val();
                 var description2 = $("#descriptionInputUpdate").val();
-                if (title2 == ""|| description2 == "") {
+                if (title2 == "" || description2 == "") {
                     alert("минимум одно из полей пустое");
                     return false;
                 }

@@ -120,6 +120,39 @@
             </div>
         </div>
     </div>
+    <div id="modalCreateQuest" class="ui small modal">
+        <div class="header">
+            Create quest
+        </div>
+        <div class="content">
+            <form id="createQuestForm" class="ui form">
+                <div class="disabled field">
+                    <label>Id</label>
+                    <input id="idInputQuestUpdate" type="text" name="last-name" placeholder="" maxlength="50">
+                </div>
+                <div class="required field">
+                    <label>Title</label>
+                    <input id="titleQuestInput" type="text" name="last-name" placeholder="" maxlength="50">
+                </div>
+                <div class="required field">
+                    <label>Description</label>
+                    <input id="descriptionQuestInput" type="text" name="first-name" placeholder="" maxlength="50">
+                </div>
+                <div class="required field">
+                    <label>maxLevel</label>
+                    <input id="maxLevelQuestInput" type="text" name="first-name" placeholder="" maxlength="50">
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+            <div class="ui positive button">
+                Create
+            </div>
+            <div class="ui black deny button">
+                Exit
+            </div>
+        </div>
+    </div>
 
     <div id="modalUpdateFeature" class="ui small modal">
         <div class="header">
@@ -127,10 +160,6 @@
         </div>
         <div class="content">
             <form id="updateFeatureForm" class="ui form">
-                <div class="disabled field">
-                    <label>Id</label>
-                    <input id="idInputUpdate" type="text" name="last-name" placeholder="" maxlength="50">
-                </div>
                 <div class="required field">
                     <label>Title</label>
                     <input id="titleInputUpdate" type="text" name="last-name" placeholder="" maxlength="50">
@@ -176,6 +205,7 @@
         </div>
     </div>
 
+
     <h4 id="headerText" class="ui header"></h4>
     <h4 id="headerText2" class="ui header"></h4>
     <h4 id="headerText3" class="ui header"></h4>
@@ -205,10 +235,11 @@
             <button class="ui feature update compact button" data-id="{{id}}">
                 Изменить
             </button>
+            <button class="ui quest post compact button" data-id="{{id}}">
+                Добавить квест
+            </button>
         </div>
-        <div class="ui container" >
-            <h3>тут будут квесты</h3>
-        </div>
+
     </div>
 </script>
 
@@ -221,6 +252,13 @@
             </div>
             <div class="description">
                 <p>{{description}}</p>
+                <div class="ui star rating" data-rating="4">
+                    <i class="icon active"></i>
+                    <i class="icon active"></i>
+                    <i class="icon active"></i>
+                    <i class="icon "></i>
+                    <i class="icon active"></i>
+                </div>
             </div>
 
         </div>
@@ -243,33 +281,32 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="js/semantic.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
-<script src="js/deleteFeature.js"></script>
-<script src="js/createFeature.js"></script>
-<script src="js/updateFeature.js"></script>
-<script src="js/signIn.js"></script>
 
 
 <script>
 
-    var username1, password1;
-    var AuthInfo, FeatureInfo;
-    var title1, description1;
-    var title2, description2;
+    var FeatureInfo;
     var UserInfo;
+
+
+    var template = Handlebars.compile($('#templateFeature').html());
+    var template2 = Handlebars.compile($('#templateContainerUpSegment').html());
+    var template3 = Handlebars.compile($('#templateContainerDownSegment').html());
 
 
     function ApiClient() {
         var baseUrl = "/app_dev.php/api";
-        //var accessToken;
+        var clientId = "1_web";
+        var clientSecret = "web";
+        var AuthInfo;
+        this.setAuthInfo = function(AuthInfoObject){
+          AuthInfo = AuthInfoObject;
+        };
+        this.AuthInfo = function(){
+            return AuthInfo;
+        };
         this.getAuthorizationHeaders = function () {
-            return {Authorization: 'Bearer ' + accessToken};
-        };
-
-        this.setAccessToken = function (token) {
-            accessToken = token;
-        };
-        this.setRefreshToken = function (token) {
-            refreshToken = token;
+            return {Authorization: 'Bearer ' + this.AuthInfo().access_token};
         };
         this.postAuthorization = function(username, password){
             return $.ajax({
@@ -277,8 +314,8 @@
                 url: baseUrl+"/oauth/v2/token",
                 data: {
                     grant_type: "password",
-                    client_id: "1_web",
-                    client_secret: "web",
+                    client_id: clientId,
+                    client_secret: clientSecret,
                     username: username,
                     password: password
                 }
@@ -292,7 +329,7 @@
                     grant_type: "refresh_token",
                     client_id: "1_web",
                     client_secret: "web",
-                    refresh_token: refreshToken
+                    refresh_token: this.AuthInfo().refresh_token
                 }
             })
         };
@@ -348,26 +385,28 @@
                 headers: this.getAuthorizationHeaders()
             })
         };
+        this.postQuest = function (feature, title, description, maxLevel) {
+            return $.ajax({
+                method: "POST",
+                url: baseUrl + "/features/"+feature+"/quests",
+                headers: this.getAuthorizationHeaders(),
+                data: {
+                    'quest[title]': title,
+                    'quest[description]': description,
+                    'quest[maxLevel]': maxLevel
+                }
+            })
+        };
+        this.isAuthorized = function(){
+            if (this.AuthInfo() !== undefined) {
+                return true;
+            }
+            this.setAuthInfo(JSON.parse(localStorage.getItem('AuthInfo')));
+            return this.AuthInfo() !== null;
+        };
     }
 
     var apiClient = new ApiClient();
-
-
-
-    var isAuthorized = function () {
-        if (AuthInfo !== undefined) {
-            $(".button.signOut").show();
-            return AuthInfo;
-        }
-        AuthInfo = JSON.parse(localStorage.getItem('AuthInfo'));
-        if (AuthInfo !== null) {
-            $(".button.signOut").show();
-            return AuthInfo;
-        }
-        $(".button.signIn").show();
-        $(".button.signOut").hide();
-        return false;
-    };
 
 
     var updateFeatures = function () {
@@ -377,17 +416,12 @@
             requestUserInfo();
             $("#templateList").empty();
             $("#templateColumn").empty().hide();
-            var template = Handlebars.compile($('#templateFeature').html());
-            var template2 = Handlebars.compile($('#templateContainerUpSegment').html());
-//            $("#userUsername").text(UserInfo.user.username);
-//            $("#userLevel").text("Уровень " + UserInfo.user.level);
-//            $("#userEmail").text(UserInfo.user.email);
+            $('#templateListQuests').empty();
 
             for (var i = 1; i <= FeatureInfo.features.length; i++) {
                 $('#templateList').append(template(FeatureInfo.features[i - 1]));
                 $('#templateColumn').append(template2(FeatureInfo.features[i - 1]));
             }
-
 
             $('.item.feature').click(function () {
                 $('#templateListQuests').empty();
@@ -401,13 +435,15 @@
         }).fail(function (xhr) {
             console.log(xhr);
             if (xhr.status == 401) {
-                apiClient.postRefreshToken().success(function (a) {
-                    AuthInfo = a;
-                    localStorage.setItem('AuthInfo', JSON.stringify(AuthInfo));
-                    $(".button.signIn").hide();
-                    $(".button.signOut").show();
-                    updateFeatures();
-                });
+                apiClient.postRefreshToken()
+                    .success(function (a) {
+                        apiClient.setAuthInfo(a);
+                        localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
+                        $(".button.signIn").hide();
+                        $(".button.signOut").show();
+                        updateFeatures();
+                    }
+                );
             }
         });
     };
@@ -418,7 +454,7 @@
     var updateQuests = function (feature) {
         apiClient.getQuests(feature).success(function (x) {
             QuestInfo=x;
-            var template3 = Handlebars.compile($('#templateContainerDownSegment').html());
+            $('#templateListQuests').empty();
             for(var i=1; i<=QuestInfo.quests.length; i++) {
                 $('#templateListQuests').append(template3(QuestInfo.quests[i-1]));
             }
@@ -449,15 +485,23 @@
         $('#containerFeature' + featureId).show().parent().show();
     };
 
-    if (isAuthorized()) {
-        apiClient.setAccessToken(AuthInfo.access_token);
-        apiClient.setRefreshToken(AuthInfo.refresh_token);
+    if (apiClient.isAuthorized()) {
+        $(".button.signOut").show();
+        $(".button.signIn").hide();
         updateFeatures();
+    }
+    else{
+        $(".button.signIn").show();
+        $(".button.signOut").hide();
     }
 
 
 </script>
-
+<script src="js/deleteFeature.js"></script>
+<script src="js/createFeature.js"></script>
+<script src="js/updateFeature.js"></script>
+<script src="js/signIn.js"></script>
+<script src="js/addQuest.js"></script>
 
 </body>
 </html>

@@ -1,24 +1,18 @@
 /**
  * Created by Nooblisk on 03.03.2016.
  */
-$("#loginInput")
-    .keyup(function () {
-        username1 = $(this).val();
-    }).keyup();
-
-$("#passwordInput")
-    .keyup(function () {
-        password1 = $(this).val();
-    }).keyup();
-
-
-
 $(".button.signIn").click(function () {
     $("#modalLogin")
         .modal({
             autofocus: true,
             transition: 'fade down',
+            onShow: function(){
+                $("#loginInput").val("");
+                $("#passwordInput").val("");
+            },
             onApprove: function () {
+                var username1 = $("#loginInput").val();
+                var password1 = $("#passwordInput").val();
                 if (username1 == "" || password1 == "") {
                     return false;
                 }
@@ -33,20 +27,14 @@ $(".button.signIn").click(function () {
 
 $(".button.signOut").click(function () {
     localStorage.clear();
-    AuthInfo=null;
     location.reload();
 });
 
 var firstAuthorization = function (username, password) {
     apiClient.postAuthorization(username, password).success(function (a) {
-        AuthInfo = a;
-        localStorage.setItem('AuthInfo', JSON.stringify(AuthInfo));
-        apiClient.setAccessToken(AuthInfo.access_token);
-        apiClient.setRefreshToken(AuthInfo.refresh_token);
-        apiClient.getAuthorizationHeaders();
-        //requestUser.headers.Authorization = "Bearer " + AuthInfo.access_token;
-        //requestUser.Info();
-        $("#headerText").text(JSON.stringify(AuthInfo));
+        apiClient.setAuthInfo(a);
+        localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
+        $("#headerText").text(JSON.stringify(apiClient.AuthInfo()));
         $(".button.signIn").hide();
         $(".button.signOut").show();
         updateFeatures();

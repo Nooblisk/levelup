@@ -3,16 +3,6 @@
  */
 
 
-$("#titleInputUpdate")
-    .keyup(function () {
-        title2 = $(this).val();
-    }).keyup();
-$("#descriptionInputUpdate")
-    .keyup(function () {
-        description2 = $(this).val();
-    }).keyup();
-
-
 $('#templateColumn').on("click", ".ui.feature.update.button", function (e) {
     $("#modalUpdateFeature")
         .modal({
@@ -30,7 +20,9 @@ $('#templateColumn').on("click", ".ui.feature.update.button", function (e) {
 
             },
             onApprove: function () {
-                if ($("#titleInputUpdate").val() == "" || $("#descriptionInputUpdate").val() == "") {
+                var title2 = $("#titleInputUpdate").val();
+                var description2 = $("#descriptionInputUpdate").val();
+                if (title2 == ""|| description2 == "") {
                     alert("минимум одно из полей пустое");
                     return false;
                 }
@@ -45,9 +37,7 @@ $('#templateColumn').on("click", ".ui.feature.update.button", function (e) {
 
 var requestUpdateFeature = function (feature, title, description) {
     apiClient.putFeature(feature, title, description).success(function () {
-        //$( "#titleInput").val("");
-        //$( "#descriptionInput").val("");
-        updateFeatures();
         alert("фича " + feature + " изменена");
+        updateFeatures();
     })
 };

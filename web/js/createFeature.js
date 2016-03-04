@@ -2,16 +2,6 @@
  * Created by Nooblisk on 03.03.2016.
  */
 
-$("#titleInput")
-    .keyup(function () {
-        title1 = $(this).val();
-    }).keyup();
-$("#descriptionInput")
-    .keyup(function () {
-        description1 = $(this).val();
-    }).keyup();
-
-
 
 $("#buttonCreateFeature").click(function () {
     $("#modalCreateFeature")
@@ -24,7 +14,9 @@ $("#buttonCreateFeature").click(function () {
 
             },
             onApprove: function () {
-                if ($("#titleInput").val() == "" || $("#descriptionInput").val() == "") {
+                var title1 = $("#titleInput").val();
+                var description1 = $("#descriptionInput").val();
+                if (title1 == "" || description1 == "") {
                     alert("минимум одно из полей пустое");
                     return false;
                 }

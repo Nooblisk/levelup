@@ -18,6 +18,8 @@
 <h1></h1>
 
 <div class="ui container">
+
+    <!--Верхний ряд с картой пользователя и кнопками создания фичи, логина, логаута-->
     <div class="ui four column grid">
         <div class="row">
             <div class="left floated three wide column">
@@ -34,8 +36,6 @@
             <div class="left floated three wide column">
                 <button id="buttonCreateFeature" class="ui button" type="submit">Create new feature</button>
             </div>
-
-
             <div class="right floated two wide column">
                 <button class="ui button signIn" type="submit" style="display: none">Sign In</button>
             </div>
@@ -46,7 +46,7 @@
         </div>
     </div>
 
-
+    <!--Окно ввода логина и пароля-->
     <div id="modalLogin" class="ui small modal">
         <div class="content">
             <form class="ui form">
@@ -67,7 +67,7 @@
         </div>
     </div>
 
-
+    <!--Окно создания новой фичи-->
     <div id="modalCreateFeature" class="ui small modal">
         <div class="header">
             Create feature
@@ -97,6 +97,8 @@
             </div>
         </div>
     </div>
+
+    <!--Окно добавления нового квеста-->
     <div id="modalCreateQuest" class="ui small modal">
         <div class="header">
             Create quest
@@ -131,6 +133,7 @@
         </div>
     </div>
 
+    <!--Окно обновления фичи-->
     <div id="modalUpdateFeature" class="ui small modal">
         <div class="header">
             Update feature
@@ -161,7 +164,7 @@
         </div>
     </div>
 
-
+    <!--Контейнер содержащий список фич и их отображение + квесты-->
     <div class="ui two column grid container">
         <div class="left floated four wide column">
             <div id="templateList" class="ui massive list"
@@ -186,9 +189,9 @@
     <h4 id="headerText4" class="ui header"></h4>
 </div>
 
-
+<!--Шаблон контейнера с информацией о фиче и кнопками-->
 <script id="templateContainerUpSegment" type="text/x-handlebars-template">
-    <div id="containerFeature{{id}}" style="display:none" data-id="{{id}}">
+    <div id="containerFeature{{id}}" class="containerFeature" style="display:none" data-id="{{id}}">
         <div class="ui container">
             <div class="ui tiny image">
                 <img src={{image_url}}>
@@ -217,6 +220,7 @@
     </div>
 </script>
 
+<!--Шаблон списка квестов по данной фиче-->
 <script id="templateContainerDownSegment" type="text/x-handlebars-template">
     <div class="item quest" data-id="{{id}}">
         <div class="content">
@@ -226,6 +230,7 @@
             </div>
             <div class="description">
                 <p>{{description}}</p>
+
                 <div class="ui star rating" data-rating="4">
                     <i class="icon active"></i>
                     <i class="icon active"></i>
@@ -239,6 +244,7 @@
     </div>
 </script>
 
+<!--Шаблон фичи в списке-->
 <script id="templateFeature" type="text/x-handlebars-template">
     <div class="item feature" data-id="{{id}}">
         <img class="ui avatar image" src={{image_url}}>
@@ -258,9 +264,6 @@
 
 <script>
 
-    var FeatureInfo;
-    var UserInfo;
-    var QuestInfo;
     var templateList = $("#templateList");
     var templateColumn = $("#templateColumn");
     var templateListQuests = $('#templateListQuests');
@@ -270,7 +273,7 @@
     var template2 = Handlebars.compile($('#templateContainerUpSegment').html());
     var template3 = Handlebars.compile($('#templateContainerDownSegment').html());
 
-
+    //конструктор апи клиента, содержит все необходимые методы для работы с апи сервера(ещё не все)
     function ApiClient() {
         var baseUrl = "/app_dev.php/api";
         var clientId = "1_web";
@@ -383,31 +386,31 @@
         };
     }
 
+    //апи клиента
     var apiClient = new ApiClient();
 
-
+    //запрашивает и выводит данные, которые видны на главной странице изначально (+- я ещё не придумал чёткий коммент)
     var updateFeatures = function () {
-        apiClient.getFeatures().success(function (z) {
-            FeatureInfo = z;
+        apiClient.getFeatures().success(function (FeatureInfo) {
             $("#headerText3").text(JSON.stringify(FeatureInfo));
             requestUserInfo();
             templateList.empty();
             templateColumn.empty().hide();
-            $('#templateListQuests').empty();
+            templateListQuests.empty();
 
             for (var i = 1; i <= FeatureInfo.features.length; i++) {
-                $('#templateList').append(template(FeatureInfo.features[i - 1]));
-                $('#templateColumn').append(template2(FeatureInfo.features[i - 1]));
+                templateList.append(template(FeatureInfo.features[i - 1]));
+                templateColumn.append(template2(FeatureInfo.features[i - 1]));
             }
 
             $('.item.feature').click(function () {
                 templateListQuests.empty();
                 if (!templateListQuests.html().length) {
-
                     updateQuests(this.dataset.id);
                 }
-
-                onlyOneContainer(this.dataset.id);
+                //делает видимым только указанный контейнер
+               $(".containerFeature").hide().parent().hide();
+               $("#containerFeature"+this.dataset.id).show().parent().show();
             });
         }).fail(function (xhr) {
             console.log(xhr);
@@ -426,39 +429,11 @@
     };
 
 
-    var updateQuests = function (feature) {
-        apiClient.getQuests(feature).success(function (x) {
-            QuestInfo = x;
-            templateListQuests.empty();
-            for (var i = 1; i <= QuestInfo.quests.length; i++) {
-                $('#templateListQuests').append(template3(QuestInfo.quests[i - 1]));
-            }
-            $("#headerText4").text(JSON.stringify(QuestInfo));
 
 
-        })
-    };
 
 
-    var requestUserInfo = function () {
-                apiClient.getUser().success(function (a) {
-                    UserInfo = a;
-                    console.log(UserInfo);
-                    $("#userUsername").text(UserInfo.user.username);
-                    $("#userLevel").text("Уровень " + UserInfo.user.level);
-                    $("#userEmail").text(UserInfo.user.email);
-                })
-            }
-            ;
-
-
-    var onlyOneContainer = function (featureId) {
-        for (var j = 1; j <= FeatureInfo.features.length; j++) {
-            $('#containerFeature' + j).hide().parent().hide();
-        }
-        $('#containerFeature' + featureId).show().parent().show();
-    };
-
+    //срабатывает при обновлении страницы
     if (apiClient.isAuthorized()) {
         $(".button.signOut").show();
         $(".button.signIn").hide();
@@ -475,7 +450,8 @@
 <script src="js/createFeature.js"></script>
 <script src="js/updateFeature.js"></script>
 <script src="js/signIn.js"></script>
-<script src="js/addQuest.js"></script>
+<script src="js/questFunctions.js"></script>
+<script src="js/userDataFunctions.js"></script>
 
 </body>
 </html>

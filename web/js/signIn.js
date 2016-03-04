@@ -1,6 +1,8 @@
 /**
  * Created by Nooblisk on 03.03.2016.
  */
+
+//по клику запускает овно логина
 $(".button.signIn").click(function () {
     $("#modalLogin")
         .modal({
@@ -25,11 +27,13 @@ $(".button.signIn").click(function () {
     ;
 });
 
+//по клику чистит данные и обновляет страницу
 $(".button.signOut").click(function () {
     localStorage.clear();
     location.reload();
 });
 
+//первичная авторизация
 var firstAuthorization = function (username, password) {
     apiClient.postAuthorization(username, password).success(function (a) {
         apiClient.setAuthInfo(a);

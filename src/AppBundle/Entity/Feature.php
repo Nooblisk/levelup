@@ -62,7 +62,7 @@ class Feature
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Quest", mappedBy="feature")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Quest", mappedBy="feature", orphanRemoval=true)
      * @Serializer\Exclude()
      */
     private $quests;

@@ -66,7 +66,7 @@ class Quest
     private $feature;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Step", mappedBy="quest")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Step", mappedBy="quest", orphanRemoval=true)
      */
     private $steps;
 

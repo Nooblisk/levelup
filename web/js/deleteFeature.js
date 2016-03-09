@@ -4,7 +4,7 @@
 
 
 //обработчик, запускающий функцию удаления фичи
-$('#templateColumn').on("click", ".ui.feature.delete.button", function () {
+templateColumn.on("click", ".ui.feature.delete.button", function () {
     if (window.confirm()) {
         requestDeleteFeature(this.dataset.id);
     }

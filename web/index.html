@@ -164,6 +164,37 @@
         </div>
     </div>
 
+    <!--Окно обновления фичи-->
+    <div id="modalUpdateQuest" class="ui small modal">
+        <div class="header">
+            Update quest
+        </div>
+        <div class="content">
+            <form class="ui form">
+                <div class="required field">
+                    <label>Title</label>
+                    <input id="titleInputUpdateQuest" type="text" name="last-name" placeholder="" maxlength="50">
+                </div>
+                <div class="required field">
+                    <label>Description</label>
+                    <input id="descriptionInputUpdateQuest" type="text" name="first-name" placeholder="" maxlength="50">
+                </div>
+                <div class="required field">
+                    <label>Max level</label>
+                    <input id="maxLevelInputUpdateQuest" type="text" name="first-name" placeholder="" maxlength="50">
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+            <div class="ui positive button">
+                Update
+            </div>
+            <div class="ui black deny button">
+                Exit
+            </div>
+        </div>
+    </div>
+
     <!--Контейнер содержащий список фич и их отображение + квесты-->
     <div class="ui two column grid container">
         <div class="left floated four wide column">
@@ -174,10 +205,10 @@
             <div id="templateColumn" class="ui raised very padded container" style="display: none">
 
             </div>
-            <div id="templateListQuests" class="ui list"
-                 style="overflow-y:auto;white-space:nowrap;width:auto;height:250px;padding:5px;border:solid 1px white;">
+            <!--<div id="templateListQuests" class="ui list"-->
+                 <!--style="overflow-y:auto;white-space:nowrap;width:auto;height:250px;padding:5px;border:solid 1px white;">-->
 
-            </div>
+            <!--</div>-->
 
         </div>
     </div>
@@ -215,8 +246,9 @@
             <button class="ui quest post compact button" data-id="{{id}}">
                 Добавить квест
             </button>
+            <div id="templateListQuests{{id}}" class="ui list quests" data-id="{{id}}"
+                 style="overflow-y:auto;white-space:nowrap;width:auto;height:250px;padding:5px;border:solid 1px white;"></div>
         </div>
-
     </div>
 </script>
 
@@ -230,13 +262,15 @@
             </div>
             <div class="description">
                 <p>{{description}}</p>
-
-                <div class="ui star rating" data-rating="4">
-                    <i class="icon active"></i>
-                    <i class="icon active"></i>
-                    <i class="icon active"></i>
-                    <i class="icon "></i>
-                    <i class="icon active"></i>
+                <div id="stepStarRating{{id}}" class="ui star rating" data-rating="4" data-id="{{id}}">
+                </div>
+            </div>
+            <div class="extra">
+                <div class="ui left floated quest delete button" data-id="{{id}}">
+                    Удалить квест
+                </div>
+                <div class="ui left floated quest update button" data-id="{{id}}">
+                    Изменить квест
                 </div>
             </div>
 
@@ -256,6 +290,15 @@
     </div>
 </script>
 
+<!--Шаблон шага в квесте-->
+<script id="templateStep" type="text/x-handlebars-template">
+    <i id="step{{id}}" class="icon active step" data-id="{{id}}"></i>
+</script>
+
+<script id="templateStepNotActive" type="text/x-handlebars-template">
+    <i class="icon step"></i>
+</script>
+
 
 <script src="js/jquery-2.2.1.min.js"></script>
 <script src="js/semantic.min.js"></script>
@@ -266,12 +309,15 @@
 
     var templateList = $("#templateList");
     var templateColumn = $("#templateColumn");
-    var templateListQuests = $('#templateListQuests');
+   // var templateListQuests = $('#templateListQuests');
 
 
     var template = Handlebars.compile($('#templateFeature').html());
     var template2 = Handlebars.compile($('#templateContainerUpSegment').html());
     var template3 = Handlebars.compile($('#templateContainerDownSegment').html());
+    var template4 = Handlebars.compile($('#templateStep').html());
+    var template5 = Handlebars.compile($('#templateStepNotActive').html());
+
 
     //конструктор апи клиента, содержит все необходимые методы для работы с апи сервера(ещё не все)
     function ApiClient() {
@@ -358,6 +404,25 @@
                 headers: this.getAuthorizationHeaders()
             })
         };
+        this.putQuest = function (feature, quest, title, description, maxLevel) {
+            return $.ajax({
+                method: "PUT",
+                url: baseUrl + "/features/" + feature + "/quests/" + quest,
+                headers: this.getAuthorizationHeaders(),
+                data: {
+                    'quest[title]': title,
+                    'quest[description]': description,
+                    'quest[maxLevel]': maxLevel
+                }
+            })
+        };
+        this.deleteQuest = function (feature, quest) {
+            return $.ajax({
+                url: baseUrl + "/features/" + feature + "/quests/" + quest,
+                type: 'DELETE',
+                headers: this.getAuthorizationHeaders()
+            })
+        };
         this.getUser = function () {
             return $.ajax({
                 method: "GET",
@@ -396,16 +461,19 @@
             requestUserInfo();
             templateList.empty();
             templateColumn.empty().hide();
-            templateListQuests.empty();
+            $(".ui.list.quests").empty();
 
             for (var i = 1; i <= FeatureInfo.features.length; i++) {
                 templateList.append(template(FeatureInfo.features[i - 1]));
                 templateColumn.append(template2(FeatureInfo.features[i - 1]));
+               // if (!templateListQuests.html().length) {
+                    //updateQuests(FeatureInfo.features[i - 1]);
+               // }
             }
 
             $('.item.feature').click(function () {
-                templateListQuests.empty();
-                if (!templateListQuests.html().length) {
+                //$('#templateListQuests'+this.dataset.id).empty();
+                if ($('#templateListQuests'+this.dataset.id).html().length == 0) {
                     updateQuests(this.dataset.id);
                 }
                 //делает видимым только указанный контейнер

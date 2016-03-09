@@ -26,7 +26,6 @@ $('#templateColumn').on("click", ".ui.quest.post.button", function (e) {
                 var descriptionQuest = $("#descriptionQuestInput").val();
                 var maxLevelQuest = $("#maxLevelQuestInput").val();
                 if (titleQuest == "" || descriptionQuest == "" || maxLevelQuest == "") {
-                    alert("минимум одно из полей пустое");
                     return false;
                 }
                 else {
@@ -43,7 +42,6 @@ var requestCreateQuest = function (feature, title, description, maxLevel) {
     apiClient.postQuest(feature, title, description, maxLevel).
     success(function () {
         updateQuests(feature);
-        alert("новый квест " + feature + " создан?");
     })
 };
 
@@ -81,7 +79,7 @@ var updateQuests = function (feature) {
 
 
 //обработчик, запускающий функцию удаления квеста
-templateColumn.on("click", ".ui.quest.delete.button", function (e) {
+templateColumn.on("click", ".ui.quest.delete.button", function () {
     if (window.confirm()) {
         console.log($(this).parents(".list.quests").data("id"));
         console.log($(this).data("id"));
@@ -93,14 +91,13 @@ templateColumn.on("click", ".ui.quest.delete.button", function (e) {
 var requestDeleteQuest = function (feature, quest) {
         apiClient.deleteQuest(feature, quest).success(function () {
             updateQuests(feature);
-            alert("Quest " + quest + "from feature "+feature+" was successfully deleted");
         })
     }
     ;
 
 //Изменяет квест
 
-templateColumn.on("click", ".ui.quest.update.button", function (e) {
+templateColumn.on("click", ".ui.quest.update.button", function () {
     var questID = $(this).data("id");
     var featureID = $(this).parents(".list.quests").data("id");
     $("#modalUpdateQuest")
@@ -123,7 +120,6 @@ templateColumn.on("click", ".ui.quest.update.button", function (e) {
                 var description3 = $("#descriptionInputUpdateQuest").val();
                 var maxLevel3 = $("#maxLevelInputUpdateQuest").val();
                 if (title3 == "" || description3 == "" || maxLevel3 =="") {
-                    alert("минимум одно из полей пустое");
                     return false;
                 }
                 else {
@@ -141,7 +137,6 @@ templateColumn.on("click", ".ui.quest.update.button", function (e) {
 
 var requestUpdateQuest = function (feature, quest, title, description, maxLevel) {
     apiClient.putQuest(feature, quest, title, description, maxLevel).success(function () {
-        alert("квест " +quest+ " в фиче " + feature + " изменён");
         updateQuests(feature);
     })
 };

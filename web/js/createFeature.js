@@ -17,7 +17,6 @@ $("#buttonCreateFeature").click(function () {
                 var title1 = $("#titleInput").val();
                 var description1 = $("#descriptionInput").val();
                 if (title1 == "" || description1 == "") {
-                    alert("минимум одно из полей пустое");
                     return false;
                 }
                 else {
@@ -36,7 +35,6 @@ var requestCreateFeature = function (title, description) {
         $("#titleInput").val("");
         $("#descriptionInput").val("");
         updateFeatures();
-        alert("новая фича создана?");
     })
 };
 

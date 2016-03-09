@@ -23,7 +23,6 @@ $('#templateColumn').on("click", ".ui.feature.update.button", function (e) {
                 var title2 = $("#titleInputUpdate").val();
                 var description2 = $("#descriptionInputUpdate").val();
                 if (title2 == "" || description2 == "") {
-                    alert("минимум одно из полей пустое");
                     return false;
                 }
                 else {
@@ -37,7 +36,6 @@ $('#templateColumn').on("click", ".ui.feature.update.button", function (e) {
 
 var requestUpdateFeature = function (feature, title, description) {
     apiClient.putFeature(feature, title, description).success(function () {
-        alert("фича " + feature + " изменена");
         updateFeatures();
     })
 };

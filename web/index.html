@@ -247,7 +247,7 @@
                 Добавить квест
             </button>
             <div id="templateListQuests{{id}}" class="ui list quests" data-id="{{id}}"
-                 style="overflow-y:auto;white-space:nowrap;width:auto;height:250px;padding:5px;border:solid 1px white;"></div>
+                 style="overflow-y:auto;white-space:nowrap;width:650px;height:250px;padding:5px;border:solid 1px white;"></div>
         </div>
     </div>
 </script>
@@ -491,7 +491,10 @@
                                     $(".button.signOut").show();
                                     updateFeatures();
                                 }
-                        );
+                        ).fail(function(){
+                    localStorage.clear();
+                    location.reload();
+                });
             }
         });
     };

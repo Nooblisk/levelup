@@ -14,7 +14,6 @@ templateColumn.on("click", ".ui.feature.delete.button", function () {
 var requestDeleteFeature = function (feature) {
         apiClient.deleteFeature(feature).success(function () {
             updateFeatures();
-            alert("Feature " + feature + " was successfully deleted");
         })
     }
     ;

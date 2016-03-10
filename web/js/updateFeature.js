@@ -21,7 +21,7 @@ $('#templateColumn').on("click", ".ui.feature.update.button", function (e) {
 
 var requestUpdateFeature = function (feature, title, description, imageUrl) {
     apiClient.putFeature(feature, title, description, imageUrl).success(function () {
-        updateFeatures();
+        synchronizeFeatures();
     })
 };
 

@@ -23,7 +23,7 @@ $("#buttonCreateFeature").click(function () {
 var requestCreateFeature = function (title, description, imageUrl) {
     apiClient.postFeature(title, description, imageUrl).
     success(function () {
-        updateFeatures();
+        synchronizeFeatures();
     })
 };
 

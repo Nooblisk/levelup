@@ -6,38 +6,23 @@
 $(".button.signIn").click(function () {
     $("#modalAuthorization").modal({
             onApprove: function () {
-                $('.form.authorization').submit();
+                formAuthorization.submit();
+                return false;
             }
-            //.modal({
-            //    autofocus: true,
-            //    transition: 'fade down',
-            //    onShow: function(){
-            //        $("#loginInput").val("");
-            //        $("#passwordInput").val("");
-            //    },
-            //    onApprove: function () {
-            //        var username1 = $("#loginInput").val();
-            //        var password1 = $("#passwordInput").val();
-            //        if (username1 == "" || password1 == "") {
-            //            return false;
-            //        }
-            //        else {
-            //            firstAuthorization(username1, password1);
-            //        }
-            //    }
         })
         .modal('show')
     ;
 });
 
 //правила для формы авторизации
-$('.form.authorization')
+formAuthorization
     .form({
         //on: 'blur',
         onSuccess: function () {
-            var logintest = $('.form.authorization').form('get field', "login").val();
-            var passwordtest = $('.form.authorization').form('get field', "password").val();
-            firstAuthorization(logintest, passwordtest);
+            var login = formAuthorization.form('get field', "login").val();
+            var password = formAuthorization.form('get field', "password").val();
+            firstAuthorization(login, password);
+            $("#modalAuthorization").modal('hide');
             return false;
         },
         fields: {
@@ -72,7 +57,8 @@ $('.form.authorization')
 
 //по клику чистит данные и обновляет страницу
 $(".button.signOut").click(function () {
-    localStorage.clear();
+    //localStorage.clear();
+    localStorage.removeItem('AuthInfo');
     location.reload();
 });
 
@@ -85,7 +71,10 @@ var firstAuthorization = function (username, password) {
        // $("#modalLogin").modal('hide');
         $(".button.signIn").hide();
         $(".button.signOut").show();
-        updateFeatures();
+        synchronizeFeatures();
+        synchronizeUserInfo();
+
+        //updateFeatures();
     });
 };
 

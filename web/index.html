@@ -329,11 +329,16 @@
 <script src="js/handlebars-v4.0.5.js"></script>
 
 
+<script src="js/requestAndFillQuests.js"></script>
+<script src="js/userDataFunctions.js"></script>
+
 <script>
 
 
     var templateList = $("#templateList");
     var templateColumn = $("#templateColumn");
+
+    var formAuthorization = $('.form.authorization');
     var formCreateFeature = $('.form.create.feature');
     var formUpdateFeature = $('.form.update.feature');
     var formCreateQuest = $('.form.create.quest');
@@ -353,11 +358,25 @@
         var clientId = "1_web";
         var clientSecret = "web";
         var AuthInfo;
+        var FeatureInfo;
+        var UserInfo;
         this.setAuthInfo = function (AuthInfoObject) {
             AuthInfo = AuthInfoObject;
         };
         this.AuthInfo = function () {
             return AuthInfo;
+        };
+        this.setUserInfo = function (UserInfoObject) {
+            UserInfo = UserInfoObject;
+        };
+        this.UserInfo = function () {
+            return UserInfo;
+        };
+        this.setFeatureInfo = function (FeatureInfoObject) {
+            FeatureInfo = FeatureInfoObject;
+        };
+        this.FeatureInfo = function () {
+            return FeatureInfo;
         };
         this.getAuthorizationHeaders = function () {
             return {Authorization: 'Bearer ' + this.AuthInfo().access_token};
@@ -477,76 +496,118 @@
             this.setAuthInfo(JSON.parse(localStorage.getItem('AuthInfo')));
             return this.AuthInfo() !== null;
         };
+        this.isFeaturized = function () {
+            if (this.FeatureInfo() !== undefined) {
+                return true;
+            }
+            this.setFeatureInfo(JSON.parse(localStorage.getItem('FeatureInfo')));
+            return this.FeatureInfo() !== null;
+        };
+        this.isUserized = function () {
+            if (this.UserInfo() !== undefined) {
+                return true;
+            }
+            this.setUserInfo(JSON.parse(localStorage.getItem('UserInfo')));
+            return this.UserInfo() !== null;
+        };
+//        this.isQuesterized = function (feature) {
+//            if (this.QuestInfo()[feature] !== undefined) {
+//                return true;
+//            }
+//            this.setQuestInfo(JSON.parse(localStorage.getItem('UserInfo')));
+//            return this.UserInfo() !== null;
+//        };
     }
 
     //апи клиента
     var apiClient = new ApiClient();
 
-    //запрашивает и выводит данные, которые видны на главной странице изначально (+- я ещё не придумал чёткий коммент)
-    var updateFeatures = function () {
-        apiClient.getFeatures().success(function (FeatureInfo) {
-            $("#headerText3").text(JSON.stringify(FeatureInfo));
-            requestUserInfo();
-            templateList.empty();
-            templateColumn.empty().hide();
-            $(".ui.list.quests").empty();
 
-            for (var i = 1; i <= FeatureInfo.features.length; i++) {
-                templateList.append(template(FeatureInfo.features[i - 1]));
-                templateColumn.append(template2(FeatureInfo.features[i - 1]));
-               // if (!templateListQuests.html().length) {
-                    //updateQuests(FeatureInfo.features[i - 1]);
-               // }
-            }
 
-            $('.item.feature').click(function () {
-                //$('#templateListQuests'+this.dataset.id).empty();
-                if ($('#templateListQuests'+this.dataset.id).html().length == 0) {
-                    updateQuests(this.dataset.id);
-                }
-                //делает видимым только указанный контейнер
-               $(".containerFeature").hide().parent().hide();
-               $("#containerFeature"+this.dataset.id).show().parent().show();
-            });
-        }).fail(function (xhr) {
-            console.log(xhr);
-            if (xhr.status == 401) {
-                apiClient.postRefreshToken()
-                        .success(function (a) {
-                                    apiClient.setAuthInfo(a);
-                                    localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
-                                    $(".button.signIn").hide();
-                                    $(".button.signOut").show();
-                                    updateFeatures();
-                                }
-                        ).fail(function(){
-                    localStorage.clear();
-                    location.reload();
-//                    $("#modalLogin").modal({
-//                                onApprove: function () {
-//                                    $('.form.authorization').submit();
-//                                    return false;
-//                                }
-//
-//                            })
-//                            .modal('show')
-//                    ;
-                });
+
+
+    //заполняет страничку данными FeatureInfo (фичи)
+    var featuresFill = function(){
+        var FeatureInfo = apiClient.FeatureInfo();
+        $("#headerText3").text(JSON.stringify(FeatureInfo));
+        templateList.empty();
+        templateColumn.empty().hide();
+        $(".ui.list.quests").empty();
+
+        for (var i = 1; i <= FeatureInfo.features.length; i++) {
+            //отрисовываем список фич поштучно
+            templateList.append(template(FeatureInfo.features[i - 1]));
+            //создаём каждой фиче контейнер
+            templateColumn.append(template2(FeatureInfo.features[i - 1]));
+        }
+        //навешиваем событие на клик по фиче из списка слева
+        $('.item.feature').click(function () {
+            if ($('#templateListQuests'+this.dataset.id).html().length == 0) {
+                updateQuests(this.dataset.id);
             }
+            //делает видимым только указанный контейнер с данными о фиче
+            $(".containerFeature").hide().parent().hide();
+            $("#containerFeature"+this.dataset.id).show().parent().show();
         });
+    };
+
+
+
+
+
+    var synchronizeFeatures = function () {
+        apiClient.getFeatures().success(function (FeatureInfo) {
+                    apiClient.setFeatureInfo(FeatureInfo);
+                    localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
+            featuresFill();
+                })
+                .fail(function (xhr) {
+                    console.log(xhr);
+                    if (xhr.status == 401) {
+                        apiClient.postRefreshToken()
+                                .success(function (a) {
+                                            apiClient.setAuthInfo(a);
+                                            localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
+                                            $(".button.signIn").hide();
+                                            $(".button.signOut").show();
+                                            synchronizeFeatures();
+                                        }
+                                ).fail(function () {
+                            localStorage.removeItem('AuthInfo');
+                            location.reload();
+                        });
+                    }
+                });
+
     };
 
 
     //срабатывает при обновлении страницы
     if (apiClient.isAuthorized()) {
         $(".button.signOut").show();
-        $(".button.signIn").hide();
-        updateFeatures();
     }
     else {
         $(".button.signIn").show();
-        $(".button.signOut").hide();
     }
+
+    if(apiClient.isFeaturized()){
+        featuresFill();
+    }
+    else{
+        synchronizeFeatures();
+    }
+
+    if(apiClient.isUserized()){
+        userInfoFill();
+    }
+    else{
+        synchronizeUserInfo();
+
+    }
+
+
+
+
 
 
 </script>
@@ -557,8 +618,6 @@
 <script src="js/updateQuest.js"></script>
 <script src="js/deleteQuest.js"></script>
 <script src="js/signIn.js"></script>
-<script src="js/requestAndFillQuests.js"></script>
-<script src="js/userDataFunctions.js"></script>
 
 </body>
 </html>

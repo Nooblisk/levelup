@@ -13,7 +13,7 @@ templateColumn.on("click", ".ui.feature.delete.button", function () {
 //удаляет фичу по id
 var requestDeleteFeature = function (feature) {
         apiClient.deleteFeature(feature).success(function () {
-            updateFeatures();
+            synchronizeFeatures();
         })
     }
     ;

@@ -30,6 +30,7 @@
                         <div id="userEmail" class="description">
 
                         </div>
+                        <button class="ui button signOut" type="submit" style="display: none">Sign Out</button>
                     </div>
                 </div>
             </div>
@@ -40,7 +41,7 @@
                 <button class="ui button signIn" type="submit" style="display: none">Sign In</button>
             </div>
             <div class="right floated two wide column">
-                <button class="ui button signOut" type="submit" style="display: none">Sign Out</button>
+                <!--<button class="ui button signOut" type="submit" style="display: none">Sign Out</button>-->
             </div>
 
         </div>
@@ -49,16 +50,28 @@
     <!--Окно ввода логина и пароля-->
     <div id="modalLogin" class="ui small modal">
         <div class="content">
-            <form class="ui form">
-                <div class="required field">
+            <form class="ui form authorization">
+                <div class="field">
                     <label>Login</label>
-                    <input id="loginInput" type="text" name="first-name" placeholder="test" maxlength="50">
+                    <input name="login" title="login" type="text" value="test">
                 </div>
-                <div class="required field">
+                <div class="field">
                     <label>Password</label>
-                    <input id="passwordInput" type="text" name="last-name" placeholder="test" maxlength="50">
+                    <input name="password" title="password" type="password" value="test">
                 </div>
+                <!--<div class="ui submit button">Submit</div>-->
+                <div class="ui error message"></div>
             </form>
+            <!--<form class="ui form">-->
+                <!--<div class="required field">-->
+                    <!--<label>Login</label>-->
+                    <!--<input id="loginInput" type="text" name="first-name" placeholder="test" maxlength="50">-->
+                <!--</div>-->
+                <!--<div class="required field">-->
+                    <!--<label>Password</label>-->
+                    <!--<input id="passwordInput" type="text" name="last-name" placeholder="test" maxlength="50">-->
+                <!--</div>-->
+            <!--</form>-->
         </div>
         <div class="actions">
             <div id="buttonLogin" class="ui bottom attached positive button">
@@ -214,11 +227,21 @@
     </div>
 
 
+
+
+
+
+
+
     <h4 id="headerText" class="ui header"></h4>
     <h4 id="headerText2" class="ui header"></h4>
     <h4 id="headerText3" class="ui header"></h4>
     <h4 id="headerText4" class="ui header"></h4>
 </div>
+
+
+
+
 
 <!--Шаблон контейнера с информацией о фиче и кнопками-->
 <script id="templateContainerUpSegment" type="text/x-handlebars-template">
@@ -306,6 +329,20 @@
 
 
 <script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     var templateList = $("#templateList");
     var templateColumn = $("#templateColumn");

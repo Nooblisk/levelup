@@ -4,10 +4,9 @@
 
 //по клику запускает овно логина
 $(".button.signIn").click(function () {
-    $("#modalLogin").modal({
+    $("#modalAuthorization").modal({
             onApprove: function () {
                 $('.form.authorization').submit();
-                return false;
             }
             //.modal({
             //    autofocus: true,
@@ -39,6 +38,7 @@ $('.form.authorization')
             var logintest = $('.form.authorization').form('get field', "login").val();
             var passwordtest = $('.form.authorization').form('get field', "password").val();
             firstAuthorization(logintest, passwordtest);
+            return false;
         },
         fields: {
             login: {
@@ -82,7 +82,7 @@ var firstAuthorization = function (username, password) {
         apiClient.setAuthInfo(a);
         localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
         $("#headerText").text(JSON.stringify(apiClient.AuthInfo()));
-        $("#modalLogin").modal('hide');
+       // $("#modalLogin").modal('hide');
         $(".button.signIn").hide();
         $(".button.signOut").show();
         updateFeatures();

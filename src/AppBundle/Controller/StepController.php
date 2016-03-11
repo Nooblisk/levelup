@@ -8,6 +8,7 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Quest;
 use AppBundle\Entity\Step;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -99,8 +100,7 @@ class StepController extends FOSRestController implements ClassResourceInterface
 
         $step = new Step();
         $step->setComment($request->request->get('comment'));
-
-        $quest->addStep($step);
+        $step->setQuest($quest);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($step);

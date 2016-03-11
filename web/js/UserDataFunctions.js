@@ -4,14 +4,21 @@
 
 
 
-//забирает и отображает данные пользователя
-var requestUserInfo = function () {
+//забирает данные пользователя и отображает
+var synchronizeUserInfo = function () {
         apiClient.getUser().success(function (UserInfo) {
-            console.log(UserInfo);
-            $("#userUsername").text(UserInfo.user.username);
-            $("#userLevel").text("Уровень " + UserInfo.user.level);
-            $("#userEmail").text(UserInfo.user.email);
+            apiClient.setUserInfo(UserInfo);
+            localStorage.setItem('UserInfo', JSON.stringify(apiClient.UserInfo()));
+            userInfoFill();
         })
     }
     ;
+
+//отображает данные пользователя
+var userInfoFill = function(){
+    var UserInfo = apiClient.UserInfo();
+    $("#userUsername").text(UserInfo.user.username);
+    $("#userLevel").text("Уровень " + UserInfo.user.level);
+    $("#userEmail").text(UserInfo.user.email);
+};
 

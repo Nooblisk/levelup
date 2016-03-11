@@ -225,12 +225,14 @@
             <div id="templateColumn" class="ui raised very padded container" style="display: none">
 
             </div>
-            <!--<div id="templateListQuests" class="ui list"-->
-                 <!--style="overflow-y:auto;white-space:nowrap;width:auto;height:250px;padding:5px;border:solid 1px white;">-->
-
-            <!--</div>-->
 
         </div>
+    </div>
+
+
+    <div class="ui indicating progress" data-value="1" data-total="20" id="example5">
+        <div class="bar"></div>
+        <div class="label">Adding Photos</div>
     </div>
 
 
@@ -286,7 +288,9 @@
             </div>
             <div class="description">
                 <p>{{description}}</p>
-                <div id="stepStarRating{{id}}" class="ui star rating" data-rating="4" data-id="{{id}}">
+                <div id="steps{{id}}" class="ui indicating progress" data-value="{{level}}" data-total="{{max_level}}">
+                    <div class="bar"></div>
+                    <div class="label">В начале пути, шагов ноль</div>
                 </div>
             </div>
             <div class="extra">
@@ -295,6 +299,12 @@
                 </div>
                 <div class="ui left floated quest update button" data-id="{{id}}">
                     Изменить квест
+                </div>
+                <div class="ui left floated step up button" data-id="{{id}}">
+                     Сделать шаг вперёд
+                </div>
+                <div class="ui left floated step down button" data-id="{{id}}">
+                    Сделать шаг назад
                 </div>
             </div>
 

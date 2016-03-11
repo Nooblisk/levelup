@@ -10,8 +10,6 @@
             background-color: #ffffff;
             background-size: cover;
         }
-
-
     </style>
 </head>
 <body>
@@ -20,30 +18,42 @@
 <div class="ui container">
 
     <!--Верхний ряд с картой пользователя и кнопками создания фичи, логина, логаута-->
-    <div class="ui four column grid">
-        <div class="row">
+    <div class="ui grid">
             <div class="left floated three wide column">
-                <div id="" class="ui card">
-                    <div class="content">
-                        <div id="userUsername" class="header"></div>
-                        <div id="userLevel" class="meta"></div>
-                        <div id="userEmail" class="description">
-
-                        </div>
-                        <button class="ui button signOut" type="submit" style="display: none">Sign Out</button>
-                    </div>
-                </div>
+                <button id="buttonUserInfo" class="ui button" type="submit" style="display: none">UserInfo</button>
+                <button class="ui button signIn" type="submit" style="display: none">Sign In</button>
+            </div>
+            <div class="left floated three wide column">
+                <button id="buttonRefresh" class="ui icon button" type="submit">
+                    <i class="refresh icon"></i>
+                </button>
             </div>
             <div class="left floated three wide column">
                 <button id="buttonCreateFeature" class="ui button" type="submit">Create new feature</button>
             </div>
-            <div class="right floated two wide column">
-                <button class="ui button signIn" type="submit" style="display: none">Sign In</button>
-            </div>
-            <div class="right floated two wide column">
-                <!--<button class="ui button signOut" type="submit" style="display: none">Sign Out</button>-->
-            </div>
+    </div>
 
+
+    <!--Окно информации о пользователе-->
+    <div id="modalUserInfo" class="ui small modal">
+        <div class="content">
+            <div id="" class="ui card">
+                <div class="content">
+                    <div id="userUsername" class="header"></div>
+                    <div id="userLevel" class="meta"></div>
+                    <div id="userEmail" class="description">
+
+                    </div>
+                </div>
+                <div class="actions">
+                    <div id="buttonSignOut" class="ui left attached green positive button">
+                        SignOut
+                    </div>
+                    <div class="ui black deny button">
+                        Close Window
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -245,30 +255,36 @@
 <script id="templateContainerUpSegment" type="text/x-handlebars-template">
     <div id="containerFeature{{id}}" class="containerFeature" style="display:none" data-id="{{id}}">
         <div class="ui container">
-            <div class="ui tiny image">
-                <img src={{image_url}}>
-            </div>
-            <div class="content">
-                <a class="header">{{title}}</a>
+            <div class="ui items">
+                <div class="item">
+                    <div class="ui tiny image">
+                    <img src={{image_url}}>
+                    </div>
+                    <div class="content">
+                        <a class="header">{{title}}</a>
 
-                <div class="description">
-                    <p>{{description}}</p>
-                </div>
-                <div class="extra">
-                    уровень {{level}}
+                        <div class="meta">
+                            <span>уровень {{level}}</span>
+                        </div>
+                        <div class="description">
+                            <p>{{description}}</p>
+                        </div>
+                        <div class="extra">
+                            <button class="ui feature delete compact red icon button" data-id="{{id}}">
+                                <i class="remove circle outline icon"></i>
+                            </button>
+                            <button class="ui feature update compact yellow icon button" data-id="{{id}}">
+                                <i class="write icon"></i>
+                            </button>
+                            <button class="ui quest post compact green icon button" data-id="{{id}}">
+                                <i class="plus icon"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button class="ui feature delete compact negative icon button" data-id="{{id}}">
-                <i class="trash outline icon"></i>
-            </button>
-            <button class="ui feature update compact button" data-id="{{id}}">
-                Изменить
-            </button>
-            <button class="ui quest post compact button" data-id="{{id}}">
-                Добавить квест
-            </button>
             <div id="templateListQuests{{id}}" class="ui list quests" data-id="{{id}}"
-                 style="overflow-y:auto;white-space:nowrap;width:650px;height:250px;padding:5px;border:solid 1px white;"></div>
+                 style="overflow-y:auto;white-space:nowrap;width:500px;height:250px;padding:5px;border:solid 1px white;"></div>
         </div>
     </div>
 </script>
@@ -283,23 +299,23 @@
             </div>
             <div class="description">
                 <p>{{description}}</p>
-                <div id="steps{{id}}" class="ui indicating progress" data-value="{{level}}" data-total="{{max_level}}">
+                <div id="steps{{id}}" class="ui indicating small progress" data-value="{{level}}" data-total="{{max_level}}" style="width:300px">
                     <div class="bar"></div>
                     <div class="label">В начале пути, шагов ноль</div>
                 </div>
             </div>
             <div class="extra">
-                <div class="ui left floated quest delete button" data-id="{{id}}">
-                    Удалить квест
+                <div class="ui left floated quest delete icon button" data-id="{{id}}">
+                    <i class="trash icon"></i>
                 </div>
-                <div class="ui left floated quest update button" data-id="{{id}}">
-                    Изменить квест
+                <div class="ui left floated quest update icon button" data-id="{{id}}">
+                    <i class="write icon"></i>
                 </div>
-                <div class="ui left floated step up button" data-id="{{id}}">
-                     Сделать шаг вперёд
+                <div class="ui left floated step up icon button" data-id="{{id}}">
+                     <i class="add circle icon"></i>
                 </div>
-                <div class="ui left floated step down button" data-id="{{id}}">
-                    Сделать шаг назад
+                <div class="ui left floated step down icon button" data-id="{{id}}">
+                    <i class="minus circle icon"></i>
                 </div>
             </div>
 
@@ -490,6 +506,30 @@
                 }
             })
         };
+        this.getSteps = function (feature, quest) {
+            return $.ajax({
+                method: "GET",
+                url: baseUrl + "/features/" + feature + "/quests/" + quest + "/steps",
+                headers: this.getAuthorizationHeaders()
+            })
+        };
+        this.postStep = function(feature, quest, comment){
+            return $.ajax({
+                method: "POST",
+                url: baseUrl + "/features/" + feature + "/quests/" + quest + "/steps",
+                headers: this.getAuthorizationHeaders(),
+                data: {
+                    'comment': comment
+                }
+            })
+        };
+        this.deleteStep = function (feature, quest, step) {
+            return $.ajax({
+                url: baseUrl + "/features/" + feature + "/quests/" + quest + "/steps/" + step,
+                type: 'DELETE',
+                headers: this.getAuthorizationHeaders()
+            })
+        };
         this.isAuthorized = function () {
             if (this.AuthInfo() !== undefined) {
                 return true;
@@ -543,15 +583,12 @@
         }
         //навешиваем событие на клик по фиче из списка слева
         $('.item.feature').click(function () {
-//            if ($('#templateListQuests'+this.dataset.id).html().length == 0) {
-//                synchronizeQuests(this.dataset.id);
                 if(apiClient.isQuesterized(this.dataset.id)){
                     questsFill(this.dataset.id);
                 }
                 else{
                     synchronizeQuests(this.dataset.id);
                 }
-//            }
             //делает видимым только указанный контейнер с данными о фиче
             $(".containerFeature").hide().parent().hide();
             $("#containerFeature"+this.dataset.id).show().parent().show();
@@ -589,9 +626,21 @@
     };
 
 
+    $("#buttonRefresh").click(function(){
+        synchronizeFeatures();
+        synchronizeUserInfo();
+        for(var i=1; i<=apiClient.FeatureInfo().features.length; i++){
+            synchronizeQuests(i);
+        }
+    });
+
+
+
+
     //срабатывает при обновлении страницы
     if (apiClient.isAuthorized()) {
-        $(".button.signOut").show();
+        $("#buttonUserInfo").show();
+
     }
     else {
         $(".button.signIn").show();
@@ -610,10 +659,6 @@
     else{
         synchronizeUserInfo();
     }
-
-
-
-
 
 
 </script>

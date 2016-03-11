@@ -55,21 +55,14 @@ formAuthorization
 
 
 
-//по клику чистит данные и обновляет страницу
-$(".button.signOut").click(function () {
-    localStorage.clear();
-    location.reload();
-});
-
 //первичная авторизация
 var firstAuthorization = function (username, password) {
     apiClient.postAuthorization(username, password).success(function (a) {
         apiClient.setAuthInfo(a);
         localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
         $("#headerText").text(JSON.stringify(apiClient.AuthInfo()));
-       // $("#modalLogin").modal('hide');
         $(".button.signIn").hide();
-        $(".button.signOut").show();
+        $("#buttonUserInfo").show();
         synchronizeFeatures();
         synchronizeUserInfo();
 

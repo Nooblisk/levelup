@@ -101,6 +101,7 @@ class StepController extends FOSRestController implements ClassResourceInterface
         $step = new Step();
         $step->setComment($request->request->get('comment'));
         $step->setQuest($quest);
+        $step->setUser($user);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($step);

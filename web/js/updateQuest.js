@@ -6,8 +6,8 @@
 
 //Изменяет квест
 templateColumn.on("click", ".ui.quest.update.button", function () {
-    var questID = $(this).data("id");
-    var featureID = $(this).parents(".list.quests").data("id");
+    $("#featureIdUpdateQuest").val($(this).parents(".list.quests").data("id"));
+    $("#questIdUpdateQuest").val($(this).data("id"));
     $("#modalUpdateQuest")
         .modal({
             autofocus: true,
@@ -16,9 +16,7 @@ templateColumn.on("click", ".ui.quest.update.button", function () {
                 formUpdateQuest.form('reset');
             },
             onApprove: function () {
-                formUpdateQuest.form('set value', "featureIdUpdateQuest").val = featureID;
-                formUpdateQuest.form('set value', "questIdUpdateQuest").val = questID;
-                formUpdateQuest.submit();
+             formUpdateQuest.submit();
                 return false;
             }
         })
@@ -27,7 +25,7 @@ templateColumn.on("click", ".ui.quest.update.button", function () {
 
 var requestUpdateQuest = function (feature, quest, title, description, maxLevel) {
     apiClient.putQuest(feature, quest, title, description, maxLevel).success(function () {
-        updateQuests(feature);
+        synchronizeQuests(feature);
     })
 };
 
@@ -41,8 +39,8 @@ formUpdateQuest
             var titleUpdateQuest = formUpdateQuest.form('get field', "titleUpdateQuest").val();
             var descriptionUpdateQuest = formUpdateQuest.form('get field', "descriptionUpdateQuest").val();
             var maxLevelUpdateQuest = formUpdateQuest.form('get field', "maxLevelUpdateQuest").val();
-            var featureIdUpdateQuest = formUpdateQuest.form('get value', "featureIdCreateQuest").val;
-            var questIdUpdateQuest = formUpdateQuest.form('get value', "questIdCreateQuest").val;
+            var featureIdUpdateQuest = formUpdateQuest.form('get field', "featureIdUpdateQuest").val();
+            var questIdUpdateQuest = formUpdateQuest.form('get field', "questIdUpdateQuest").val();
             requestUpdateQuest(featureIdUpdateQuest, questIdUpdateQuest, titleUpdateQuest, descriptionUpdateQuest, maxLevelUpdateQuest);
             formUpdateQuest.form('reset');
             $("#modalUpdateQuest").modal('hide');

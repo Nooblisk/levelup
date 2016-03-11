@@ -196,11 +196,11 @@
                 </div>
                 <div class="disabled field" style="display:none">
                     <label>featureId</label>
-                    <input id="featureIdUpdateQuest" title="featureId" type="text" value="">
+                    <input id="featureIdUpdateQuest" title="featureIdUpdateQuest" type="text" value="">
                 </div>
                 <div class="disabled field" style="display:none">
                     <label>questId</label>
-                    <input id="questIdUpdateQuest" title="questId" type="text" value="">
+                    <input id="questIdUpdateQuest" title="questIdUpdateQuest" type="text" value="">
                 </div>
                 <div class="ui error message"></div>
             </form>
@@ -319,15 +319,6 @@
     </div>
 </script>
 
-<!--Шаблон шага в квесте-->
-<script id="templateStep" type="text/x-handlebars-template">
-    <i id="step{{id}}" class="icon active step" data-id="{{id}}"></i>
-</script>
-
-<script id="templateStepNotActive" type="text/x-handlebars-template">
-    <i class="icon step"></i>
-</script>
-
 
 <script src="js/jquery-2.2.1.min.js"></script>
 <script src="js/semantic.min.js"></script>
@@ -353,8 +344,6 @@
     var template = Handlebars.compile($('#templateFeature').html());
     var template2 = Handlebars.compile($('#templateContainerUpSegment').html());
     var template3 = Handlebars.compile($('#templateContainerDownSegment').html());
-    var template4 = Handlebars.compile($('#templateStep').html());
-    var template5 = Handlebars.compile($('#templateStepNotActive').html());
 
 
     //конструктор апи клиента, содержит все необходимые методы для работы с апи сервера(ещё не все)
@@ -365,6 +354,13 @@
         var AuthInfo;
         var FeatureInfo;
         var UserInfo;
+        var QuestInfo =[];
+        this.setQuestInfo = function (feature, QuestInfoObject) {
+            QuestInfo[feature-1] = QuestInfoObject;
+        };
+        this.QuestInfo = function (feature) {
+            return QuestInfo[feature-1];
+        };
         this.setAuthInfo = function (AuthInfoObject) {
             AuthInfo = AuthInfoObject;
         };
@@ -515,13 +511,13 @@
             this.setUserInfo(JSON.parse(localStorage.getItem('UserInfo')));
             return this.UserInfo() !== null;
         };
-//        this.isQuesterized = function (feature) {
-//            if (this.QuestInfo()[feature] !== undefined) {
-//                return true;
-//            }
-//            this.setQuestInfo(JSON.parse(localStorage.getItem('UserInfo')));
-//            return this.UserInfo() !== null;
-//        };
+        this.isQuesterized = function (feature) {
+            if (this.QuestInfo(feature) !== undefined) {
+                return true;
+            }
+            this.setQuestInfo(feature, JSON.parse(localStorage.getItem('QuestInfo'+feature)));
+            return this.QuestInfo(feature) !== null;
+        };
     }
 
     //апи клиента
@@ -547,9 +543,15 @@
         }
         //навешиваем событие на клик по фиче из списка слева
         $('.item.feature').click(function () {
-            if ($('#templateListQuests'+this.dataset.id).html().length == 0) {
-                updateQuests(this.dataset.id);
-            }
+//            if ($('#templateListQuests'+this.dataset.id).html().length == 0) {
+//                synchronizeQuests(this.dataset.id);
+                if(apiClient.isQuesterized(this.dataset.id)){
+                    questsFill(this.dataset.id);
+                }
+                else{
+                    synchronizeQuests(this.dataset.id);
+                }
+//            }
             //делает видимым только указанный контейнер с данными о фиче
             $(".containerFeature").hide().parent().hide();
             $("#containerFeature"+this.dataset.id).show().parent().show();
@@ -607,7 +609,6 @@
     }
     else{
         synchronizeUserInfo();
-
     }
 
 

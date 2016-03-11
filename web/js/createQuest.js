@@ -26,7 +26,7 @@ $('#templateColumn').on("click", ".ui.quest.post.button", function (e) {
 var requestCreateQuest = function (feature, title, description, maxLevel) {
     apiClient.postQuest(feature, title, description, maxLevel).
     success(function () {
-        updateQuests(feature);
+        synchronizeQuests(feature);
     })
 };
 

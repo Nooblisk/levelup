@@ -57,8 +57,7 @@ formAuthorization
 
 //по клику чистит данные и обновляет страницу
 $(".button.signOut").click(function () {
-    //localStorage.clear();
-    localStorage.removeItem('AuthInfo');
+    localStorage.clear();
     location.reload();
 });
 
@@ -74,7 +73,6 @@ var firstAuthorization = function (username, password) {
         synchronizeFeatures();
         synchronizeUserInfo();
 
-        //updateFeatures();
     });
 };
 

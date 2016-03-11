@@ -57,8 +57,7 @@ class StepController extends FOSRestController implements ClassResourceInterface
     {
         $steps = $this->getStepRepository()->findBy([
             'user' => $this->getUser(),
-            'feature' => $featureId,
-            'questId' => $questId,
+            'quest' => $questId,
         ]);
         return ['steps' => $steps];
     }

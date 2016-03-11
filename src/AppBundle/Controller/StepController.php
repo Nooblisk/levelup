@@ -90,7 +90,7 @@ class StepController extends FOSRestController implements ClassResourceInterface
         $user = $this->getUser();
         $quest = $this->getQuestRepository()->findOneBy([
             'user' => $user,
-            'questId' => $questId,
+            'id' => $questId,
         ]);
 
         if (!$quest) {

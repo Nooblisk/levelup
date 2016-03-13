@@ -43,18 +43,18 @@ var questsFill = function(feature){
                 })
             ;
         }
-        templateColumn.on("click", ".ui.step.up.button", function () {
-            var step = $(this).data("id");
-            $('#steps' + step)
-                .progress('increment')
-            ;
-        });
-        templateColumn.on("click", ".ui.step.down.button", function () {
-            var step = $(this).data("id");
-            $('#steps' + step)
-                .progress('decrement')
-            ;
-        });
+        //templateColumn.on("click", ".ui.step.up.button", function () {
+        //    var step = $(this).data("id");
+        //    $('#steps' + step)
+        //        .progress('increment')
+        //    ;
+        //});
+        //templateColumn.on("click", ".ui.step.down.button", function () {
+        //    var step = $(this).data("id");
+        //    $('#steps' + step)
+        //        .progress('decrement')
+        //    ;
+        //});
     }
     else {
         $('#templateListQuests' + feature).append("Квестов пока нет");

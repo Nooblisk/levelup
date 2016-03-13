@@ -3,7 +3,7 @@
  */
 
 //по клику запускает овно логина
-$(".button.signIn").click(function () {
+$("#buttonSignIn").click(function () {
     $("#modalAuthorization").modal({
             onApprove: function () {
                 formAuthorization.submit();
@@ -61,7 +61,7 @@ var firstAuthorization = function (username, password) {
         apiClient.setAuthInfo(a);
         localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
         $("#headerText").text(JSON.stringify(apiClient.AuthInfo()));
-        $(".button.signIn").hide();
+        $("#buttonSignIn").hide();
         $("#buttonUserInfo").show();
         synchronizeFeatures();
         synchronizeUserInfo();

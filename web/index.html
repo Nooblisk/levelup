@@ -13,255 +13,242 @@
     </style>
 </head>
 <body>
-<h1></h1>
-<h1></h1>
 
-<div class="ui container">
 
-    <div class="ui fixed inverted top menu">
-        <a class="item">
-            <button id="buttonLeftMenu" class="ui inverted button" type="submit">Features</button>
-        </a>
-        <a class="item">
-            <button id="buttonUserInfo" class="ui inverted button" type="submit" style="display: none">UserInfo</button>
-            <button class="ui button signIn" type="submit" style="display: none">Sign In</button>
-        </a>
-        <a class="item">
-            <button id="buttonRefresh" class="ui inverted icon button" type="submit">
+<!--Контейнер содержащий список фич и их отображение + квесты-->
+<div id="templateList" class="ui sidebar inverted vertical menu left"
+     style="width:200px !important;white-space:nowrap;padding:5px;border:solid 1px;"></div>
+
+<div class="pusher">
+    <h1></h1>
+    <h1></h1>
+
+    <div class="ui container">
+
+        <div class="ui fixed inverted top menu">
+            <a id="buttonLeftMenu" class="item">Features</a>
+            <a id="buttonUserInfo" class="item" style="display: none">UserInfo</a>
+            <a id="buttonSignIn" class="item" style="display: none">Sign In</a>
+            <a id="buttonRefresh" class="item">
                 <i class="refresh icon"></i>
-            </button>
-        </a>
-        <a class="item">
-            <button id="buttonCreateFeature" class="ui inverted button" type="submit">Create new feature</button>
-        </a>
-    </div>
+            </a>
+            <a id="buttonCreateFeature" class="item">Create new feature</a>
+        </div>
 
-    <!--Контейнер содержащий список фич и их отображение + квесты-->
-    <div id="templateList" class="ui sidebar inverted vertical menu"
-         style="width:200px !important;white-space:nowrap;padding:5px;border:solid 1px;"></div>
+
+       <div id="templateColumn" class="ui raised very padded container"></div>
+
+            <h4 id="headerText" class="ui header"></h4>
+            <h4 id="headerText2" class="ui header"></h4>
+            <h4 id="headerText3" class="ui header"></h4>
+            <h4 id="headerText4" class="ui header"></h4>
+
+        <!--Окно информации о пользователе-->
+        <div id="modalUserInfo" class="ui small modal">
+            <div class="content">
+                <div id="" class="ui card">
+                    <div class="content">
+                        <div id="userUsername" class="header"></div>
+                        <div id="userLevel" class="meta"></div>
+                        <div id="userEmail" class="description">
+
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <div id="buttonSignOut" class="ui left attached green positive button">
+                            SignOut
+                        </div>
+                        <div class="ui black deny button">
+                            Close Window
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Окно ввода логина и пароля-->
+        <div id="modalAuthorization" class="ui small modal">
+            <div class="content">
+                <form class="ui form authorization">
+                    <div class="field">
+                        <label>Login</label>
+                        <input name="login" title="login" type="text" value="test">
+                    </div>
+                    <div class="field">
+                        <label>Password</label>
+                        <input name="password" title="password" type="password" value="test">
+                    </div>
+                    <!--<div class="ui submit button">Submit</div>-->
+                    <div class="ui error message"></div>
+                </form>
+            </div>
+            <div class="actions">
+                <div id="buttonLogin" class="ui bottom attached positive button">
+                    Login
+                </div>
+            </div>
+        </div>
+
+        <!--Окно создания новой фичи-->
+        <div id="modalCreateFeature" class="ui small modal">
+            <div class="header">
+                Create feature
+            </div>
+            <div class="content">
+                <form class="ui form create feature">
+                    <div class="field">
+                        <label>Title</label>
+                        <input name="titleCreateFeature" title="title" type="text" value="">
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <input name="descriptionCreateFeature" title="description" type="text" value="">
+                    </div>
+                    <div class="field">
+                        <label>Image</label>
+                        <input name="imageUrlCreateFeature" title="imageUrl" type="text"
+                               value="http://lorempixel.com/100/100/">
+                    </div>
+                    <div class="ui error message"></div>
+                </form>
+            </div>
+            <div class="actions">
+                <div class="ui positive button">
+                    Create
+                </div>
+                <div class="ui black deny button">
+                    Exit
+                </div>
+            </div>
+        </div>
+
+        <!--Окно добавления нового квеста-->
+        <div id="modalCreateQuest" class="ui small modal">
+            <div class="header">
+                Create quest
+            </div>
+            <div class="content">
+                <form class="ui form create quest">
+                    <div class="field">
+                        <label>Title</label>
+                        <input name="titleCreateQuest" title="title" type="text" value="">
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <input name="descriptionCreateQuest" title="description" type="text" value="">
+                    </div>
+                    <div class="field">
+                        <label>maxLevel</label>
+                        <input name="maxLevelCreateQuest" title="maxLevel" type="text" value="">
+                    </div>
+                    <div class="disabled field" style="display:none">
+                        <label>featureId</label>
+                        <input id="featureIdCreateQuest" title="featureId" type="text" value="">
+                    </div>
+                    <div class="ui error message"></div>
+                </form>
+            </div>
+            <div class="actions">
+                <div class="ui positive button">
+                    Create
+                </div>
+                <div class="ui black deny button">
+                    Exit
+                </div>
+            </div>
+        </div>
+
+        <!--Окно обновления фичи-->
+        <div id="modalUpdateFeature" class="ui small modal">
+            <div class="header">
+                Update feature
+            </div>
+            <div class="content">
+                <form class="ui form update feature">
+                    <div class="field">
+                        <label>Title</label>
+                        <input name="titleUpdateFeature" title="title" type="text" value="">
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <input name="descriptionUpdateFeature" title="description" type="text" value="">
+                    </div>
+                    <div class="field">
+                        <label>Image</label>
+                        <input name="imageUrlUpdateFeature" title="imageUrl" type="text"
+                               value="http://lorempixel.com/100/100/">
+                    </div>
+                    <div class="disabled field" style="display:none">
+                        <label>featureId</label>
+                        <input id="featureIdUpdateFeature" title="featureId" type="text" value="">
+                    </div>
+                    <div class="ui error message"></div>
+                </form>
+            </div>
+            <div class="actions">
+                <div class="ui positive button">
+                    Update
+                </div>
+                <div class="ui black deny button">
+                    Exit
+                </div>
+            </div>
+        </div>
+
+        <!--Окно обновления фичи-->
+        <div id="modalUpdateQuest" class="ui small modal">
+            <div class="header">
+                Update quest
+            </div>
+            <div class="content">
+                <form class="ui form update quest">
+                    <div class="field">
+                        <label>Title</label>
+                        <input name="titleUpdateQuest" title="title" type="text" value="">
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <input name="descriptionUpdateQuest" title="description" type="text" value="">
+                    </div>
+                    <div class="field">
+                        <label>maxLevel</label>
+                        <input name="maxLevelUpdateQuest" title="maxLevel" type="text" value="">
+                    </div>
+                    <div class="disabled field" style="display:none">
+                        <label>featureId</label>
+                        <input id="featureIdUpdateQuest" title="featureIdUpdateQuest" type="text" value="">
+                    </div>
+                    <div class="disabled field" style="display:none">
+                        <label>questId</label>
+                        <input id="questIdUpdateQuest" title="questIdUpdateQuest" type="text" value="">
+                    </div>
+                    <div class="ui error message"></div>
+                </form>
+            </div>
+            <div class="actions">
+                <div class="ui positive button">
+                    Update
+                </div>
+                <div class="ui black deny button">
+                    Exit
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
-
-    <div class="ui two column grid container">
-        <div class="left floated four wide column">
-            <!--<div id="templateList" class="ui vertical sticky fixed top menu"-->
-                 <!--style="white-space:nowrap;padding:5px;border:solid 1px white;"></div>-->
-        <!--</div>-->
-        <div class="right floated twelve wide column">
-            <div id="templateColumn" class="ui raised very padded container">
-
-            </div>
-
-        </div>
-    </div>
-
-    <!--Окно информации о пользователе-->
-    <div id="modalUserInfo" class="ui small modal">
-        <div class="content">
-            <div id="" class="ui card">
-                <div class="content">
-                    <div id="userUsername" class="header"></div>
-                    <div id="userLevel" class="meta"></div>
-                    <div id="userEmail" class="description">
-
-                    </div>
-                </div>
-                <div class="actions">
-                    <div id="buttonSignOut" class="ui left attached green positive button">
-                        SignOut
-                    </div>
-                    <div class="ui black deny button">
-                        Close Window
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--Окно ввода логина и пароля-->
-    <div id="modalAuthorization" class="ui small modal">
-        <div class="content">
-            <form class="ui form authorization">
-                <div class="field">
-                    <label>Login</label>
-                    <input name="login" title="login" type="text" value="test">
-                </div>
-                <div class="field">
-                    <label>Password</label>
-                    <input name="password" title="password" type="password" value="test">
-                </div>
-                <!--<div class="ui submit button">Submit</div>-->
-                <div class="ui error message"></div>
-            </form>
-        </div>
-        <div class="actions">
-            <div id="buttonLogin" class="ui bottom attached positive button">
-                Login
-            </div>
-        </div>
-    </div>
-
-    <!--Окно создания новой фичи-->
-    <div id="modalCreateFeature" class="ui small modal">
-        <div class="header">
-            Create feature
-        </div>
-        <div class="content">
-            <form class="ui form create feature">
-                <div class="field">
-                    <label>Title</label>
-                    <input name="titleCreateFeature" title="title" type="text" value="">
-                </div>
-                <div class="field">
-                    <label>Description</label>
-                    <input name="descriptionCreateFeature" title="description" type="text" value="">
-                </div>
-                <div class="field">
-                    <label>Image</label>
-                    <input name="imageUrlCreateFeature" title="imageUrl" type="text" value="http://lorempixel.com/100/100/">
-                </div>
-                <div class="ui error message"></div>
-            </form>
-        </div>
-        <div class="actions">
-            <div class="ui positive button">
-                Create
-            </div>
-            <div class="ui black deny button">
-                Exit
-            </div>
-        </div>
-    </div>
-
-
-    <!--Окно добавления нового квеста-->
-    <div id="modalCreateQuest" class="ui small modal">
-        <div class="header">
-            Create quest
-        </div>
-        <div class="content">
-            <form class="ui form create quest">
-                <div class="field">
-                    <label>Title</label>
-                    <input name="titleCreateQuest" title="title" type="text" value="">
-                </div>
-                <div class="field">
-                    <label>Description</label>
-                    <input name="descriptionCreateQuest" title="description" type="text" value="">
-                </div>
-                <div class="field">
-                    <label>maxLevel</label>
-                    <input name="maxLevelCreateQuest" title="maxLevel" type="text" value="">
-                </div>
-                <div class="disabled field" style="display:none">
-                    <label>featureId</label>
-                    <input id="featureIdCreateQuest" title="featureId" type="text" value="">
-                </div>
-                <div class="ui error message"></div>
-            </form>
-        </div>
-        <div class="actions">
-            <div class="ui positive button">
-                Create
-            </div>
-            <div class="ui black deny button">
-                Exit
-            </div>
-        </div>
-    </div>
-
-    <!--Окно обновления фичи-->
-    <div id="modalUpdateFeature" class="ui small modal">
-        <div class="header">
-            Update feature
-        </div>
-        <div class="content">
-            <form class="ui form update feature">
-                <div class="field">
-                    <label>Title</label>
-                    <input name="titleUpdateFeature" title="title" type="text" value="">
-                </div>
-                <div class="field">
-                    <label>Description</label>
-                    <input name="descriptionUpdateFeature" title="description" type="text" value="">
-                </div>
-                <div class="field">
-                    <label>Image</label>
-                    <input name="imageUrlUpdateFeature" title="imageUrl" type="text" value="http://lorempixel.com/100/100/">
-                </div>
-                <div class="disabled field" style="display:none">
-                    <label>featureId</label>
-                    <input id="featureIdUpdateFeature" title="featureId" type="text" value="">
-                </div>
-                <div class="ui error message"></div>
-            </form>
-        </div>
-        <div class="actions">
-            <div class="ui positive button">
-                Update
-            </div>
-            <div class="ui black deny button">
-                Exit
-            </div>
-        </div>
-    </div>
-
-    <!--Окно обновления фичи-->
-    <div id="modalUpdateQuest" class="ui small modal">
-        <div class="header">
-            Update quest
-        </div>
-        <div class="content">
-            <form class="ui form update quest">
-                <div class="field">
-                    <label>Title</label>
-                    <input name="titleUpdateQuest" title="title" type="text" value="">
-                </div>
-                <div class="field">
-                    <label>Description</label>
-                    <input name="descriptionUpdateQuest" title="description" type="text" value="">
-                </div>
-                <div class="field">
-                    <label>maxLevel</label>
-                    <input name="maxLevelUpdateQuest" title="maxLevel" type="text" value="">
-                </div>
-                <div class="disabled field" style="display:none">
-                    <label>featureId</label>
-                    <input id="featureIdUpdateQuest" title="featureIdUpdateQuest" type="text" value="">
-                </div>
-                <div class="disabled field" style="display:none">
-                    <label>questId</label>
-                    <input id="questIdUpdateQuest" title="questIdUpdateQuest" type="text" value="">
-                </div>
-                <div class="ui error message"></div>
-            </form>
-        </div>
-        <div class="actions">
-            <div class="ui positive button">
-                Update
-            </div>
-            <div class="ui black deny button">
-                Exit
-            </div>
-        </div>
-    </div>
-
-
-    <h4 id="headerText" class="ui header"></h4>
-    <h4 id="headerText2" class="ui header"></h4>
-    <h4 id="headerText3" class="ui header"></h4>
-    <h4 id="headerText4" class="ui header"></h4>
-</div>
-
 
 
 <!--Шаблон фичи в списке-->
 <script id="templateFeature" type="text/x-handlebars-template">
     <a class="item feature" data-tab="{{id}}" data-id="{{id}}">
         <img class="ui avatar image" src={{image_url}}>
+
         <div class="content">
             <div class="header">{{title}}</div>
             уровень {{level}}
         </div>
+
     </a>
 </script>
 
@@ -336,8 +323,6 @@
         </div>
     </div>
 </script>
-
-
 
 
 <script src="js/jquery-2.2.1.min.js"></script>
@@ -594,6 +579,7 @@
         $('.vertical.menu .item.feature')
                 .tab()
         ;
+        //$.tab('change tab', "1");
         //навешиваем событие на клик по фиче из списка слева
         $('.item.feature').click(function () {
             $.tab('change tab', this.dataset.id);
@@ -607,6 +593,7 @@
             //$(".containerFeature").hide().parent().hide();
             // $("#containerFeature"+this.dataset.id).show().parent().show();
         });
+
     };
 
 
@@ -626,7 +613,7 @@
                                 .success(function (a) {
                                             apiClient.setAuthInfo(a);
                                             localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
-                                            $(".button.signIn").hide();
+                                            $("#buttonSignIn").hide();
                                             $(".button.signOut").show();
                                             synchronizeFeatures();
                                         }
@@ -657,7 +644,7 @@
 
     }
     else {
-        $(".button.signIn").show();
+        $("#buttonSignIn").show();
     }
 
     if(apiClient.isFeaturized()){

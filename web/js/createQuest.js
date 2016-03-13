@@ -27,7 +27,9 @@ var requestCreateQuest = function (feature, title, description, maxLevel) {
     apiClient.postQuest(feature, title, description, maxLevel).
     success(function () {
         synchronizeQuests(feature);
-    })
+    }).fail(function(xhr){
+        apiClient.authFail(xhr, requestCreateQuest, feature, title, description, maxLevel);
+    });
 };
 
 

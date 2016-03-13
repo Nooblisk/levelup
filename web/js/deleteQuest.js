@@ -14,6 +14,8 @@ templateColumn.on("click", ".ui.quest.delete.button", function () {
 var requestDeleteQuest = function (feature, quest) {
         apiClient.deleteQuest(feature, quest).success(function () {
             synchronizeQuests(feature);
-        })
+        }).fail(function(xhr){
+            apiClient.authFail(xhr, requestDeleteQuest, feature, quest);
+        });
     }
     ;

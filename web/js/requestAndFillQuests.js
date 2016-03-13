@@ -4,27 +4,13 @@
 //забирает с помощью клиент-апи список квестов для данной фичи
 var synchronizeQuests = function (feature) {
     apiClient.getQuests(feature).success(function (QuestInfo) {
-        apiClient.setQuestInfo(feature, QuestInfo);
-        localStorage.setItem('QuestInfo'+feature, JSON.stringify(apiClient.QuestInfo(feature)));
-        questsFill(feature);
-    }).fail(function (xhr) {
-        console.log(xhr);
-        if (xhr.status == 401) {
-            apiClient.postRefreshToken()
-                .success(function (a) {
-                        apiClient.setAuthInfo(a);
-                        localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
-                        $(".button.signIn").hide();
-                        $(".button.signOut").show();
-
-                        synchronizeQuests(feature);
-                    }
-                ).fail(function () {
-                localStorage.removeItem('AuthInfo');
-                location.reload();
-            });
-        }
-    });
+            apiClient.setQuestInfo(feature, QuestInfo);
+            localStorage.setItem('QuestInfo' + feature, JSON.stringify(apiClient.QuestInfo(feature)));
+            questsFill(feature);
+        })
+        .fail(function (xhr) {
+            apiClient.authFail(xhr, synchronizeQuests, feature);
+        });
 };
 
 //заполняет информацию о квестах данными, добытыми раннее функцией synchronizeQuests
@@ -43,18 +29,6 @@ var questsFill = function(feature){
                 })
             ;
         }
-        //templateColumn.on("click", ".ui.step.up.button", function () {
-        //    var step = $(this).data("id");
-        //    $('#steps' + step)
-        //        .progress('increment')
-        //    ;
-        //});
-        //templateColumn.on("click", ".ui.step.down.button", function () {
-        //    var step = $(this).data("id");
-        //    $('#steps' + step)
-        //        .progress('decrement')
-        //    ;
-        //});
     }
     else {
         $('#templateListQuests' + feature).append("Квестов пока нет");

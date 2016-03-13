@@ -390,9 +390,6 @@
         this.FeatureInfo = function () {
             return FeatureInfo;
         };
-        this.getAuthorizationHeaders = function () {
-            return {Authorization: 'Bearer ' + this.AuthInfo().access_token};
-        };
         this.postAuthorization = function (username, password) {
             return $.ajax({
                 method: "POST",
@@ -417,6 +414,16 @@
                     refresh_token: this.AuthInfo().refresh_token
                 }
             })
+        };
+        this.isAuthorized = function () {
+            if ((this.AuthInfo() !== undefined) && (this.AuthInfo() !== null)) {
+                return true;
+            }
+            this.setAuthInfo(JSON.parse(localStorage.getItem('AuthInfo')));
+            return ((this.AuthInfo() !== undefined) && (this.AuthInfo() !== null));
+        };
+        this.getAuthorizationHeaders = function () {
+                return {Authorization: 'Bearer ' + this.AuthInfo().access_token};
         };
         this.getFeatures = function () {
             return $.ajax({
@@ -525,13 +532,6 @@
                 headers: this.getAuthorizationHeaders()
             })
         };
-        this.isAuthorized = function () {
-            if (this.AuthInfo() !== undefined) {
-                return true;
-            }
-            this.setAuthInfo(JSON.parse(localStorage.getItem('AuthInfo')));
-            return this.AuthInfo() !== null;
-        };
         this.isFeaturized = function () {
             if (this.FeatureInfo() !== undefined) {
                 return true;
@@ -553,13 +553,29 @@
             this.setQuestInfo(feature, JSON.parse(localStorage.getItem('QuestInfo'+feature)));
             return this.QuestInfo(feature) !== null;
         };
+        this.authFail = function (xhr, func, arg1, arg2, arg3, arg4, arg5) {
+            console.log(xhr);
+            if (xhr.status == 401) {
+                apiClient.postRefreshToken()
+                        .success(function (a) {
+                                    apiClient.setAuthInfo(a);
+                                    localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
+                                    $("#buttonSignIn").hide();
+                                    $(".button.signOut").show();
+                                    return func(arg1, arg2, arg3, arg4, arg5);
+                                }
+                        )
+                        .fail(function () {
+                            localStorage.removeItem('AuthInfo');
+                            location.reload();
+                        })
+                ;
+            }
+        };
     }
 
     //апи клиента
     var apiClient = new ApiClient();
-
-
-
 
 
     //заполняет страничку данными FeatureInfo (фичи)
@@ -579,7 +595,6 @@
         $('.vertical.menu .item.feature')
                 .tab()
         ;
-        //$.tab('change tab', "1");
         //навешиваем событие на клик по фиче из списка слева
         $('.item.feature').click(function () {
             $.tab('change tab', this.dataset.id);
@@ -589,14 +604,10 @@
             else {
                 synchronizeQuests(this.dataset.id);
             }
-            //делает видимым только указанный контейнер с данными о фиче
-            //$(".containerFeature").hide().parent().hide();
-            // $("#containerFeature"+this.dataset.id).show().parent().show();
+
         });
 
     };
-
-
 
 
 
@@ -605,29 +616,13 @@
                     apiClient.setFeatureInfo(FeatureInfo);
                     localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
             featuresFill();
-                })
-                .fail(function (xhr) {
-                    console.log(xhr);
-                    if (xhr.status == 401) {
-                        apiClient.postRefreshToken()
-                                .success(function (a) {
-                                            apiClient.setAuthInfo(a);
-                                            localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
-                                            $("#buttonSignIn").hide();
-                                            $(".button.signOut").show();
-                                            synchronizeFeatures();
-                                        }
-                                ).fail(function () {
-                            localStorage.removeItem('AuthInfo');
-                            location.reload();
-                        });
-                    }
-                });
-
+                }).fail(function(xhr){
+            apiClient.authFail(xhr, synchronizeFeatures);
+        });
     };
 
-
     $("#buttonRefresh").click(function(){
+
         synchronizeFeatures();
         synchronizeUserInfo();
         for(var i=1; i<=apiClient.FeatureInfo().features.length; i++){
@@ -635,31 +630,29 @@
         }
     });
 
-
-
-
     //срабатывает при обновлении страницы
     if (apiClient.isAuthorized()) {
         $("#buttonUserInfo").show();
+        if(apiClient.isFeaturized()){
+            featuresFill();
+        }
+        else{
+            synchronizeFeatures();
+        }
+
+        if(apiClient.isUserized()){
+            userInfoFill();
+        }
+        else{
+            synchronizeUserInfo();
+        }
 
     }
     else {
         $("#buttonSignIn").show();
     }
 
-    if(apiClient.isFeaturized()){
-        featuresFill();
-    }
-    else{
-        synchronizeFeatures();
-    }
 
-    if(apiClient.isUserized()){
-        userInfoFill();
-    }
-    else{
-        synchronizeUserInfo();
-    }
 
 
 </script>

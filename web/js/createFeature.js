@@ -24,7 +24,9 @@ var requestCreateFeature = function (title, description, imageUrl) {
     apiClient.postFeature(title, description, imageUrl).
     success(function () {
         synchronizeFeatures();
-    })
+    }).fail(function(xhr){
+        apiClient.authFail(xhr, requestCreateFeature, title, description, imageUrl);
+    });
 };
 
 //правила для формы добавления фичи

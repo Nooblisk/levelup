@@ -2,6 +2,17 @@
  * Created by Nooblisk on 05.03.2016.
  */
 
+$("#buttonUserInfo").click(function(){
+    $("#modalUserInfo").modal({
+            onApprove: function () {
+                localStorage.clear();
+                location.reload();
+            }
+        })
+        .modal('show')
+    ;
+});
+
 
 
 //забирает данные пользователя и отображает

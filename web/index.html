@@ -14,25 +14,38 @@
 </head>
 <body>
 <h1></h1>
+<h1></h1>
 
 <div class="ui container">
 
-    <!--Верхний ряд с картой пользователя и кнопками создания фичи, логина, логаута-->
-    <div class="ui grid">
-            <div class="left floated three wide column">
-                <button id="buttonUserInfo" class="ui button" type="submit" style="display: none">UserInfo</button>
-                <button class="ui button signIn" type="submit" style="display: none">Sign In</button>
-            </div>
-            <div class="left floated three wide column">
-                <button id="buttonRefresh" class="ui icon button" type="submit">
-                    <i class="refresh icon"></i>
-                </button>
-            </div>
-            <div class="left floated three wide column">
-                <button id="buttonCreateFeature" class="ui button" type="submit">Create new feature</button>
-            </div>
+    <div class="ui fixed top menu">
+        <a class="item">
+            <button id="buttonUserInfo" class="ui button" type="submit" style="display: none">UserInfo</button>
+            <button class="ui button signIn" type="submit" style="display: none">Sign In</button>
+        </a>
+        <a class="item">
+            <button id="buttonRefresh" class="ui icon button" type="submit">
+                <i class="refresh icon"></i>
+            </button>
+        </a>
+        <a class="item">
+            <button id="buttonCreateFeature" class="ui button" type="submit">Create new feature</button>
+        </a>
     </div>
 
+    <!--Контейнер содержащий список фич и их отображение + квесты-->
+    <div class="ui two column grid container">
+        <div class="left floated four wide column">
+            <div id="templateList" class="ui fluid vertical menu"
+                 style="overflow-y:auto;white-space:nowrap;width:auto;height:350px;padding:5px;border:solid 1px white;"></div>
+        </div>
+        <div class="right floated twelve wide column">
+            <div id="templateColumn" class="ui raised very padded container">
+
+            </div>
+
+        </div>
+    </div>
 
     <!--Окно информации о пользователе-->
     <div id="modalUserInfo" class="ui small modal">
@@ -225,21 +238,6 @@
         </div>
     </div>
 
-    <!--Контейнер содержащий список фич и их отображение + квесты-->
-    <div class="ui two column grid container">
-        <div class="left floated four wide column">
-            <div id="templateList" class="ui massive list"
-                 style="overflow-y:auto;white-space:nowrap;width:auto;height:390px;padding:5px;border:solid 1px white;"></div>
-        </div>
-        <div class="right floated twelve wide column">
-            <div id="templateColumn" class="ui raised very padded container" style="display: none">
-
-            </div>
-
-        </div>
-    </div>
-
-
 
     <h4 id="headerText" class="ui header"></h4>
     <h4 id="headerText2" class="ui header"></h4>
@@ -249,45 +247,54 @@
 
 
 
-
+<!--Шаблон фичи в списке-->
+<script id="templateFeature" type="text/x-handlebars-template">
+    <a class="item feature" data-tab="{{id}}" data-id="{{id}}">
+        <img class="ui avatar image" src={{image_url}}>
+        <div class="content">
+            <div class="header">{{title}}</div>
+            уровень {{level}}
+        </div>
+    </a>
+</script>
 
 <!--Шаблон контейнера с информацией о фиче и кнопками-->
-<script id="templateContainerUpSegment" type="text/x-handlebars-template">
-    <div id="containerFeature{{id}}" class="containerFeature" style="display:none" data-id="{{id}}">
-        <div class="ui container">
-            <div class="ui items">
-                <div class="item">
-                    <div class="ui tiny image">
-                    <img src={{image_url}}>
-                    </div>
-                    <div class="content">
-                        <a class="header">{{title}}</a>
+    <script id="templateContainerUpSegment" type="text/x-handlebars-template">
+        <div id="containerFeature{{id}}" class="ui bottom attached tab container" data-tab="{{id}}" data-id="{{id}}">
+            <div class="ui container">
+                <div class="ui items">
+                    <div class="item">
+                        <div class="ui tiny image">
+                            <img src={{image_url}}>
+                        </div>
+                        <div class="content">
+                            <a class="header">{{title}}</a>
 
-                        <div class="meta">
-                            <span>уровень {{level}}</span>
-                        </div>
-                        <div class="description">
-                            <p>{{description}}</p>
-                        </div>
-                        <div class="extra">
-                            <button class="ui feature delete compact red icon button" data-id="{{id}}">
-                                <i class="remove circle outline icon"></i>
-                            </button>
-                            <button class="ui feature update compact yellow icon button" data-id="{{id}}">
-                                <i class="write icon"></i>
-                            </button>
-                            <button class="ui quest post compact green icon button" data-id="{{id}}">
-                                <i class="plus icon"></i>
-                            </button>
+                            <div class="meta">
+                                <span>уровень {{level}}</span>
+                            </div>
+                            <div class="description">
+                                <p>{{description}}</p>
+                            </div>
+                            <div class="extra">
+                                <button class="ui quest post compact green icon button" title="add quest" data-id="{{id}}">
+                                    <i class="plus icon"></i>
+                                </button>
+                                <button class="ui feature update compact yellow icon button" title="update feature" data-id="{{id}}">
+                                    <i class="write icon"></i>
+                                </button>
+                                <button class="ui feature delete compact red icon button" title="delete feature" data-id="{{id}}">
+                                    <i class="remove circle outline icon"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div id="templateListQuests{{id}}" class="ui list quests" data-id="{{id}}"
+                     style="overflow-y:auto;white-space:nowrap;width:500px;height:250px;padding:5px;border:solid 1px white;"></div>
             </div>
-            <div id="templateListQuests{{id}}" class="ui list quests" data-id="{{id}}"
-                 style="overflow-y:auto;white-space:nowrap;width:500px;height:250px;padding:5px;border:solid 1px white;"></div>
         </div>
-    </div>
-</script>
+    </script>
 
 <!--Шаблон списка квестов по данной фиче-->
 <script id="templateContainerDownSegment" type="text/x-handlebars-template">
@@ -301,21 +308,21 @@
                 <p>{{description}}</p>
                 <div id="steps{{id}}" class="ui indicating small progress" data-value="{{level}}" data-total="{{max_level}}" style="width:300px">
                     <div class="bar"></div>
-                    <div class="label">В начале пути, шагов ноль</div>
+                    <div class="label">шагов {{level}} из {{max_level}}</div>
                 </div>
             </div>
             <div class="extra">
-                <div class="ui left floated quest delete icon button" data-id="{{id}}">
-                    <i class="trash icon"></i>
-                </div>
-                <div class="ui left floated quest update icon button" data-id="{{id}}">
+                <div class="ui left floated quest update icon button" title="update quest" data-id="{{id}}">
                     <i class="write icon"></i>
                 </div>
-                <div class="ui left floated step up icon button" data-id="{{id}}">
-                     <i class="add circle icon"></i>
+                <div class="ui left floated quest delete icon button" title="delete quest" data-id="{{id}}">
+                    <i class="trash icon"></i>
                 </div>
-                <div class="ui left floated step down icon button" data-id="{{id}}">
+                <div class="ui left floated step down icon button" title="step down" data-id="{{id}}">
                     <i class="minus circle icon"></i>
+                </div>
+                <div class="ui left floated step up icon button" title="step up" data-id="{{id}}">
+                     <i class="add circle icon"></i>
                 </div>
             </div>
 
@@ -323,17 +330,7 @@
     </div>
 </script>
 
-<!--Шаблон фичи в списке-->
-<script id="templateFeature" type="text/x-handlebars-template">
-    <div class="item feature" data-id="{{id}}">
-        <img class="ui avatar image" src={{image_url}}>
 
-        <div class="content">
-            <div class="header">{{title}}</div>
-            уровень {{level}}
-        </div>
-    </div>
-</script>
 
 
 <script src="js/jquery-2.2.1.min.js"></script>
@@ -572,7 +569,7 @@
         var FeatureInfo = apiClient.FeatureInfo();
         $("#headerText3").text(JSON.stringify(FeatureInfo));
         templateList.empty();
-        templateColumn.empty().hide();
+        templateColumn.empty();
         $(".ui.list.quests").empty();
 
         for (var i = 1; i <= FeatureInfo.features.length; i++) {
@@ -581,17 +578,21 @@
             //создаём каждой фиче контейнер
             templateColumn.append(template2(FeatureInfo.features[i - 1]));
         }
+        $('.vertical.menu .item.feature')
+                .tab()
+        ;
         //навешиваем событие на клик по фиче из списка слева
         $('.item.feature').click(function () {
-                if(apiClient.isQuesterized(this.dataset.id)){
-                    questsFill(this.dataset.id);
-                }
-                else{
-                    synchronizeQuests(this.dataset.id);
-                }
+            $.tab('change tab', this.dataset.id);
+            if (apiClient.isQuesterized(this.dataset.id)) {
+                questsFill(this.dataset.id);
+            }
+            else {
+                synchronizeQuests(this.dataset.id);
+            }
             //делает видимым только указанный контейнер с данными о фиче
-            $(".containerFeature").hide().parent().hide();
-            $("#containerFeature"+this.dataset.id).show().parent().show();
+            //$(".containerFeature").hide().parent().hide();
+            // $("#containerFeature"+this.dataset.id).show().parent().show();
         });
     };
 

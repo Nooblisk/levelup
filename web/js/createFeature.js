@@ -2,8 +2,7 @@
  * Created by Nooblisk on 03.03.2016.
  */
 
-
-$("#buttonCreateFeature").click(function () {
+templateList.on("click", "#buttonCreateFeature", function (e) {
     $("#modalCreateFeature")
         .modal({
             autofocus: true,

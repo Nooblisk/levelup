@@ -32,7 +32,6 @@
             <a id="buttonRefresh" class="item">
                 <i class="refresh icon"></i>
             </a>
-            <a id="buttonCreateFeature" class="item">Create new feature</a>
         </div>
 
 
@@ -252,6 +251,7 @@
     </a>
 </script>
 
+
 <!--Шаблон контейнера с информацией о фиче и кнопками-->
     <script id="templateContainerUpSegment" type="text/x-handlebars-template">
         <div id="containerFeature{{id}}" class="ui bottom attached tab container" data-tab="{{id}}" data-id="{{id}}">
@@ -337,7 +337,10 @@
 
 
     $("#buttonLeftMenu").click(function(){
-        $('.ui.sidebar')
+        $('.ui.sidebar').sidebar({
+                    dimPage: false,
+                    closable: false
+        })
                 .sidebar('toggle')
         ;
     });
@@ -560,8 +563,8 @@
                         .success(function (a) {
                                     apiClient.setAuthInfo(a);
                                     localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
-                                    $("#buttonSignIn").hide();
-                                    $(".button.signOut").show();
+                                    //$("#buttonSignIn").hide();
+                                    //$(".button.signOut").show();
                                     return func(arg1, arg2, arg3, arg4, arg5);
                                 }
                         )
@@ -586,11 +589,17 @@
         templateColumn.empty();
         $(".ui.list.quests").empty();
 
-        for (var i = 1; i <= FeatureInfo.features.length; i++) {
-            //отрисовываем список фич поштучно
-            templateList.append(template(FeatureInfo.features[i - 1]));
-            //создаём каждой фиче контейнер
-            templateColumn.append(template2(FeatureInfo.features[i - 1]));
+        if (FeatureInfo.features.length>0) {
+            for (var i = 1; i <= FeatureInfo.features.length; i++) {
+                //отрисовываем список фич поштучно
+                templateList.append(template(FeatureInfo.features[i - 1]));
+                //создаём каждой фиче контейнер
+                templateColumn.append(template2(FeatureInfo.features[i - 1]));
+            }
+            templateList.append("<a id=\"buttonCreateFeature\" class=\"item\">Add new feature</a>");
+        }
+        else{
+            templateList.append("<a id=\"buttonCreateFeature\" class=\"item\">Add new feature</a>");
         }
         $('.vertical.menu .item.feature')
                 .tab()
@@ -622,7 +631,6 @@
     };
 
     $("#buttonRefresh").click(function(){
-
         synchronizeFeatures();
         synchronizeUserInfo();
         for(var i=1; i<=apiClient.FeatureInfo().features.length; i++){

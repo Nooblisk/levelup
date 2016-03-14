@@ -18,6 +18,8 @@ var requestStepUp = function(feature, quest, comment){
         comment = "";
     }
     apiClient.postStep(feature, quest, comment).success(function () {
+        spiner.down();
+        statusBar();
         synchronizeQuests(feature);
     }).fail(function (xhr) {
         apiClient.authFail(xhr, requestStepUp, feature, quest, comment);
@@ -37,9 +39,13 @@ templateColumn.on("click", ".ui.step.down.button", function () {
 
 var requestStepDown = function (feature, quest) {
     apiClient.getSteps(feature, quest).success(function (e) {
+        spiner.down();
+        statusBar();
         var len = e.steps.length;
         if (len > 0) {
             apiClient.deleteStep(feature, quest, e.steps[len - 1].id).success(function () {
+                spiner.down();
+                statusBar();
                 synchronizeQuests(feature);
             }).fail(function (xhr) {
                 apiClient.authFail(xhr, requestStepDown, feature, quest);

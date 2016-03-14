@@ -4,6 +4,8 @@
 //забирает с помощью клиент-апи список квестов для данной фичи
 var synchronizeQuests = function (feature) {
     apiClient.getQuests(feature).success(function (QuestInfo) {
+            spiner.down();
+            statusBar();
             apiClient.setQuestInfo(feature, QuestInfo);
             localStorage.setItem('QuestInfo' + feature, JSON.stringify(apiClient.QuestInfo(feature)));
             questsFill(feature);

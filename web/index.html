@@ -32,6 +32,7 @@
             <a id="buttonRefresh" class="item">
                 <i class="refresh icon"></i>
             </a>
+            <a id="statusBar" class="item" style="display: none">Идёт запрос к серверу</a>
         </div>
 
 
@@ -360,6 +361,33 @@
     var template3 = Handlebars.compile($('#templateContainerDownSegment').html());
 
 
+    var spiner = new Spiner();
+
+    function Spiner(){
+        var count;
+        this.up = function(){
+            count++;
+        };
+        this.down = function(){
+            count--;
+        };
+        this.count = function(){
+            return count;
+        };
+        this.drop = function(){
+            count = 0;
+        };
+    }
+
+    var statusBar = function(){
+        if (spiner.count()>0){
+            $("#statusBar").show();
+        }
+        else {
+            $("#statusBar").hide();
+        }
+    };
+
     //конструктор апи клиента, содержит все необходимые методы для работы с апи сервера(ещё не все)
     function ApiClient() {
         var baseUrl = "/app_dev.php/api";
@@ -394,6 +422,8 @@
             return FeatureInfo;
         };
         this.postAuthorization = function (username, password) {
+            spiner.up();
+            statusBar();
             return $.ajax({
                 method: "POST",
                 url: baseUrl + "/oauth/v2/token",
@@ -407,6 +437,8 @@
             })
         };
         this.postRefreshToken = function () {
+            spiner.up();
+            statusBar();
             return $.ajax({
                 method: "POST",
                 url: baseUrl + "/oauth/v2/token",
@@ -429,13 +461,18 @@
                 return {Authorization: 'Bearer ' + this.AuthInfo().access_token};
         };
         this.getFeatures = function () {
+            spiner.up();
+            statusBar();
             return $.ajax({
                 method: "GET",
                 url: baseUrl + "/features",
                 headers: this.getAuthorizationHeaders()
             })
+
         };
         this.postFeature = function (title, description, imageUrl) {
+            spiner.up();
+            statusBar();
             return $.ajax({
                 method: "POST",
                 url: baseUrl + "/features",
@@ -448,6 +485,8 @@
             })
         };
         this.putFeature = function (feature, title, description, imageUrl) {
+            spiner.up();
+            statusBar();
             return $.ajax({
                 method: "PUT",
                 url: baseUrl + "/features/" + feature,
@@ -460,6 +499,8 @@
             })
         };
         this.deleteFeature = function (feature) {
+            spiner.up();
+            statusBar();
             return $.ajax({
                 url: baseUrl + "/features/" + feature,
                 type: 'DELETE',
@@ -467,6 +508,8 @@
             })
         };
         this.getQuests = function (feature) {
+            spiner.up();
+            statusBar();
             return $.ajax({
                 method: "GET",
                 url: baseUrl + "/features/" + feature + "/quests",
@@ -474,6 +517,8 @@
             })
         };
         this.putQuest = function (feature, quest, title, description, maxLevel) {
+            spiner.up();
+            statusBar();
             return $.ajax({
                 method: "PUT",
                 url: baseUrl + "/features/" + feature + "/quests/" + quest,
@@ -486,6 +531,8 @@
             })
         };
         this.deleteQuest = function (feature, quest) {
+            spiner.up();
+            statusBar();
             return $.ajax({
                 url: baseUrl + "/features/" + feature + "/quests/" + quest,
                 type: 'DELETE',
@@ -493,6 +540,7 @@
             })
         };
         this.getUser = function () {
+            spiner.up();
             return $.ajax({
                 method: "GET",
                 url: baseUrl + "/user",
@@ -500,6 +548,8 @@
             })
         };
         this.postQuest = function (feature, title, description, maxLevel) {
+            spiner.up();
+            statusBar();
             return $.ajax({
                 method: "POST",
                 url: baseUrl + "/features/" + feature + "/quests",
@@ -512,6 +562,8 @@
             })
         };
         this.getSteps = function (feature, quest) {
+            spiner.up();
+            statusBar();
             return $.ajax({
                 method: "GET",
                 url: baseUrl + "/features/" + feature + "/quests/" + quest + "/steps",
@@ -519,6 +571,8 @@
             })
         };
         this.postStep = function(feature, quest, comment){
+            spiner.up();
+            statusBar();
             return $.ajax({
                 method: "POST",
                 url: baseUrl + "/features/" + feature + "/quests/" + quest + "/steps",
@@ -529,6 +583,8 @@
             })
         };
         this.deleteStep = function (feature, quest, step) {
+            spiner.up();
+            statusBar();
             return $.ajax({
                 url: baseUrl + "/features/" + feature + "/quests/" + quest + "/steps/" + step,
                 type: 'DELETE',
@@ -557,18 +613,24 @@
             return this.QuestInfo(feature) !== null;
         };
         this.authFail = function (xhr, func, arg1, arg2, arg3, arg4, arg5) {
+            spiner.down();
+            statusBar();
             console.log(xhr);
             if (xhr.status == 401) {
                 apiClient.postRefreshToken()
                         .success(function (a) {
                                     apiClient.setAuthInfo(a);
                                     localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
+                                    spiner.down();
+                            statusBar();
                                     //$("#buttonSignIn").hide();
                                     //$(".button.signOut").show();
                                     return func(arg1, arg2, arg3, arg4, arg5);
                                 }
                         )
                         .fail(function () {
+                            spiner.down();
+                            statusBar();
                             localStorage.removeItem('AuthInfo');
                             location.reload();
                         })
@@ -621,8 +683,12 @@
 
 
 
+
+
     var synchronizeFeatures = function () {
         apiClient.getFeatures().success(function (FeatureInfo) {
+            spiner.down();
+            statusBar();
                     apiClient.setFeatureInfo(FeatureInfo);
                     localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
             featuresFill();
@@ -641,6 +707,7 @@
 
     //срабатывает при обновлении страницы
     if (apiClient.isAuthorized()) {
+        spiner.drop();
         $("#buttonUserInfo").show();
         $('.ui.sidebar').sidebar({
             dimPage: false,

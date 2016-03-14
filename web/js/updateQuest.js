@@ -33,6 +33,8 @@ templateColumn.on("click", ".ui.quest.update.button", function () {
 
 var requestUpdateQuest = function (feature, quest, title, description, maxLevel) {
     apiClient.putQuest(feature, quest, title, description, maxLevel).success(function () {
+        spiner.down();
+        statusBar();
         synchronizeQuests(feature);
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestUpdateQuest, feature, quest, title, description, maxLevel);

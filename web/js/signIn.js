@@ -58,6 +58,8 @@ formAuthorization
 //первичная авторизация
 var firstAuthorization = function (username, password) {
     apiClient.postAuthorization(username, password).success(function (a) {
+        spiner.drop();
+        statusBar();
         apiClient.setAuthInfo(a);
         localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
         $("#headerText").text(JSON.stringify(apiClient.AuthInfo()));

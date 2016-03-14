@@ -13,6 +13,8 @@ templateColumn.on("click", ".ui.quest.delete.button", function () {
 //удаляет квест по id
 var requestDeleteQuest = function (feature, quest) {
         apiClient.deleteQuest(feature, quest).success(function () {
+            spiner.down();
+            statusBar();
             synchronizeQuests(feature);
         }).fail(function(xhr){
             apiClient.authFail(xhr, requestDeleteQuest, feature, quest);

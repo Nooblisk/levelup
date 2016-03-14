@@ -2,7 +2,7 @@
  * Created by Nooblisk on 03.03.2016.
  */
 
-templateList.on("click", "#buttonCreateFeature", function (e) {
+templateList.on("click", "#buttonCreateFeature", function () {
     $("#modalCreateFeature")
         .modal({
             autofocus: true,
@@ -22,6 +22,8 @@ templateList.on("click", "#buttonCreateFeature", function (e) {
 var requestCreateFeature = function (title, description, imageUrl) {
     apiClient.postFeature(title, description, imageUrl).
     success(function () {
+        spiner.down();
+        statusBar();
         synchronizeFeatures();
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestCreateFeature, title, description, imageUrl);

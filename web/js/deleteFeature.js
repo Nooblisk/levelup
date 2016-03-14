@@ -13,6 +13,8 @@ templateColumn.on("click", ".ui.feature.delete.button", function () {
 //удаляет фичу по id
 var requestDeleteFeature = function (feature) {
         apiClient.deleteFeature(feature).success(function () {
+            spiner.down();
+            statusBar();
             synchronizeFeatures();
         }).fail(function(xhr){
             apiClient.authFail(xhr, requestDeleteFeature, feature);

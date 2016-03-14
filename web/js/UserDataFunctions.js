@@ -20,6 +20,8 @@ $("#buttonUserInfo").click(function(){
 //забирает данные пользователя и отображает
 var synchronizeUserInfo = function () {
         apiClient.getUser().success(function (UserInfo) {
+            spiner.down();
+            statusBar();
             apiClient.setUserInfo(UserInfo);
             localStorage.setItem('UserInfo', JSON.stringify(apiClient.UserInfo()));
             userInfoFill();

@@ -2,7 +2,12 @@
  * Created by Nooblisk on 04.03.2016.
  */
 
-$('#templateColumn').on("click", ".ui.feature.update.button", function (e) {
+$('#templateColumn').on("click", ".ui.feature.update.button", function () {
+    var feature = $(this).data("id");
+    $("#featureIdUpdateFeature").val(feature);
+    $("#titleUpdateFeature").val(apiClient.FeatureInfo().features[feature-1].title);
+    $("#descriptionUpdateFeature").val(apiClient.FeatureInfo().features[feature-1].description);
+    $("#imageUrlUpdateFeature").val(apiClient.FeatureInfo().features[feature-1].image_url);
     $("#modalUpdateFeature")
         .modal({
             autofocus: true,
@@ -11,7 +16,6 @@ $('#templateColumn').on("click", ".ui.feature.update.button", function (e) {
                 formUpdateFeature.form('reset');
             },
             onApprove: function () {
-                formUpdateFeature.form('set value', "featureIdUpdateFeature").val = e.target.dataset.id;
                 formUpdateFeature.submit();
                 return false;
             }
@@ -35,7 +39,7 @@ formUpdateFeature
             var titleUpdateFeature = formUpdateFeature.form('get field', "titleUpdateFeature").val();
             var descriptionUpdateFeature = formUpdateFeature.form('get field', "descriptionUpdateFeature").val();
             var imageUrlUpdateFeature = formUpdateFeature.form('get field', "imageUrlUpdateFeature").val();
-            var featureIdUpdateFeature = formUpdateFeature.form('get value', "featureIdUpdateFeature").val;
+            var featureIdUpdateFeature = formUpdateFeature.form('get field', "featureIdUpdateFeature").val();
             requestUpdateFeature(featureIdUpdateFeature, titleUpdateFeature, descriptionUpdateFeature, imageUrlUpdateFeature);
             formUpdateFeature.form('reset');
             $("#modalUpdateFeature").modal('hide');

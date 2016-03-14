@@ -63,9 +63,16 @@ var firstAuthorization = function (username, password) {
         $("#headerText").text(JSON.stringify(apiClient.AuthInfo()));
         $("#buttonSignIn").hide();
         $("#buttonUserInfo").show();
+        $('#buttonLeftMenu').show();
+        $('#buttonRefresh').show();
+
         synchronizeFeatures();
         synchronizeUserInfo();
-
+        $('.ui.sidebar').sidebar({
+            dimPage: false,
+            closable: false
+        }).sidebar('show');
+        $('.item.feature').first().click();
     });
 };
 

@@ -6,6 +6,8 @@ $("#buttonUserInfo").click(function(){
     $("#modalUserInfo").modal({
             onApprove: function () {
                 localStorage.clear();
+                //templateList.empty();
+                //templateColumn.empty();
                 location.reload();
             }
         })
@@ -21,6 +23,8 @@ var synchronizeUserInfo = function () {
             apiClient.setUserInfo(UserInfo);
             localStorage.setItem('UserInfo', JSON.stringify(apiClient.UserInfo()));
             userInfoFill();
+        }).fail(function(xhr){
+            apiClient.authFail(xhr, synchronizeUserInfo);
         })
     }
     ;
@@ -31,5 +35,6 @@ var userInfoFill = function(){
     $("#userUsername").text(UserInfo.user.username);
     $("#userLevel").text("Уровень " + UserInfo.user.level);
     $("#userEmail").text(UserInfo.user.email);
+    $("#buttonUserInfo").text(UserInfo.user.username+" "+UserInfo.user.level);
 };
 

@@ -6,8 +6,16 @@
 
 //Изменяет квест
 templateColumn.on("click", ".ui.quest.update.button", function () {
-    $("#featureIdUpdateQuest").val($(this).parents(".list.quests").data("id"));
-    $("#questIdUpdateQuest").val($(this).data("id"));
+    var feature = $(this).parents(".list.quests").data("id");
+    var quest = $(this).data("id");
+    var questOrder = $(this).parents(".item.quest").data("order");
+    $("#featureIdUpdateQuest").val(feature);
+    $("#questIdUpdateQuest").val(quest);
+    $("#titleUpdateQuest").val(apiClient.QuestInfo(feature).quests[questOrder].title);
+    $("#descriptionUpdateQuest").val(apiClient.QuestInfo(feature).quests[questOrder].description);
+    $("#maxLevelUpdateQuest").val(apiClient.QuestInfo(feature).quests[questOrder].max_level);
+
+
     $("#modalUpdateQuest")
         .modal({
             autofocus: true,

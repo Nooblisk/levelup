@@ -166,16 +166,16 @@
                 <form class="ui form update feature">
                     <div class="field">
                         <label>Title</label>
-                        <input name="titleUpdateFeature" title="title" type="text" value="">
+                        <input id="titleUpdateFeature" title="title" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Description</label>
-                        <input name="descriptionUpdateFeature" title="description" type="text" value="">
+                        <input id="descriptionUpdateFeature" title="description" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Image</label>
-                        <input name="imageUrlUpdateFeature" title="imageUrl" type="text"
-                               value="http://lorempixel.com/100/100/">
+                        <input id="imageUrlUpdateFeature" title="imageUrl" type="text"
+                               value="">
                     </div>
                     <div class="disabled field" style="display:none">
                         <label>featureId</label>
@@ -203,15 +203,15 @@
                 <form class="ui form update quest">
                     <div class="field">
                         <label>Title</label>
-                        <input name="titleUpdateQuest" title="title" type="text" value="">
+                        <input id="titleUpdateQuest" title="title" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Description</label>
-                        <input name="descriptionUpdateQuest" title="description" type="text" value="">
+                        <input id="descriptionUpdateQuest" title="description" type="text" value="">
                     </div>
                     <div class="field">
                         <label>maxLevel</label>
-                        <input name="maxLevelUpdateQuest" title="maxLevel" type="text" value="">
+                        <input id="maxLevelUpdateQuest" title="maxLevel" type="text" value="">
                     </div>
                     <div class="disabled field" style="display:none">
                         <label>featureId</label>
@@ -292,7 +292,7 @@
 
 <!--Шаблон списка квестов по данной фиче-->
 <script id="templateContainerDownSegment" type="text/x-handlebars-template">
-    <div class="item quest" data-id="{{id}}">
+    <div id="itemQuest{{id}}" class="item quest" data-id="{{id}}">
         <div class="content">
             <div class="header">{{title}}</div>
             <div class="meta">
@@ -596,7 +596,7 @@
                 //создаём каждой фиче контейнер
                 templateColumn.append(template2(FeatureInfo.features[i - 1]));
             }
-            templateList.append("<a id=\"buttonCreateFeature\" class=\"item\">Add new feature</a>");
+            templateList.append("<a id='buttonCreateFeature' class='item'><i class='plus icon'></i>Add new feature</a>");
         }
         else{
             templateList.append("<a id=\"buttonCreateFeature\" class=\"item\">Add new feature</a>");
@@ -613,6 +613,7 @@
             else {
                 synchronizeQuests(this.dataset.id);
             }
+
 
         });
 
@@ -641,11 +642,17 @@
     //срабатывает при обновлении страницы
     if (apiClient.isAuthorized()) {
         $("#buttonUserInfo").show();
+        $('.ui.sidebar').sidebar({
+            dimPage: false,
+            closable: false
+        }).sidebar('show');
         if(apiClient.isFeaturized()){
             featuresFill();
+            $('.item.feature').first().click();
         }
         else{
             synchronizeFeatures();
+            $('.item.feature').first().click();
         }
 
         if(apiClient.isUserized()){
@@ -658,6 +665,8 @@
     }
     else {
         $("#buttonSignIn").show();
+        $('#buttonLeftMenu').hide();
+        $('#buttonRefresh').hide();
     }
 
 

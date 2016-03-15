@@ -694,11 +694,13 @@
 
     buttonRefresh.click(function () {
          var refresh = function() {
-            apiClient.getUser().success(function () {
+            apiClient.getUser().success(function (UserInfo) {
                 spiner.down();
                 statusBar();
+                apiClient.setUserInfo(UserInfo);
+                localStorage.setItem('UserInfo', JSON.stringify(apiClient.UserInfo()));
+                userInfoFill();
                 synchronizeFeatures();
-                synchronizeUserInfo();
                 for (var i = 1; i <= apiClient.FeatureInfo().features.length; i++) {
                     synchronizeQuests(i);
                 }

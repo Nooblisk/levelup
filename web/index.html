@@ -27,7 +27,17 @@
 
         <div class="ui fixed inverted top menu">
             <a id="buttonLeftMenu" class="item">Features</a>
-            <a id="buttonUserInfo" class="item" style="display: none">UserInfo</a>
+            <!--<a id="buttonUserInfo" class="item" style="display: none">UserInfo</a>-->
+            <div id="buttonUserInfo" class="ui dropdown item" style="display: none">
+                UserInfo
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a id="userUsername" class="item"></a>
+                    <a id="userLevel" class="item"></a>
+                    <a id="userEmail" class="item"></a>
+                    <a id="buttonLogOut" class="item">Log out</a>
+                </div>
+            </div>
             <a id="buttonSignIn" class="item" style="display: none">Sign In</a>
             <a id="buttonRefresh" class="item">
                 <i class="refresh icon"></i>
@@ -44,27 +54,27 @@
             <h4 id="headerText4" class="ui header"></h4>
 
         <!--Окно информации о пользователе-->
-        <div id="modalUserInfo" class="ui small modal">
-            <div class="content">
-                <div id="" class="ui card">
-                    <div class="content">
-                        <div id="userUsername" class="header"></div>
-                        <div id="userLevel" class="meta"></div>
-                        <div id="userEmail" class="description">
+        <!--<div id="modalUserInfo" class="ui small modal">-->
+            <!--<div class="content">-->
+                <!--<div id="" class="ui card">-->
+                    <!--<div class="content">-->
+                        <!--<div id="userUsername" class="header"></div>-->
+                        <!--<div id="userLevel" class="meta"></div>-->
+                        <!--<div id="userEmail" class="description">-->
 
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <div id="buttonSignOut" class="ui left attached green positive button">
-                            SignOut
-                        </div>
-                        <div class="ui black deny button">
-                            Close Window
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="actions">-->
+                        <!--<div id="buttonSignOut" class="ui left attached green positive button">-->
+                            <!--SignOut-->
+                        <!--</div>-->
+                        <!--<div class="ui black deny button">-->
+                            <!--Close Window-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
 
         <!--Окно ввода логина и пароля-->
         <div id="modalAuthorization" class="ui small modal">
@@ -308,16 +318,16 @@
             </div>
             <div class="extra">
                 <div class="ui left floated quest update icon button" title="update quest" data-id="{{id}}">
-                    <i class="write icon"></i>
+                    <i class="write icon" data-id="{{id}}"></i>
                 </div>
                 <div class="ui left floated quest delete icon button" title="delete quest" data-id="{{id}}">
-                    <i class="trash icon"></i>
+                    <i class="trash icon" data-id="{{id}}"></i>
                 </div>
                 <div class="ui left floated step down icon button" title="step down" data-id="{{id}}">
-                    <i class="minus circle icon"></i>
+                    <i class="minus circle icon" data-id="{{id}}"></i>
                 </div>
                 <div class="ui left floated step up icon button" title="step up" data-id="{{id}}">
-                     <i class="add circle icon"></i>
+                     <i class="add circle icon" data-id="{{id}}"></i>
                 </div>
             </div>
 
@@ -345,6 +355,13 @@
                 .sidebar('toggle')
         ;
     });
+
+    $('.dropdown.item')
+            .dropdown({
+                // you can use any ui transition
+                transition: 'scale'
+            })
+    ;
 
     var templateList = $("#templateList");
     var templateColumn = $("#templateColumn");

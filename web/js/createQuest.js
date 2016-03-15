@@ -5,7 +5,8 @@
 
 
 //обработчик для кнопок создания новых квестов
-$('#templateColumn').on("click", ".ui.quest.post.button", function (e) {
+$('#templateColumn').on("click", ".ui.quest.post.button", function () {
+    var feature = $(this).data("id");
     $("#modalCreateQuest")
         .modal({
             autofocus: true,
@@ -14,7 +15,7 @@ $('#templateColumn').on("click", ".ui.quest.post.button", function (e) {
                 formCreateQuest.form('reset');
             },
             onApprove: function () {
-                formCreateQuest.form('set value', "featureIdCreateQuest").val = e.target.dataset.id;
+                formCreateQuest.form('set value', "featureIdCreateQuest").val = feature;
                 formCreateQuest.submit();
                 return false;
             }

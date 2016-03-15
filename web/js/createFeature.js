@@ -33,7 +33,6 @@ var requestCreateFeature = function (title, description, imageUrl) {
 //правила для формы добавления фичи
 formCreateFeature
     .form({
-        //on: 'blur',
         onSuccess: function () {
             var titleCreateFeature = formCreateFeature.form('get field', "titleCreateFeature").val();
             var descriptionCreateFeature = formCreateFeature.form('get field', "descriptionCreateFeature").val();
@@ -59,10 +58,6 @@ formCreateFeature
                     {
                         type   : 'empty',
                         prompt : 'Please enter a description'
-                    },
-                    {
-                        type   : 'minLength[4]',
-                        prompt : 'Please enter at least 4 characters'
                     }
                 ]
             },
@@ -71,7 +66,7 @@ formCreateFeature
                 rules: [
                     {
                         type   : 'empty',
-                        prompt : 'Please enter a imageUrl'
+                        prompt : 'Please enter an imageUrl'
                     }
                 ]
             }

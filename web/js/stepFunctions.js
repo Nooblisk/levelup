@@ -8,9 +8,7 @@ templateColumn.on("click", ".ui.step.up.button", function () {
     var featureStepUp = $(this).parents(".list.quests").data("id");
     var questStepUp = $(this).data("id");
     var questOrder = $(this).parents(".item.quest").data("order");
-    //console.log(questOrder);
     var result = prompt("Добавьте комментарий, если хотите", "");
-    console.log(featureStepUp, questStepUp, result);
     requestStepUp(featureStepUp, questStepUp, result, questOrder);
 });
 
@@ -48,8 +46,6 @@ templateColumn.on("click", ".ui.step.down.button", function () {
     var featureStepDown = $(this).parents(".list.quests").data("id");
     var questStepDown = $(this).data("id");
     if (window.confirm()) {
-        console.log(featureStepDown);
-        console.log(questStepDown);
         requestStepDown(featureStepDown, questStepDown, questOrder);
     }
 });

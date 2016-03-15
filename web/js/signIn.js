@@ -17,7 +17,6 @@ $("#buttonSignIn").click(function () {
 //правила для формы авторизации
 formAuthorization
     .form({
-        //on: 'blur',
         onSuccess: function () {
             var login = formAuthorization.form('get field', "login").val();
             var password = formAuthorization.form('get field', "password").val();
@@ -65,8 +64,8 @@ var firstAuthorization = function (username, password) {
         $("#headerText").text(JSON.stringify(apiClient.AuthInfo()));
         $("#buttonSignIn").hide();
         $("#buttonUserInfo").show();
-        $('#buttonLeftMenu').show();
-        $('#buttonRefresh').show();
+        buttonLeftMenu.show();
+        buttonRefresh.show();
 
         synchronizeFeatures();
         synchronizeUserInfo();

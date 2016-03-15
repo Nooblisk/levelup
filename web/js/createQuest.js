@@ -2,11 +2,10 @@
  * Created by Nooblisk on 10.03.2016.
  */
 
-
-
 //обработчик для кнопок создания новых квестов
 $('#templateColumn').on("click", ".ui.quest.post.button", function () {
     var feature = $(this).data("id");
+    $("#featureIdCreateQuest").val(feature);
     $("#modalCreateQuest")
         .modal({
             autofocus: true,
@@ -15,7 +14,6 @@ $('#templateColumn').on("click", ".ui.quest.post.button", function () {
                 formCreateQuest.form('reset');
             },
             onApprove: function () {
-                formCreateQuest.form('set value', "featureIdCreateQuest").val = feature;
                 formCreateQuest.submit();
                 return false;
             }
@@ -35,16 +33,14 @@ var requestCreateQuest = function (feature, title, description, maxLevel) {
     });
 };
 
-
 //правила для формы добавления фичи
 formCreateQuest
     .form({
-        //on: 'blur',
         onSuccess: function () {
             var titleCreateQuest = formCreateQuest.form('get field', "titleCreateQuest").val();
             var descriptionCreateQuest = formCreateQuest.form('get field', "descriptionCreateQuest").val();
             var maxLevelCreateQuest = formCreateQuest.form('get field', "maxLevelCreateQuest").val();
-            var featureIdCreateQuest = formCreateQuest.form('get value', "featureIdCreateQuest").val;
+            var featureIdCreateQuest = formCreateQuest.form('get field', "featureIdCreateQuest").val();
             requestCreateQuest(featureIdCreateQuest, titleCreateQuest, descriptionCreateQuest, maxLevelCreateQuest);
             formCreateQuest.form('reset');
             $("#modalCreateQuest").modal('hide');
@@ -66,10 +62,6 @@ formCreateQuest
                     {
                         type   : 'empty',
                         prompt : 'Please enter a description'
-                    },
-                    {
-                        type   : 'minLength[4]',
-                        prompt : 'Please enter at least 4 characters'
                     }
                 ]
             },
@@ -78,7 +70,7 @@ formCreateQuest
                 rules: [
                     {
                         type   : 'empty',
-                        prompt : 'Please enter a maxLevel'
+                        prompt : 'Please enter how much steps you need'
                     }
                 ]
             }

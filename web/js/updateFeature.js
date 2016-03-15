@@ -36,7 +36,6 @@ var requestUpdateFeature = function (feature, title, description, imageUrl) {
 //правила для формы добавления фичи
 formUpdateFeature
     .form({
-        //on: 'blur',
         onSuccess: function () {
             var titleUpdateFeature = formUpdateFeature.form('get field', "titleUpdateFeature").val();
             var descriptionUpdateFeature = formUpdateFeature.form('get field', "descriptionUpdateFeature").val();
@@ -63,10 +62,6 @@ formUpdateFeature
                     {
                         type   : 'empty',
                         prompt : 'Please enter a description'
-                    },
-                    {
-                        type   : 'minLength[4]',
-                        prompt : 'Please enter at least 4 characters'
                     }
                 ]
             },

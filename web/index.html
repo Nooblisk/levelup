@@ -53,42 +53,18 @@
             <h4 id="headerText3" class="ui header"></h4>
             <h4 id="headerText4" class="ui header"></h4>
 
-        <!--Окно информации о пользователе-->
-        <!--<div id="modalUserInfo" class="ui small modal">-->
-            <!--<div class="content">-->
-                <!--<div id="" class="ui card">-->
-                    <!--<div class="content">-->
-                        <!--<div id="userUsername" class="header"></div>-->
-                        <!--<div id="userLevel" class="meta"></div>-->
-                        <!--<div id="userEmail" class="description">-->
-
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div class="actions">-->
-                        <!--<div id="buttonSignOut" class="ui left attached green positive button">-->
-                            <!--SignOut-->
-                        <!--</div>-->
-                        <!--<div class="ui black deny button">-->
-                            <!--Close Window-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-
         <!--Окно ввода логина и пароля-->
         <div id="modalAuthorization" class="ui small modal">
             <div class="content">
                 <form class="ui form authorization">
                     <div class="field">
                         <label>Login</label>
-                        <input name="login" title="login" type="text" value="test">
+                        <input id="login" title="login" type="text" value="test">
                     </div>
                     <div class="field">
                         <label>Password</label>
-                        <input name="password" title="password" type="password" value="test">
+                        <input id="password" title="password" type="password" value="test">
                     </div>
-                    <!--<div class="ui submit button">Submit</div>-->
                     <div class="ui error message"></div>
                 </form>
             </div>
@@ -108,15 +84,15 @@
                 <form class="ui form create feature">
                     <div class="field">
                         <label>Title</label>
-                        <input name="titleCreateFeature" title="title" type="text" value="">
+                        <input id="titleCreateFeature" title="title" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Description</label>
-                        <input name="descriptionCreateFeature" title="description" type="text" value="">
+                        <input id="descriptionCreateFeature" title="description" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Image</label>
-                        <input name="imageUrlCreateFeature" title="imageUrl" type="text"
+                        <input id="imageUrlCreateFeature" title="imageUrl" type="text"
                                value="http://lorempixel.com/100/100/">
                     </div>
                     <div class="ui error message"></div>
@@ -141,15 +117,15 @@
                 <form class="ui form create quest">
                     <div class="field">
                         <label>Title</label>
-                        <input name="titleCreateQuest" title="title" type="text" value="">
+                        <input id="titleCreateQuest" title="title" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Description</label>
-                        <input name="descriptionCreateQuest" title="description" type="text" value="">
+                        <input id="descriptionCreateQuest" title="description" type="text" value="">
                     </div>
                     <div class="field">
-                        <label>maxLevel</label>
-                        <input name="maxLevelCreateQuest" title="maxLevel" type="text" value="">
+                        <label>Number of steps</label>
+                        <input id="maxLevelCreateQuest" title="maxLevel" type="text" value="">
                     </div>
                     <div class="disabled field" style="display:none">
                         <label>featureId</label>
@@ -347,7 +323,18 @@
 <script>
 
 
-    $("#buttonLeftMenu").click(function(){
+    var templateList = $("#templateList");
+    var templateColumn = $("#templateColumn");
+
+    var formAuthorization = $('.form.authorization');
+    var formCreateFeature = $('.form.create.feature');
+    var formUpdateFeature = $('.form.update.feature');
+    var formCreateQuest = $('.form.create.quest');
+    var formUpdateQuest = $('.form.update.quest');
+    var buttonRefresh = $("#buttonRefresh");
+    var buttonLeftMenu = $("#buttonLeftMenu");
+
+    buttonLeftMenu.click(function(){
         $('.ui.sidebar').sidebar({
                     dimPage: false,
                     closable: false
@@ -363,14 +350,7 @@
             })
     ;
 
-    var templateList = $("#templateList");
-    var templateColumn = $("#templateColumn");
 
-    var formAuthorization = $('.form.authorization');
-    var formCreateFeature = $('.form.create.feature');
-    var formUpdateFeature = $('.form.update.feature');
-    var formCreateQuest = $('.form.create.quest');
-    var formUpdateQuest = $('.form.update.quest');
 
 
     var template = Handlebars.compile($('#templateFeature').html());
@@ -640,8 +620,6 @@
                                     localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
                                     spiner.down();
                             statusBar();
-                                    //$("#buttonSignIn").hide();
-                                    //$(".button.signOut").show();
                                     return func(arg1, arg2, arg3, arg4, arg5);
                                 }
                         )
@@ -714,12 +692,21 @@
         });
     };
 
-    $("#buttonRefresh").click(function(){
-        synchronizeFeatures();
-        synchronizeUserInfo();
-        for(var i=1; i<=apiClient.FeatureInfo().features.length; i++){
-            synchronizeQuests(i);
-        }
+    buttonRefresh.click(function () {
+         var refresh = function() {
+            apiClient.getUser().success(function () {
+                spiner.down();
+                statusBar();
+                synchronizeFeatures();
+                synchronizeUserInfo();
+                for (var i = 1; i <= apiClient.FeatureInfo().features.length; i++) {
+                    synchronizeQuests(i);
+                }
+            }).fail(function (xhr) {
+                apiClient.authFail(xhr, refresh);
+            });
+        };
+        refresh();
     });
 
     //срабатывает при обновлении страницы
@@ -749,8 +736,8 @@
     }
     else {
         $("#buttonSignIn").show();
-        $('#buttonLeftMenu').hide();
-        $('#buttonRefresh').hide();
+        buttonLeftMenu.hide();
+        buttonRefresh.hide();
     }
 
 

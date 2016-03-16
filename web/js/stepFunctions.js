@@ -22,8 +22,8 @@ var requestStepUp = function (feature, quest, comment, questOrder) {
             spiner.down();
             statusBar();
             synchronizeUserInfo();
-            synchronizeFeatures();
-            synchronizeQuests(feature);
+            synchronizeFeaturesAndFill();
+            synchronizeQuestsAndFill(feature);
         }).fail(function (xhr) {
             apiClient.authFail(xhr, requestStepUp, feature, quest, comment);
         });
@@ -32,7 +32,7 @@ var requestStepUp = function (feature, quest, comment, questOrder) {
         apiClient.postStep(feature, quest, comment).success(function () {
             spiner.down();
             statusBar();
-            synchronizeQuests(feature);
+            synchronizeQuestsAndFill(feature);
         }).fail(function (xhr) {
             apiClient.authFail(xhr, requestStepUp, feature, quest, comment);
         });
@@ -60,10 +60,10 @@ var requestStepDown = function (feature, quest, questOrder) {
                 apiClient.deleteStep(feature, quest, e.steps[len - 1].id).success(function () {
                     spiner.down();
                     statusBar();
-                    synchronizeFeatures();
+                    synchronizeFeaturesAndFill();
                     synchronizeUserInfo();
                     $.tab('change tab', feature);
-                    synchronizeQuests(feature);
+                    synchronizeQuestsAndFill(feature);
 
                 }).fail(function (xhr) {
                     apiClient.authFail(xhr, requestStepDown, feature, quest);
@@ -73,7 +73,7 @@ var requestStepDown = function (feature, quest, questOrder) {
                 apiClient.deleteStep(feature, quest, e.steps[len - 1].id).success(function () {
                     spiner.down();
                     statusBar();
-                    synchronizeQuests(feature);
+                    synchronizeQuestsAndFill(feature);
                 }).fail(function (xhr) {
                     apiClient.authFail(xhr, requestStepDown, feature, quest);
                 });

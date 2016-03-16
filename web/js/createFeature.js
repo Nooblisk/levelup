@@ -24,7 +24,7 @@ var requestCreateFeature = function (title, description, imageUrl) {
     success(function () {
         spiner.down();
         statusBar();
-        synchronizeFeatures();
+        synchronizeFeaturesAndFill();
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestCreateFeature, title, description, imageUrl);
     });

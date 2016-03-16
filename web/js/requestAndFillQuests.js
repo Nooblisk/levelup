@@ -2,7 +2,7 @@
  * Created by Nooblisk on 04.03.2016.
  */
 //забирает с помощью клиент-апи список квестов для данной фичи
-var synchronizeQuests = function (feature) {
+var synchronizeQuestsAndFill = function (feature) {
     apiClient.getQuests(feature).success(function (QuestInfo) {
             spiner.down();
             statusBar();
@@ -11,11 +11,28 @@ var synchronizeQuests = function (feature) {
             questsFill(feature);
         })
         .fail(function (xhr) {
+            apiClient.authFail(xhr, synchronizeQuestsAndFill, feature);
+        });
+};
+
+
+
+var synchronizeQuests = function (feature) {
+    apiClient.getQuests(feature).success(function (QuestInfo) {
+            spiner.down();
+            statusBar();
+            apiClient.setQuestInfo(feature, QuestInfo);
+            localStorage.setItem('QuestInfo' + feature, JSON.stringify(apiClient.QuestInfo(feature)));
+        })
+        .fail(function (xhr) {
             apiClient.authFail(xhr, synchronizeQuests, feature);
         });
 };
 
-//заполняет информацию о квестах данными, добытыми раннее функцией synchronizeQuests
+
+
+
+//заполняет информацию о квестах данными, добытыми раннее функцией synchronizeQuestsAndFill
 var questsFill = function(feature){
     var QuestInfo = apiClient.QuestInfo(feature);
     $('#templateListQuests' + feature).empty();

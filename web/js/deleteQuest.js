@@ -5,8 +5,10 @@
 
 //обработчик, запускающий функцию удаления квеста
 templateColumn.on("click", ".ui.quest.delete.button", function () {
+    var feature = $(this).parents(".list.quests").data("id");
+    var quest = $(this).data("id");
     if (window.confirm()) {
-        requestDeleteQuest($(this).parents(".list.quests").data("id"), $(this).data("id"));
+        requestDeleteQuest(feature, quest);
     }
 });
 
@@ -15,6 +17,7 @@ var requestDeleteQuest = function (feature, quest) {
         apiClient.deleteQuest(feature, quest).success(function () {
             spiner.down();
             statusBar();
+            $("#itemQuest"+quest).remove();
             synchronizeQuests(feature);
         }).fail(function(xhr){
             apiClient.authFail(xhr, requestDeleteQuest, feature, quest);

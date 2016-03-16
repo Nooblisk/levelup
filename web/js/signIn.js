@@ -67,7 +67,7 @@ var firstAuthorization = function (username, password) {
         buttonLeftMenu.show();
         buttonRefresh.show();
 
-        synchronizeFeatures();
+        synchronizeFeaturesAndFill();
         synchronizeUserInfo();
         $('.ui.sidebar').sidebar({
             dimPage: false,

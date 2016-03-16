@@ -27,7 +27,7 @@ var requestCreateQuest = function (feature, title, description, maxLevel) {
     success(function () {
         spiner.down();
         statusBar();
-        synchronizeQuests(feature);
+        synchronizeQuestsAndFill(feature);
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestCreateQuest, feature, title, description, maxLevel);
     });

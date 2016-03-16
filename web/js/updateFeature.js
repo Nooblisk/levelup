@@ -27,7 +27,7 @@ var requestUpdateFeature = function (feature, title, description, imageUrl) {
     apiClient.putFeature(feature, title, description, imageUrl).success(function () {
         spiner.down();
         statusBar();
-        synchronizeFeatures();
+        synchronizeFeaturesAndFill();
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestUpdateFeature, feature, title, description, imageUrl);
     });

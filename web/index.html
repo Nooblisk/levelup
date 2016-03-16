@@ -333,6 +333,7 @@
     var formUpdateQuest = $('.form.update.quest');
     var buttonRefresh = $("#buttonRefresh");
     var buttonLeftMenu = $("#buttonLeftMenu");
+    var itemFeatureClass = $(".item.feature");
 
     buttonLeftMenu.click(function(){
         $('.ui.sidebar').sidebar({
@@ -393,12 +394,12 @@
         var AuthInfo;
         var FeatureInfo;
         var UserInfo;
-        var QuestInfo =[];
+        var QuestInfo ={};
         this.setQuestInfo = function (feature, QuestInfoObject) {
-            QuestInfo[feature-1] = QuestInfoObject;
+            QuestInfo["feature"+feature] = QuestInfoObject;
         };
         this.QuestInfo = function (feature) {
-            return QuestInfo[feature-1];
+            return QuestInfo["feature"+feature];
         };
         this.setAuthInfo = function (AuthInfoObject) {
             AuthInfo = AuthInfoObject;
@@ -650,10 +651,13 @@
             for (var i = 1; i <= FeatureInfo.features.length; i++) {
                 //отрисовываем список фич поштучно
                 templateList.append(template(FeatureInfo.features[i - 1]));
+
                 //создаём каждой фиче контейнер
                 templateColumn.append(template2(FeatureInfo.features[i - 1]));
+                $("#containerFeature"+FeatureInfo.features[i - 1].id).attr("data-order", i-1);
             }
             templateList.append("<a id='buttonCreateFeature' class='item'><i class='plus icon'></i>Add new feature</a>");
+
         }
         else{
             templateList.append("<a id=\"buttonCreateFeature\" class=\"item\">Add new feature</a>");
@@ -662,13 +666,13 @@
                 .tab()
         ;
         //навешиваем событие на клик по фиче из списка слева
-        $('.item.feature').click(function () {
+        itemFeatureClass.click(function () {
             $.tab('change tab', this.dataset.id);
             if (apiClient.isQuesterized(this.dataset.id)) {
                 questsFill(this.dataset.id);
             }
             else {
-                synchronizeQuests(this.dataset.id);
+                synchronizeQuestsAndFill(this.dataset.id);
             }
 
 
@@ -679,8 +683,8 @@
 
 
 
-
-    var synchronizeFeatures = function () {
+    //обновить данные по фичам и сразу же перерисовать
+    var synchronizeFeaturesAndFill = function () {
         apiClient.getFeatures().success(function (FeatureInfo) {
             spiner.down();
             statusBar();
@@ -688,9 +692,24 @@
                     localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
             featuresFill();
                 }).fail(function(xhr){
+            apiClient.authFail(xhr, synchronizeFeaturesAndFill);
+        });
+    };
+
+    //только обновить данные по фичам
+    var synchronizeFeatures = function () {
+        apiClient.getFeatures().success(function (FeatureInfo) {
+            spiner.down();
+            statusBar();
+            apiClient.setFeatureInfo(FeatureInfo);
+            localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
+        }).fail(function(xhr){
             apiClient.authFail(xhr, synchronizeFeatures);
         });
     };
+
+
+
 
     buttonRefresh.click(function () {
          var refresh = function() {
@@ -700,10 +719,11 @@
                 apiClient.setUserInfo(UserInfo);
                 localStorage.setItem('UserInfo', JSON.stringify(apiClient.UserInfo()));
                 userInfoFill();
-                synchronizeFeatures();
-                for (var i = 1; i <= apiClient.FeatureInfo().features.length; i++) {
-                    synchronizeQuests(i);
-                }
+                synchronizeFeaturesAndFill();
+
+                apiClient.FeatureInfo().features.forEach(function(item){
+                    synchronizeQuestsAndFill(item.id);
+                });
             }).fail(function (xhr) {
                 apiClient.authFail(xhr, refresh);
             });
@@ -721,11 +741,11 @@
         }).sidebar('show');
         if(apiClient.isFeaturized()){
             featuresFill();
-            $('.item.feature').first().click();
+            itemFeatureClass.first().click();
         }
         else{
-            synchronizeFeatures();
-            $('.item.feature').first().click();
+            synchronizeFeaturesAndFill();
+            itemFeatureClass.first().click();
         }
 
         if(apiClient.isUserized()){

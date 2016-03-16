@@ -333,7 +333,6 @@
     var formUpdateQuest = $('.form.update.quest');
     var buttonRefresh = $("#buttonRefresh");
     var buttonLeftMenu = $("#buttonLeftMenu");
-    var itemFeatureClass = $(".item.feature");
 
     buttonLeftMenu.click(function(){
         $('.ui.sidebar').sidebar({
@@ -656,6 +655,13 @@
                 templateColumn.append(template2(FeatureInfo.features[i - 1]));
                 $("#containerFeature"+FeatureInfo.features[i - 1].id).attr("data-order", i-1);
             }
+
+
+
+            for(var j=0; i<apiClient.FeatureInfo().features.length; j++){
+                $(".item.feature .content .header").eq(j).text(truncate($(".item.feature .content .header").eq(j).text(), 10))
+            }
+
             templateList.append("<a id='buttonCreateFeature' class='item'><i class='plus icon'></i>Add new feature</a>");
 
         }
@@ -666,7 +672,7 @@
                 .tab()
         ;
         //навешиваем событие на клик по фиче из списка слева
-        itemFeatureClass.click(function () {
+        $(".item.feature").click(function () {
             $.tab('change tab', this.dataset.id);
             if (apiClient.isQuesterized(this.dataset.id)) {
                 questsFill(this.dataset.id);
@@ -680,7 +686,13 @@
 
     };
 
-
+    var truncate = function(str, maxlength) {
+        if (str.length > maxlength) {
+            return str.substring(0, maxlength - 3) + "...";
+        }
+        else
+            return str;
+    };
 
 
     //обновить данные по фичам и сразу же перерисовать
@@ -741,11 +753,11 @@
         }).sidebar('show');
         if(apiClient.isFeaturized()){
             featuresFill();
-            itemFeatureClass.first().click();
+            $(".item.feature").first().click();
         }
         else{
             synchronizeFeaturesAndFill();
-            itemFeatureClass.first().click();
+            $(".item.feature").first().click();
         }
 
         if(apiClient.isUserized()){

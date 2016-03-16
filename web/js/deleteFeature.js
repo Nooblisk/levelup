@@ -17,9 +17,9 @@ var requestDeleteFeature = function (feature, featureOrder) {
         apiClient.deleteFeature(feature).success(function () {
             spiner.down();
             statusBar();
-            itemFeatureClass.eq(featureOrder).remove();
+            $(".item.feature").eq(featureOrder).remove();
             $(".tab.container").eq(featureOrder).remove();
-            itemFeatureClass.eq(featureOrder-1).click();
+            $(".item.feature").eq(featureOrder-1).click();
             localStorage.removeItem("Quest"+feature);
             synchronizeFeatures();
         }).fail(function(xhr){

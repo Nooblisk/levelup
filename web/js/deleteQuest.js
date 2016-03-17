@@ -17,7 +17,11 @@ var requestDeleteQuest = function (feature, quest) {
         apiClient.deleteQuest(feature, quest).success(function () {
             spiner.down();
             statusBar();
-            $("#itemQuest"+quest).remove();
+            var QuestInfo = apiClient.QuestInfo(feature);
+            if(QuestInfo.quests.length == 1){
+                $("#itemQuest"+quest).remove();
+                $('#templateListQuests' + feature).append("Квестов пока нет");
+            }
             synchronizeQuests(feature);
         }).fail(function(xhr){
             apiClient.authFail(xhr, requestDeleteQuest, feature, quest);

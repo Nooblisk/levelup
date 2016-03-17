@@ -5,9 +5,10 @@
 $('#templateColumn').on("click", ".ui.feature.update.button", function () {
     var feature = $(this).data("id");
     $("#featureIdUpdateFeature").val(feature);
-    $("#titleUpdateFeature").val(apiClient.FeatureInfo().features[feature-1].title);
-    $("#descriptionUpdateFeature").val(apiClient.FeatureInfo().features[feature-1].description);
-    $("#imageUrlUpdateFeature").val(apiClient.FeatureInfo().features[feature-1].image_url);
+    var featureOrder = apiClient.featureOrder(feature);
+    $("#titleUpdateFeature").val(apiClient.FeatureInfo().features[featureOrder].title);
+    $("#descriptionUpdateFeature").val(apiClient.FeatureInfo().features[featureOrder].description);
+    $("#imageUrlUpdateFeature").val(apiClient.FeatureInfo().features[featureOrder].image_url);
     $("#modalUpdateFeature")
         .modal({
             autofocus: true,
@@ -27,7 +28,8 @@ var requestUpdateFeature = function (feature, title, description, imageUrl) {
     apiClient.putFeature(feature, title, description, imageUrl).success(function () {
         spiner.down();
         statusBar();
-        synchronizeFeaturesAndFill();
+        featureChange(feature, title, description, imageUrl);
+        synchronizeFeatures();
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestUpdateFeature, feature, title, description, imageUrl);
     });
@@ -78,3 +80,18 @@ formUpdateFeature
         }
     })
 ;
+
+
+
+var featureChange = function(feature, title, description, imageUrl, level){
+    $("#titleItemFeature"+feature).text(truncate(title, 10));
+    $("#titleContainerFeature"+feature).text(title);
+
+    $("#descriptionContainerFeature"+feature).text(description);
+
+    $("#imageContainerFeature"+feature).attr("src", imageUrl);
+    $("#imageItemFeature"+feature).attr("src", imageUrl);
+
+    $("#levelItemFeature"+feature).text(level);
+    $("#levelContainerFeature"+feature).text("уровень "+level);
+};

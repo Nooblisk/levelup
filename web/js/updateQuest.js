@@ -6,7 +6,7 @@
 templateColumn.on("click", ".ui.quest.update.button", function () {
     var feature = $(this).parents(".list.quests").data("id");
     var quest = $(this).data("id");
-    var questOrder = $(this).parents(".item.quest").data("order");
+    var questOrder = apiClient.questOrder(feature, quest);
     $("#featureIdUpdateQuest").val(feature);
     $("#questIdUpdateQuest").val(quest);
     $("#titleUpdateQuest").val(apiClient.QuestInfo(feature).quests[questOrder].title);
@@ -31,7 +31,8 @@ var requestUpdateQuest = function (feature, quest, title, description, maxLevel)
     apiClient.putQuest(feature, quest, title, description, maxLevel).success(function () {
         spiner.down();
         statusBar();
-        synchronizeQuestsAndFill(feature);
+        questChange(quest, title, description, maxLevel);
+        synchronizeQuests(feature);
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestUpdateQuest, feature, quest, title, description, maxLevel);
     });
@@ -82,3 +83,15 @@ formUpdateQuest
         }
     })
 ;
+
+
+var questChange = function(quest, title, description, maxLevel){
+    $("#titleQuest"+quest).text(title);
+    $("#descriptionQuest"+quest).text(description);
+    $("#steps"+quest).data("total", maxLevel).progress({
+        text: {
+            active: 'Шагов {value} из {total} выполнено',
+            success: '{total} Шагов Выполнено! Квест Выполнен!'
+        }
+    });
+};

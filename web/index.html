@@ -225,16 +225,12 @@
 </div>
 
 
-<!--Шаблон фичи в списке-->
+
 <script id="templateFeature" type="text/x-handlebars-template">
-    <a id = "itemFeature{{id}}" class="item feature" data-tab="{{id}}" data-id="{{id}}">
-        <img class="ui avatar image" src={{image_url}}>
-
-        <div class="content">
-            <div class="header">{{title}}</div>
-            уровень {{level}}
-        </div>
-
+    <a id= "itemFeature{{id}}" class="item feature" data-tab="{{id}}" data-id="{{id}}">
+        <img id="imageItemFeature{{id}}" class="ui avatar image" src={{image_url}}>
+        <div id="levelItemFeature{{id}}" class="ui teal label">{{level}}</div>
+        <div id="titleItemFeature{{id}}" class="ui container">{{title}}</div>
     </a>
 </script>
 
@@ -246,16 +242,16 @@
                 <div class="ui items">
                     <div class="item">
                         <div class="ui tiny image">
-                            <img src={{image_url}}>
+                            <img id="imageContainerFeature{{id}}" src={{image_url}}>
                         </div>
                         <div class="content">
-                            <a class="header">{{title}}</a>
+                            <a id="titleContainerFeature{{id}}" class="header">{{title}}</a>
 
                             <div class="meta">
-                                <span>уровень {{level}}</span>
+                                <span id="levelContainerFeature{{id}}">уровень {{level}}</span>
                             </div>
                             <div class="description">
-                                <p>{{description}}</p>
+                                <p id="descriptionContainerFeature{{id}}">{{description}}</p>
                             </div>
                             <div class="extra">
                                 <button class="ui quest post compact green icon button" title="add quest" data-id="{{id}}">
@@ -281,13 +277,13 @@
 <script id="templateContainerDownSegment" type="text/x-handlebars-template">
     <div id="itemQuest{{id}}" class="item quest" data-id="{{id}}">
         <div class="content">
-            <div class="header">{{title}}</div>
+            <div id="titleQuest{{id}}" class="header">{{title}}</div>
             <div class="meta">
                 <span>шаг {{level}} из {{max_level}}</span>
             </div>
             <div class="description">
-                <p>{{description}}</p>
-                <div id="steps{{id}}" class="ui indicating small progress" data-value="{{level}}" data-total="{{max_level}}" style="width:300px">
+                <p id="descriptionQuest{{id}}">{{description}}</p>
+                <div id="steps{{id}}" class="ui indicating small inverted progress" data-value="{{level}}" data-total="{{max_level}}" style="width:300px">
                     <div class="bar"></div>
                     <div class="label">шагов {{level}} из {{max_level}}</div>
                 </div>
@@ -417,6 +413,22 @@
         };
         this.FeatureInfo = function () {
             return FeatureInfo;
+        };
+        this.featureOrder = function(feature){
+            for(var i=0; i<apiClient.FeatureInfo().features.length; i++){
+                if (apiClient.FeatureInfo().features[i].id == feature){
+                    return i;
+                }
+            }
+            return -1;
+        };
+        this.questOrder = function(feature, quest){
+            for(var i=0; i<apiClient.QuestInfo(feature).quests.length; i++){
+                if (apiClient.QuestInfo(feature).quests[i].id == quest){
+                    return i;
+                }
+            }
+            return -1;
         };
         this.postAuthorization = function (username, password) {
             spiner.up();
@@ -638,6 +650,8 @@
     var apiClient = new ApiClient();
 
 
+
+
     //заполняет страничку данными FeatureInfo (фичи)
     var featuresFill = function(){
         var FeatureInfo = apiClient.FeatureInfo();
@@ -659,7 +673,7 @@
 
 
             for(var j=0; i<apiClient.FeatureInfo().features.length; j++){
-                $(".item.feature .content .header").eq(j).text(truncate($(".item.feature .content .header").eq(j).text(), 10))
+                $(".item.feature .container").eq(j).text(truncate($(".item.feature .container").eq(j).text(), 10))
             }
 
             templateList.append("<a id='buttonCreateFeature' class='item'><i class='plus icon'></i>Add new feature</a>");

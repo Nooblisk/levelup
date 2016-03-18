@@ -24,7 +24,8 @@ var requestCreateFeature = function (title, description, imageUrl) {
     success(function () {
         spiner.down();
         statusBar();
-        synchronizeFeaturesAndFill();
+        featureAdd(title, description, imageUrl);
+        synchronizeFeatures();
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestCreateFeature, title, description, imageUrl);
     });
@@ -74,3 +75,44 @@ formCreateFeature
         }
     })
 ;
+
+var featureIdForNew = function () {
+    var biggerId = 0;
+    for (var i = 0; i < apiClient.FeatureInfo().features.length; i++) {
+        if (apiClient.FeatureInfo().features[i].id > biggerId) {
+            biggerId = apiClient.FeatureInfo().features[i].id;
+        }
+    }
+    return biggerId + 1;
+};
+
+var featureAdd = function (title, description, imageUrl) {
+    var newFeatureObj = {};
+    newFeatureObj.id = featureIdForNew();
+    newFeatureObj.title = title;
+    newFeatureObj.description = description;
+    newFeatureObj.image_url = imageUrl;
+    newFeatureObj.level = 0;
+
+    $(".item.feature").last().after(template(newFeatureObj));
+
+    templateColumn.append(template2(newFeatureObj));
+
+
+    $('#itemFeature'+newFeatureObj.id)
+        .tab()
+    ;
+
+    $("#itemFeature"+newFeatureObj.id).click(function () {
+        $.tab('change tab', this.dataset.id);
+        if (apiClient.isQuesterized(this.dataset.id)) {
+            questsFill(this.dataset.id);
+        }
+        else {
+            synchronizeQuestsAndFill(this.dataset.id);
+        }
+
+
+    });
+
+};

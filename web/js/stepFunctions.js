@@ -7,7 +7,8 @@
 templateColumn.on("click", ".ui.step.up.button", function () {
     var featureStepUp = $(this).parents(".list.quests").data("id");
     var questStepUp = $(this).data("id");
-    var questOrder = $(this).parents(".item.quest").data("order");
+    var questOrder = apiClient.questOrder(featureStepUp, questStepUp);
+
     var result = prompt("Добавьте комментарий, если хотите", "");
     requestStepUp(featureStepUp, questStepUp, result, questOrder);
 });
@@ -42,10 +43,10 @@ var requestStepUp = function (feature, quest, comment, questOrder) {
 
 
 templateColumn.on("click", ".ui.step.down.button", function () {
-    var questOrder = $(this).parents(".item.quest").data("order");
     var featureStepDown = $(this).parents(".list.quests").data("id");
     var questStepDown = $(this).data("id");
-    if (window.confirm()) {
+    var questOrder = apiClient.questOrder(featureStepDown, questStepDown);
+    if (window.confirm("Вы уверены, что хотите удалить шаг?")) {
         requestStepDown(featureStepDown, questStepDown, questOrder);
     }
 });

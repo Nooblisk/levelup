@@ -5,9 +5,7 @@
 
 //обработчик, запускающий функцию удаления фичи
 templateColumn.on("click", ".ui.feature.delete.button", function () {
-   // var featureOrder = $(this).parents(".tab.container").data("order");
-    //console.log(featureOrder);
-    if (window.confirm()) {
+    if (window.confirm("Вы уверены, что хотите удалить фичу?")) {
         requestDeleteFeature(this.dataset.id);
     }
 });

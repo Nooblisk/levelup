@@ -39,7 +39,6 @@ var questsFill = function(feature){
     if (QuestInfo.quests.length != 0) {
         for (var i = 1; i <= QuestInfo.quests.length; i++) {
             $('#templateListQuests' + feature).append(template3(QuestInfo.quests[i - 1]));
-            $('#itemQuest' + QuestInfo.quests[i - 1].id).attr("data-order", i-1);
             $('#steps' + QuestInfo.quests[i - 1].id)
                 .progress({
                     text: {

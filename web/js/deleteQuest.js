@@ -7,7 +7,7 @@
 templateColumn.on("click", ".ui.quest.delete.button", function () {
     var feature = $(this).parents(".list.quests").data("id");
     var quest = $(this).data("id");
-    if (window.confirm()) {
+    if (window.confirm("Вы уверены, что хотите удалить квест?")) {
         requestDeleteQuest(feature, quest);
     }
 });

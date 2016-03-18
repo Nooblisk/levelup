@@ -278,12 +278,9 @@
     <div id="itemQuest{{id}}" class="item quest" data-id="{{id}}">
         <div class="content">
             <div id="titleQuest{{id}}" class="header">{{title}}</div>
-            <div class="meta">
-                <span>шаг {{level}} из {{max_level}}</span>
-            </div>
             <div class="description">
                 <p id="descriptionQuest{{id}}">{{description}}</p>
-                <div id="steps{{id}}" class="ui indicating small inverted progress" data-value="{{level}}" data-total="{{max_level}}" style="width:300px">
+                <div id="steps{{id}}" class="ui small teal progress" data-value="{{level}}" data-total="{{max_level}}" style="width:300px">
                     <div class="bar"></div>
                     <div class="label">шагов {{level}} из {{max_level}}</div>
                 </div>
@@ -667,7 +664,6 @@
 
                 //создаём каждой фиче контейнер
                 templateColumn.append(template2(FeatureInfo.features[i - 1]));
-                $("#containerFeature"+FeatureInfo.features[i - 1].id).attr("data-order", i-1);
             }
 
 

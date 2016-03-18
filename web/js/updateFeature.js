@@ -83,7 +83,7 @@ formUpdateFeature
 
 
 
-var featureChange = function(feature, title, description, imageUrl, level){
+var featureChange = function(feature, title, description, imageUrl){
     $("#titleItemFeature"+feature).text(truncate(title, 10));
     $("#titleContainerFeature"+feature).text(title);
 
@@ -92,6 +92,6 @@ var featureChange = function(feature, title, description, imageUrl, level){
     $("#imageContainerFeature"+feature).attr("src", imageUrl);
     $("#imageItemFeature"+feature).attr("src", imageUrl);
 
-    $("#levelItemFeature"+feature).text(level);
-    $("#levelContainerFeature"+feature).text("уровень "+level);
+    //$("#levelItemFeature"+feature).text(level);
+    //$("#levelContainerFeature"+feature).text("уровень "+level);
 };

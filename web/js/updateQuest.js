@@ -31,8 +31,7 @@ var requestUpdateQuest = function (feature, quest, title, description, maxLevel)
     apiClient.putQuest(feature, quest, title, description, maxLevel).success(function () {
         spiner.down();
         statusBar();
-        questChange(quest, title, description, maxLevel);
-        synchronizeQuests(feature);
+        questChange(feature, quest, title, description, maxLevel);
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestUpdateQuest, feature, quest, title, description, maxLevel);
     });
@@ -85,13 +84,12 @@ formUpdateQuest
 ;
 
 
-var questChange = function(quest, title, description, maxLevel){
-    $("#titleQuest"+quest).text(title);
-    $("#descriptionQuest"+quest).text(description);
-    $("#steps"+quest).data("total", maxLevel).progress({
-        text: {
-            active: 'Шагов {value} из {total} выполнено',
-            success: '{total} Шагов Выполнено! Квест Выполнен!'
-        }
-    });
+var questChange = function(feature, quest, title, description, maxLevel){
+    var questOrder = apiClient.questOrder(feature, quest);
+    apiClient.QuestInfo(feature).quests[questOrder].title = title;
+    apiClient.QuestInfo(feature).quests[questOrder].description = description;
+    apiClient.QuestInfo(feature).quests[questOrder].max_level = maxLevel;
+    localStorage.setItem('QuestInfo'+feature, JSON.stringify(apiClient.QuestInfo(feature)));
+    reactiveQuestInfo.set(apiClient.QuestInfoAll());
+
 };

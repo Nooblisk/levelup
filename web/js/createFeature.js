@@ -18,14 +18,13 @@ templateList.on("click", "#buttonCreateFeature", function () {
         .modal('show')
 });
 
-
+//запрашиваем создание новой фичи, запускаем её отрисовку и синхронизируем данные
 var requestCreateFeature = function (title, description, imageUrl) {
     apiClient.postFeature(title, description, imageUrl).
     success(function () {
         spiner.down();
         statusBar();
         featureAdd(title, description, imageUrl);
-        synchronizeFeatures();
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestCreateFeature, title, description, imageUrl);
     });
@@ -76,6 +75,7 @@ formCreateFeature
     })
 ;
 
+//вычисляем ид новой фичи
 var featureIdForNew = function () {
     var biggerId = 0;
     for (var i = 0; i < apiClient.FeatureInfo().features.length; i++) {
@@ -86,33 +86,32 @@ var featureIdForNew = function () {
     return biggerId + 1;
 };
 
+
+//отрисовывает фичу и контейнер к ней по шаблону
 var featureAdd = function (title, description, imageUrl) {
-    var newFeatureObj = {};
-    newFeatureObj.id = featureIdForNew();
-    newFeatureObj.title = title;
-    newFeatureObj.description = description;
-    newFeatureObj.image_url = imageUrl;
-    newFeatureObj.level = 0;
+    var newFeatureInfo = {
+        id: featureIdForNew(),
+        title: title,
+        description: description,
+        image_url: imageUrl,
+        level: "0"
+    };
+    apiClient.FeatureInfo().features.push(newFeatureInfo);
+    localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
 
-    $(".item.feature").last().after(template(newFeatureObj));
+    //рисуем новый элемент в меню слева
+    $(".item.feature").last().after(template(newFeatureInfo));
 
-    templateColumn.append(template2(newFeatureObj));
+    //рисуем новый контейнер ему соответствующий
+    templateColumn.append(template2(newFeatureInfo));
 
-
-    $('#itemFeature'+newFeatureObj.id)
-        .tab()
+    //объясняем элементу слева, что он открывает контейнер кликом и сразу кликаем на новую фичу
+    $('#itemFeature'+newFeatureInfo.id)
+        .tab().click()
     ;
 
-    $("#itemFeature"+newFeatureObj.id).click(function () {
-        $.tab('change tab', this.dataset.id);
-        if (apiClient.isQuesterized(this.dataset.id)) {
-            questsFill(this.dataset.id);
-        }
-        else {
-            synchronizeQuestsAndFill(this.dataset.id);
-        }
+    $('#templateListQuests' + newFeatureInfo.id).append("Квестов пока нет");
 
-
-    });
-
+    apiClient.setQuestInfo(newFeatureInfo.id, JSON.parse('{"quests":[]}'));
+    localStorage.setItem('QuestInfo'+newFeatureInfo.id, JSON.stringify(apiClient.QuestInfo(newFeatureInfo.id)));
 };

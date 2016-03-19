@@ -18,6 +18,7 @@ var requestDeleteQuest = function (feature, quest) {
             spiner.down();
             statusBar();
             var QuestInfo = apiClient.QuestInfo(feature);
+            var questOrder = apiClient.questOrder(feature, quest);
             if(QuestInfo.quests.length == 1){
                 $("#itemQuest"+quest).remove();
                 $('#templateListQuests' + feature).append("Квестов пока нет");
@@ -25,7 +26,9 @@ var requestDeleteQuest = function (feature, quest) {
             else{
                 $("#itemQuest"+quest).remove();
             }
-            synchronizeQuests(feature);
+            apiClient.QuestInfo(feature).quests.splice(questOrder, 1);
+            localStorage.setItem('QuestInfo' + feature, JSON.stringify(apiClient.QuestInfo(feature)));
+
         }).fail(function(xhr){
             apiClient.authFail(xhr, requestDeleteQuest, feature, quest);
         });

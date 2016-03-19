@@ -53,7 +53,6 @@ formAuthorization
 ;
 
 
-
 //первичная авторизация
 var firstAuthorization = function (username, password) {
     apiClient.postAuthorization(username, password).success(function (a) {
@@ -66,9 +65,8 @@ var firstAuthorization = function (username, password) {
         $("#buttonUserInfo").show();
         buttonLeftMenu.show();
         buttonRefresh.show();
-
         synchronizeFeaturesAndFill();
-        synchronizeUserInfo();
+        synchronizeUserInfoAndFill();
         $('.ui.sidebar').sidebar({
             dimPage: false,
             closable: false

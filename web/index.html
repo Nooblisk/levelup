@@ -27,7 +27,6 @@
 
         <div class="ui fixed inverted top menu">
             <a id="buttonLeftMenu" class="item">Features</a>
-            <!--<a id="buttonUserInfo" class="item" style="display: none">UserInfo</a>-->
             <div id="buttonUserInfo" class="ui dropdown item" style="display: none">
                 UserInfo
                 <i class="dropdown icon"></i>
@@ -309,11 +308,13 @@
 <script src="vendor/semantic/js/semantic.min.js"></script>
 <script src="vendor/handlebars/handlebars-v4.0.5.js"></script>
 
-
+<script src="js/reactiveTest.js"></script>
 <script src="js/requestAndFillQuests.js"></script>
 <script src="js/userDataFunctions.js"></script>
 
 <script>
+
+
 
 
     var templateList = $("#templateList");
@@ -338,7 +339,6 @@
 
     $('.dropdown.item')
             .dropdown({
-                // you can use any ui transition
                 transition: 'scale'
             })
     ;
@@ -647,8 +647,6 @@
     var apiClient = new ApiClient();
 
 
-
-
     //заполняет страничку данными FeatureInfo (рендерим с нуля)
     var featuresRender = function(){
         var FeatureInfo = apiClient.FeatureInfo();
@@ -733,6 +731,10 @@
                     apiClient.setFeatureInfo(FeatureInfo);
                     localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
             featuresRender();
+
+
+
+
                 }).fail(function(xhr){
             apiClient.authFail(xhr, synchronizeFeaturesAndFill);
         });
@@ -745,6 +747,8 @@
             statusBar();
             apiClient.setFeatureInfo(FeatureInfo);
             localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
+            reactiveFeatureInfo.set(FeatureInfo);
+
         }).fail(function(xhr){
             apiClient.authFail(xhr, synchronizeFeatures);
         });
@@ -760,9 +764,7 @@
                 statusBar();
                 apiClient.setUserInfo(UserInfo);
                 localStorage.setItem('UserInfo', JSON.stringify(apiClient.UserInfo()));
-                userInfoFill();
                 synchronizeFeaturesAndFill();
-
                 apiClient.FeatureInfo().features.forEach(function(item){
                     synchronizeQuestsAndFill(item.id);
                 });
@@ -772,6 +774,10 @@
         };
         refresh();
     });
+
+
+
+
 
     //срабатывает при обновлении страницы
     if (apiClient.isAuthorized()) {
@@ -789,20 +795,34 @@
             synchronizeFeaturesAndFill();
             $(".item.feature").first().click();
         }
-
         if(apiClient.isUserized()){
-            userInfoFill();
+            userInfoFill(apiClient.UserInfo());
         }
         else{
-            synchronizeUserInfo();
+            synchronizeUserInfoAndFill();
         }
-
     }
     else {
         $("#buttonSignIn").show();
         buttonLeftMenu.hide();
         buttonRefresh.hide();
     }
+
+    //инициализируем реактивную переменную(данные фич)
+    var reactiveFeatureInfo = new ReactiveVar(apiClient.FeatureInfo());
+
+    Tracker(function(){
+        var FeatureInfo = reactiveFeatureInfo.get(); // начинаем отслеживание изменений переменной
+        featuresFill(FeatureInfo); //Заполняем поля данными в связи с изменением нашей переменной
+    });
+
+    //инициализируем реактивную переменную(данные пользователя)
+    var reactiveUserInfo = new ReactiveVar(apiClient.UserInfo());
+
+    Tracker(function(){
+        var UserInfo = reactiveUserInfo.get(); // начинаем отслеживание изменений переменной
+        userInfoFill(UserInfo); //Заполняем поля данными в связи с изменением нашей переменной
+    });
 
 
 

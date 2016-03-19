@@ -29,7 +29,6 @@ var requestUpdateFeature = function (feature, title, description, imageUrl) {
         spiner.down();
         statusBar();
         featureChange(feature, title, description, imageUrl);
-        synchronizeFeatures();
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestUpdateFeature, feature, title, description, imageUrl);
     });
@@ -84,14 +83,13 @@ formUpdateFeature
 
 
 var featureChange = function(feature, title, description, imageUrl){
-    $("#titleItemFeature"+feature).text(truncate(title, 10));
-    $("#titleContainerFeature"+feature).text(title);
 
-    $("#descriptionContainerFeature"+feature).text(description);
+    var featureOrder = apiClient.featureOrder(feature);
+    apiClient.FeatureInfo().features[featureOrder].title = title;
+    apiClient.FeatureInfo().features[featureOrder].description = description;
+    apiClient.FeatureInfo().features[featureOrder].image_url = imageUrl;
+    localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
+    reactiveFeatureInfo.set(apiClient.FeatureInfo());
 
-    $("#imageContainerFeature"+feature).attr("src", imageUrl);
-    $("#imageItemFeature"+feature).attr("src", imageUrl);
 
-    //$("#levelItemFeature"+feature).text(level);
-    //$("#levelContainerFeature"+feature).text("уровень "+level);
 };

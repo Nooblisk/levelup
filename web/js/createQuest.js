@@ -24,10 +24,10 @@ $('#templateColumn').on("click", ".ui.quest.post.button", function () {
 //отправляет запрос на создание нового квеста с указанными данными
 var requestCreateQuest = function (feature, title, description, maxLevel) {
     apiClient.postQuest(feature, title, description, maxLevel).
-    success(function () {
+    success(function (NewQuestInfo) {
         spiner.down();
         statusBar();
-        questAdd(feature, title, description, maxLevel);
+        questAdd(feature, NewQuestInfo.quest);
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestCreateQuest, feature, title, description, maxLevel);
     });
@@ -78,43 +78,19 @@ formCreateQuest
     })
 ;
 
-
-//вычисляем id для нового квеста
-var questIdForNew = function () {
-    var QuestInfoAll = apiClient.QuestInfoAll();
-    var biggerId = 0;
-    for (var key in QuestInfoAll) {
-        var QuestInfo = QuestInfoAll[key];
-        for (var i = 0; i < QuestInfo.quests.length; i++) {
-            if (QuestInfo.quests[i].id > biggerId) {
-                biggerId = QuestInfo.quests[i].id;
-            }
-        }
-    }
-    return biggerId + 1;
-};
-
 //отрисовываем квест по шаблону
-var questAdd = function (feature, title, description, maxLevel) {
-    var newQuestInfo = {
-        id: questIdForNew(),
-        title: title,
-        description: description,
-        level: "0",
-        max_level: maxLevel
-    };
+var questAdd = function (feature, QuestInfo) {
 
-    var QuestInfo = apiClient.QuestInfo(feature);
-    QuestInfo.quests.push(newQuestInfo);
-    localStorage.setItem('QuestInfo' + feature, JSON.stringify(QuestInfo));
+    apiClient.QuestInfo(feature).quests.push(QuestInfo);
+    localStorage.setItem('QuestInfo' + feature, JSON.stringify(apiClient.QuestInfo(feature)));
 
-    if(apiClient.questOrder(feature, newQuestInfo.id)==0){
+    if(apiClient.questOrder(feature, QuestInfo.id)==0){
         $('#templateListQuests' + feature).empty();
     }
 
     //рисуем новый элемент
-    $('#templateListQuests' + feature).append(template3(newQuestInfo));
-    $('#steps' + newQuestInfo.id)
+    $('#templateListQuests' + feature).append(template3(QuestInfo));
+    $('#steps' + QuestInfo.id)
         .progress({
             text: {
                 active: 'Шагов {value} из {total} выполнено',

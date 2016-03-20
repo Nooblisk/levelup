@@ -21,10 +21,10 @@ templateList.on("click", "#buttonCreateFeature", function () {
 //запрашиваем создание новой фичи, запускаем её отрисовку и синхронизируем данные
 var requestCreateFeature = function (title, description, imageUrl) {
     apiClient.postFeature(title, description, imageUrl).
-    success(function () {
+    success(function (NewFeatureInfo) {
         spiner.down();
         statusBar();
-        featureAdd(title, description, imageUrl);
+        featureAdd(NewFeatureInfo.feature);
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestCreateFeature, title, description, imageUrl);
     });
@@ -75,43 +75,25 @@ formCreateFeature
     })
 ;
 
-//вычисляем ид новой фичи
-var featureIdForNew = function () {
-    var biggerId = 0;
-    for (var i = 0; i < apiClient.FeatureInfo().features.length; i++) {
-        if (apiClient.FeatureInfo().features[i].id > biggerId) {
-            biggerId = apiClient.FeatureInfo().features[i].id;
-        }
-    }
-    return biggerId + 1;
-};
-
 
 //отрисовывает фичу и контейнер к ней по шаблону
-var featureAdd = function (title, description, imageUrl) {
-    var newFeatureInfo = {
-        id: featureIdForNew(),
-        title: title,
-        description: description,
-        image_url: imageUrl,
-        level: "0"
-    };
-    apiClient.FeatureInfo().features.push(newFeatureInfo);
+var featureAdd = function (FeatureInfo) {
+    apiClient.FeatureInfo().features.push(FeatureInfo);
     localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
 
     //рисуем новый элемент в меню слева
-    $(".item.feature").last().after(template(newFeatureInfo));
+    $(".item.feature").last().after(template(FeatureInfo));
 
     //рисуем новый контейнер ему соответствующий
-    templateColumn.append(template2(newFeatureInfo));
+    templateColumn.append(template2(FeatureInfo));
 
     //объясняем элементу слева, что он открывает контейнер кликом и сразу кликаем на новую фичу
-    $('#itemFeature'+newFeatureInfo.id)
+    $('#itemFeature'+FeatureInfo.id)
         .tab().click()
     ;
 
-    $('#templateListQuests' + newFeatureInfo.id).append("Квестов пока нет");
+    $('#templateListQuests' + FeatureInfo.id).append("Квестов пока нет");
 
-    apiClient.setQuestInfo(newFeatureInfo.id, JSON.parse('{"quests":[]}'));
-    localStorage.setItem('QuestInfo'+newFeatureInfo.id, JSON.stringify(apiClient.QuestInfo(newFeatureInfo.id)));
+    apiClient.setQuestInfo(FeatureInfo.id, JSON.parse('{"quests":[]}'));
+    localStorage.setItem('QuestInfo'+FeatureInfo.id, JSON.stringify(apiClient.QuestInfo(FeatureInfo.id)));
 };

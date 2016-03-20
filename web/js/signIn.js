@@ -62,6 +62,7 @@ var firstAuthorization = function (username, password) {
         localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
         $("#headerText").text(JSON.stringify(apiClient.AuthInfo()));
         $("#buttonSignIn").hide();
+        $("#buttonRegister").hide();
         $("#buttonUserInfo").show();
         buttonLeftMenu.show();
         buttonRefresh.show();

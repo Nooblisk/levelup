@@ -27,7 +27,7 @@ var requestCreateQuest = function (feature, title, description, maxLevel) {
     success(function () {
         spiner.down();
         statusBar();
-        synchronizeQuestsAndFill(feature);
+        questAdd(feature, title, description, maxLevel);
     }).fail(function(xhr){
         apiClient.authFail(xhr, requestCreateQuest, feature, title, description, maxLevel);
     });
@@ -77,3 +77,50 @@ formCreateQuest
         }
     })
 ;
+
+
+//вычисляем id для нового квеста
+var questIdForNew = function () {
+    var QuestInfoAll = apiClient.QuestInfoAll();
+    var biggerId = 0;
+    for (var key in QuestInfoAll) {
+        var QuestInfo = QuestInfoAll[key];
+        for (var i = 0; i < QuestInfo.quests.length; i++) {
+            if (QuestInfo.quests[i].id > biggerId) {
+                biggerId = QuestInfo.quests[i].id;
+            }
+        }
+    }
+    return biggerId + 1;
+};
+
+//отрисовываем квест по шаблону
+var questAdd = function (feature, title, description, maxLevel) {
+    var newQuestInfo = {
+        id: questIdForNew(),
+        title: title,
+        description: description,
+        level: "0",
+        max_level: maxLevel
+    };
+
+    var QuestInfo = apiClient.QuestInfo(feature);
+    QuestInfo.quests.push(newQuestInfo);
+    localStorage.setItem('QuestInfo' + feature, JSON.stringify(QuestInfo));
+
+    if(apiClient.questOrder(feature, newQuestInfo.id)==0){
+        $('#templateListQuests' + feature).empty();
+    }
+
+    //рисуем новый элемент
+    $('#templateListQuests' + feature).append(template3(newQuestInfo));
+    $('#steps' + newQuestInfo.id)
+        .progress({
+            text: {
+                active: 'Шагов {value} из {total} выполнено',
+                success: '{total} Шагов Выполнено! Квест Выполнен!'
+            }
+        })
+    ;
+};
+

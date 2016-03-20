@@ -281,7 +281,7 @@
                 <p id="descriptionQuest{{id}}">{{description}}</p>
                 <div id="steps{{id}}" class="ui small teal progress" data-value="{{level}}" data-total="{{max_level}}" style="width:300px">
                     <div class="bar"></div>
-                    <div class="label">шагов {{level}} из {{max_level}}</div>
+                    <div class="label">шагов {{level}} из {{max_level}} выполнено</div>
                 </div>
             </div>
             <div class="extra">
@@ -811,9 +811,6 @@
         var UserInfo = reactiveUserInfo.get(); // начинаем отслеживание изменений переменной
         userInfoFill(UserInfo); //Заполняем поля данными в связи с изменением нашей переменной
     });
-
-
-
 
 
     //инициализируем реактивную переменную(данные пользователя)

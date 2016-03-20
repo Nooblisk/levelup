@@ -18,8 +18,8 @@ $("#buttonSignIn").click(function () {
 formAuthorization
     .form({
         onSuccess: function () {
-            var login = formAuthorization.form('get field', "login").val();
-            var password = formAuthorization.form('get field', "password").val();
+            var login = formAuthorization.form('get value', "login");
+            var password = formAuthorization.form('get value', "password");
             firstAuthorization(login, password);
             $("#modalAuthorization").modal('hide');
             return false;

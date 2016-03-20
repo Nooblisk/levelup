@@ -4,11 +4,14 @@
 
 $('#templateColumn').on("click", ".ui.feature.update.button", function () {
     var feature = $(this).data("id");
-    $("#featureIdUpdateFeature").val(feature);
     var featureOrder = apiClient.featureOrder(feature);
-    $("#titleUpdateFeature").val(apiClient.FeatureInfo().features[featureOrder].title);
-    $("#descriptionUpdateFeature").val(apiClient.FeatureInfo().features[featureOrder].description);
-    $("#imageUrlUpdateFeature").val(apiClient.FeatureInfo().features[featureOrder].image_url);
+    formUpdateFeature.form('set values', {
+        featureIdUpdateFeature: feature,
+        titleUpdateFeature: apiClient.FeatureInfo().features[featureOrder].title,
+        descriptionUpdateFeature: apiClient.FeatureInfo().features[featureOrder].description,
+        imageUrlUpdateFeature: apiClient.FeatureInfo().features[featureOrder].image_url
+    });
+
     $("#modalUpdateFeature")
         .modal({
             autofocus: true,
@@ -38,10 +41,10 @@ var requestUpdateFeature = function (feature, title, description, imageUrl) {
 formUpdateFeature
     .form({
         onSuccess: function () {
-            var titleUpdateFeature = formUpdateFeature.form('get field', "titleUpdateFeature").val();
-            var descriptionUpdateFeature = formUpdateFeature.form('get field', "descriptionUpdateFeature").val();
-            var imageUrlUpdateFeature = formUpdateFeature.form('get field', "imageUrlUpdateFeature").val();
-            var featureIdUpdateFeature = formUpdateFeature.form('get field', "featureIdUpdateFeature").val();
+            var titleUpdateFeature = formUpdateFeature.form('get value', "titleUpdateFeature");
+            var descriptionUpdateFeature = formUpdateFeature.form('get value', "descriptionUpdateFeature");
+            var imageUrlUpdateFeature = formUpdateFeature.form('get value', "imageUrlUpdateFeature");
+            var featureIdUpdateFeature = formUpdateFeature.form('get value', "featureIdUpdateFeature");
             requestUpdateFeature(featureIdUpdateFeature, titleUpdateFeature, descriptionUpdateFeature, imageUrlUpdateFeature);
             formUpdateFeature.form('reset');
             $("#modalUpdateFeature").modal('hide');
@@ -54,6 +57,10 @@ formUpdateFeature
                     {
                         type   : 'empty',
                         prompt : 'Please enter a title'
+                    },
+                    {
+                        type   : 'minLength[2]',
+                        prompt : 'Title must be at least {ruleValue} characters'
                     }
                 ]
             },
@@ -63,6 +70,10 @@ formUpdateFeature
                     {
                         type   : 'empty',
                         prompt : 'Please enter a description'
+                    },
+                    {
+                        type   : 'minLength[2]',
+                        prompt : 'Description must be at least {ruleValue} characters'
                     }
                 ]
             },
@@ -70,8 +81,8 @@ formUpdateFeature
                 identifier  : 'imageUrlUpdateFeature',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter a imageUrl'
+                        type   : 'url',
+                        prompt : 'Please enter a url'
                     }
                 ]
             }

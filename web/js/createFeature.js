@@ -25,7 +25,7 @@ var requestCreateFeature = function (title, description, imageUrl) {
         spiner.down();
         statusBar();
         featureAdd(NewFeatureInfo.feature);
-    }).fail(function(xhr){
+    }).fail(function (xhr) {
         apiClient.authFail(xhr, requestCreateFeature, title, description, imageUrl);
     });
 };
@@ -34,9 +34,9 @@ var requestCreateFeature = function (title, description, imageUrl) {
 formCreateFeature
     .form({
         onSuccess: function () {
-            var titleCreateFeature = formCreateFeature.form('get field', "titleCreateFeature").val();
-            var descriptionCreateFeature = formCreateFeature.form('get field', "descriptionCreateFeature").val();
-            var imageUrlCreateFeature = formCreateFeature.form('get field', "imageUrlCreateFeature").val();
+            var titleCreateFeature = formCreateFeature.form('get value', "titleCreateFeature");
+            var descriptionCreateFeature = formCreateFeature.form('get value', "descriptionCreateFeature");
+            var imageUrlCreateFeature = formCreateFeature.form('get value', "imageUrlCreateFeature");
             requestCreateFeature(titleCreateFeature, descriptionCreateFeature, imageUrlCreateFeature);
             formCreateFeature.form('reset');
             $("#modalCreateFeature").modal('hide');
@@ -44,29 +44,37 @@ formCreateFeature
         },
         fields: {
             titleCreateFeature: {
-                identifier  : 'titleCreateFeature',
+                identifier: 'titleCreateFeature',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter a title'
+                        type: 'empty',
+                        prompt: 'Please enter a title'
+                    },
+                    {
+                        type   : 'minLength[2]',
+                        prompt : 'Title must be at least {ruleValue} characters'
                     }
                 ]
             },
             descriptionCreateFeature: {
-                identifier  : 'descriptionCreateFeature',
+                identifier: 'descriptionCreateFeature',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter a description'
+                        type: 'empty',
+                        prompt: 'Please enter a description'
+                    },
+                    {
+                        type   : 'minLength[2]',
+                        prompt : 'Description must be at least {ruleValue} characters'
                     }
                 ]
             },
             imageUrlCreateFeature: {
-                identifier  : 'imageUrlCreateFeature',
+                identifier: 'imageUrlCreateFeature',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter an imageUrl'
+                        type   : 'url',
+                        prompt : 'Please enter a url'
                     }
                 ]
             }

@@ -5,7 +5,7 @@
 //обработчик для кнопок создания новых квестов
 $('#templateColumn').on("click", ".ui.quest.post.button", function () {
     var feature = $(this).data("id");
-    $("#featureIdCreateQuest").val(feature);
+    formCreateQuest.form('set value', 'featureIdCreateQuest', feature);
     $("#modalCreateQuest")
         .modal({
             autofocus: true,
@@ -37,10 +37,10 @@ var requestCreateQuest = function (feature, title, description, maxLevel) {
 formCreateQuest
     .form({
         onSuccess: function () {
-            var titleCreateQuest = formCreateQuest.form('get field', "titleCreateQuest").val();
-            var descriptionCreateQuest = formCreateQuest.form('get field', "descriptionCreateQuest").val();
-            var maxLevelCreateQuest = formCreateQuest.form('get field', "maxLevelCreateQuest").val();
-            var featureIdCreateQuest = formCreateQuest.form('get field', "featureIdCreateQuest").val();
+            var titleCreateQuest = formCreateQuest.form('get value', "titleCreateQuest");
+            var descriptionCreateQuest = formCreateQuest.form('get value', "descriptionCreateQuest");
+            var maxLevelCreateQuest = formCreateQuest.form('get value', "maxLevelCreateQuest");
+            var featureIdCreateQuest = formCreateQuest.form('get value', "featureIdCreateQuest");
             requestCreateQuest(featureIdCreateQuest, titleCreateQuest, descriptionCreateQuest, maxLevelCreateQuest);
             formCreateQuest.form('reset');
             $("#modalCreateQuest").modal('hide');
@@ -53,6 +53,10 @@ formCreateQuest
                     {
                         type   : 'empty',
                         prompt : 'Please enter a title'
+                    },
+                    {
+                        type   : 'minLength[2]',
+                        prompt : 'Title must be at least {ruleValue} characters'
                     }
                 ]
             },
@@ -62,6 +66,10 @@ formCreateQuest
                     {
                         type   : 'empty',
                         prompt : 'Please enter a description'
+                    },
+                    {
+                        type   : 'minLength[2]',
+                        prompt : 'Description must be at least {ruleValue} characters'
                     }
                 ]
             },
@@ -71,6 +79,10 @@ formCreateQuest
                     {
                         type   : 'empty',
                         prompt : 'Please enter how much steps you need'
+                    },
+                    {
+                        type : 'number',
+                        prompt: 'maxLevel must be a number'
                     }
                 ]
             }

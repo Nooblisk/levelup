@@ -58,11 +58,11 @@
                 <form class="ui form authorization">
                     <div class="field">
                         <label>Login</label>
-                        <input id="login" title="login" type="text" value="test">
+                        <input name="login" title="login" type="text" value="test">
                     </div>
                     <div class="field">
                         <label>Password</label>
-                        <input id="password" title="password" type="password" value="test">
+                        <input name="password" title="password" type="password" value="test">
                     </div>
                     <div class="ui error message"></div>
                 </form>
@@ -83,15 +83,15 @@
                 <form class="ui form create feature">
                     <div class="field">
                         <label>Title</label>
-                        <input id="titleCreateFeature" title="title" type="text" value="">
+                        <input name="titleCreateFeature" title="title" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Description</label>
-                        <input id="descriptionCreateFeature" title="description" type="text" value="">
+                        <input name="descriptionCreateFeature" title="description" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Image</label>
-                        <input id="imageUrlCreateFeature" title="imageUrl" type="text"
+                        <input name="imageUrlCreateFeature" title="imageUrl" type="text"
                                value="http://lorempixel.com/100/100/">
                     </div>
                     <div class="ui error message"></div>
@@ -116,19 +116,19 @@
                 <form class="ui form create quest">
                     <div class="field">
                         <label>Title</label>
-                        <input id="titleCreateQuest" title="title" type="text" value="">
+                        <input name="titleCreateQuest" title="title" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Description</label>
-                        <input id="descriptionCreateQuest" title="description" type="text" value="">
+                        <input name="descriptionCreateQuest" title="description" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Number of steps</label>
-                        <input id="maxLevelCreateQuest" title="maxLevel" type="text" value="">
+                        <input name="maxLevelCreateQuest" title="maxLevel" type="text" value="">
                     </div>
                     <div class="disabled field" style="display:none">
                         <label>featureId</label>
-                        <input id="featureIdCreateQuest" title="featureId" type="text" value="">
+                        <input name="featureIdCreateQuest" title="featureId" type="text" value="">
                     </div>
                     <div class="ui error message"></div>
                 </form>
@@ -152,20 +152,20 @@
                 <form class="ui form update feature">
                     <div class="field">
                         <label>Title</label>
-                        <input id="titleUpdateFeature" title="title" type="text" value="">
+                        <input name="titleUpdateFeature" title="title" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Description</label>
-                        <input id="descriptionUpdateFeature" title="description" type="text" value="">
+                        <input name="descriptionUpdateFeature" title="description" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Image</label>
-                        <input id="imageUrlUpdateFeature" title="imageUrl" type="text"
+                        <input name="imageUrlUpdateFeature" title="imageUrl" type="text"
                                value="">
                     </div>
                     <div class="disabled field" style="display:none">
                         <label>featureId</label>
-                        <input id="featureIdUpdateFeature" title="featureId" type="text" value="">
+                        <input name="featureIdUpdateFeature" title="featureId" type="text" value="">
                     </div>
                     <div class="ui error message"></div>
                 </form>
@@ -189,23 +189,23 @@
                 <form class="ui form update quest">
                     <div class="field">
                         <label>Title</label>
-                        <input id="titleUpdateQuest" title="title" type="text" value="">
+                        <input name="titleUpdateQuest" title="title" type="text" value="">
                     </div>
                     <div class="field">
                         <label>Description</label>
-                        <input id="descriptionUpdateQuest" title="description" type="text" value="">
+                        <input name="descriptionUpdateQuest" title="description" type="text" value="">
                     </div>
                     <div class="field">
                         <label>maxLevel</label>
-                        <input id="maxLevelUpdateQuest" title="maxLevel" type="text" value="">
+                        <input name="maxLevelUpdateQuest" title="maxLevel" type="text" value="">
                     </div>
                     <div class="disabled field" style="display:none">
                         <label>featureId</label>
-                        <input id="featureIdUpdateQuest" title="featureIdUpdateQuest" type="text" value="">
+                        <input name="featureIdUpdateQuest" title="featureIdUpdateQuest" type="text" value="">
                     </div>
                     <div class="disabled field" style="display:none">
                         <label>questId</label>
-                        <input id="questIdUpdateQuest" title="questIdUpdateQuest" type="text" value="">
+                        <input name="questIdUpdateQuest" title="questIdUpdateQuest" type="text" value="">
                     </div>
                     <div class="ui error message"></div>
                 </form>
@@ -730,6 +730,8 @@
             var description = FeatureInfo.features[i-1].description;
             var imageUrl = FeatureInfo.features[i-1].image_url;
             var level = FeatureInfo.features[i-1].level;
+
+
             //title
             $("#titleItemFeature"+feature).text(truncate(title, 10));
             $("#titleContainerFeature"+feature).text(title);
@@ -741,6 +743,10 @@
             //level
             $("#levelItemFeature"+feature).text(level);
             $("#levelContainerFeature"+feature).text("уровень "+level);
+
+
+
+
         }
     };
 

@@ -7,11 +7,16 @@ templateColumn.on("click", ".ui.quest.update.button", function () {
     var feature = $(this).parents(".list.quests").data("id");
     var quest = $(this).data("id");
     var questOrder = apiClient.questOrder(feature, quest);
-    $("#featureIdUpdateQuest").val(feature);
-    $("#questIdUpdateQuest").val(quest);
-    $("#titleUpdateQuest").val(apiClient.QuestInfo(feature).quests[questOrder].title);
-    $("#descriptionUpdateQuest").val(apiClient.QuestInfo(feature).quests[questOrder].description);
-    $("#maxLevelUpdateQuest").val(apiClient.QuestInfo(feature).quests[questOrder].max_level);
+    formUpdateQuest.form('set values',
+        {
+            featureIdUpdateQuest : feature,
+            questIdUpdateQuest : quest,
+            titleUpdateQuest : apiClient.QuestInfo(feature).quests[questOrder].title,
+            descriptionUpdateQuest : apiClient.QuestInfo(feature).quests[questOrder].description,
+            maxLevelUpdateQuest: apiClient.QuestInfo(feature).quests[questOrder].max_level
+
+        }
+    );
     $("#modalUpdateQuest")
         .modal({
             autofocus: true,
@@ -41,11 +46,12 @@ var requestUpdateQuest = function (feature, quest, title, description, maxLevel)
 formUpdateQuest
     .form({
         onSuccess: function () {
-            var titleUpdateQuest = formUpdateQuest.form('get field', "titleUpdateQuest").val();
-            var descriptionUpdateQuest = formUpdateQuest.form('get field', "descriptionUpdateQuest").val();
-            var maxLevelUpdateQuest = formUpdateQuest.form('get field', "maxLevelUpdateQuest").val();
-            var featureIdUpdateQuest = formUpdateQuest.form('get field', "featureIdUpdateQuest").val();
-            var questIdUpdateQuest = formUpdateQuest.form('get field', "questIdUpdateQuest").val();
+            var titleUpdateQuest = formUpdateQuest.form('get value', 'titleUpdateQuest');
+            var descriptionUpdateQuest = formUpdateQuest.form('get value', 'descriptionUpdateQuest');
+            var maxLevelUpdateQuest = formUpdateQuest.form('get value', 'maxLevelUpdateQuest');
+            var featureIdUpdateQuest = formUpdateQuest.form('get value', 'featureIdUpdateQuest');
+            var questIdUpdateQuest = formUpdateQuest.form('get value', 'questIdUpdateQuest');
+            //console.log(featureIdUpdateQuest, questIdUpdateQuest, titleUpdateQuest, descriptionUpdateQuest, maxLevelUpdateQuest);
             requestUpdateQuest(featureIdUpdateQuest, questIdUpdateQuest, titleUpdateQuest, descriptionUpdateQuest, maxLevelUpdateQuest);
             formUpdateQuest.form('reset');
             $("#modalUpdateQuest").modal('hide');
@@ -58,6 +64,10 @@ formUpdateQuest
                     {
                         type   : 'empty',
                         prompt : 'Please enter a title'
+                    },
+                    {
+                        type   : 'minLength[2]',
+                        prompt : 'Title must be at least {ruleValue} characters'
                     }
                 ]
             },
@@ -67,6 +77,10 @@ formUpdateQuest
                     {
                         type   : 'empty',
                         prompt : 'Please enter a description'
+                    },
+                    {
+                        type   : 'minLength[2]',
+                        prompt : 'Description must be at least {ruleValue} characters'
                     }
                 ]
             },
@@ -76,6 +90,10 @@ formUpdateQuest
                     {
                         type   : 'empty',
                         prompt : 'Please enter a maxLevel'
+                    },
+                    {
+                        type : 'number',
+                        prompt: 'maxLevel must be a number'
                     }
                 ]
             }

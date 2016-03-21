@@ -56,29 +56,28 @@ var synchronizeQuests = function (feature) {
 
 //заполняет квесты данными
 var questsFill = function (QuestInfoAll) {
-    //var QuestInfoAll = QuestInfoAll;
-    for (var key in QuestInfoAll) {
-        var QuestInfo = QuestInfoAll[key];
-        for (var i = 0; i < QuestInfo.quests.length; i++) {
-            var id = QuestInfo.quests[i].id;
-            var title = QuestInfo.quests[i].title;
-            var description = QuestInfo.quests[i].description;
-            var level = QuestInfo.quests[i].level;
-            var maxLevel = QuestInfo.quests[i].max_level;
-            $("#titleQuest" + id).text(title);
-            $("#descriptionQuest" + id).text(description);
-           // $("#steps" + id).attr("data-value", level);
-           // $("#steps" + id).attr("data-total", maxLevel);
-            $("#steps" + id).progress({
-                total: maxLevel,
-                value: level,
-                text: {
-                    active: 'Шагов {value} из {total} выполнено',
-                    success: '{total} Шагов Выполнено! Квест Выполнен!'
-                }
-            });
-        }
+    if(QuestInfoAll != undefined) {
+        for (var key in QuestInfoAll) {
+            var QuestInfo = QuestInfoAll[key];
+            for (var i = 0; i < QuestInfo.quests.length; i++) {
+                var id = QuestInfo.quests[i].id;
+                var title = QuestInfo.quests[i].title;
+                var description = QuestInfo.quests[i].description;
+                var level = QuestInfo.quests[i].level;
+                var maxLevel = QuestInfo.quests[i].max_level;
+                $("#titleQuest" + id).text(title);
+                $("#descriptionQuest" + id).text(description);
+                $("#steps" + id).progress({
+                    total: maxLevel,
+                    value: level,
+                    text: {
+                        active: 'Шагов {value} из {total} выполнено',
+                        success: '{total} Шагов Выполнено! Квест Выполнен!'
+                    }
+                });
+            }
 
+        }
     }
 
 };

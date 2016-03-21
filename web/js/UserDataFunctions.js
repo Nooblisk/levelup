@@ -37,8 +37,10 @@ var synchronizeUserInfo = function () {
 
 //Заполняет поля данными
 var userInfoFill = function(UserInfo){
-    $("#userUsername").text("Пользователь "+UserInfo.user.username);
-    $("#userLevel").text("Уровень " + UserInfo.user.level);
-    $("#userEmail").text("E-mail "+UserInfo.user.email);
+    if(UserInfo != undefined) {
+        $("#userUsername").text("Пользователь " + UserInfo.user.username);
+        $("#userLevel").text("Уровень " + UserInfo.user.level);
+        $("#userEmail").text("E-mail " + UserInfo.user.email);
+    }
 };
 

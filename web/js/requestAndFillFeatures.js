@@ -74,31 +74,29 @@ var synchronizeFeatures = function () {
 
 
 //функция заполнения уже готовых фич данными(не рендеря их заного)
-var featuresFill = function(){
-    var FeatureInfo = apiClient.FeatureInfo();
-    for (var i = 1; i <= FeatureInfo.features.length; i++) {
-        var feature = FeatureInfo.features[i-1].id;
-        var title = FeatureInfo.features[i-1].title;
-        var description = FeatureInfo.features[i-1].description;
-        var imageUrl = FeatureInfo.features[i-1].image_url;
-        var level = FeatureInfo.features[i-1].level;
+var featuresFill = function(FeatureInfo){
+    if(FeatureInfo != undefined) {
+        for (var i = 1; i <= FeatureInfo.features.length; i++) {
+            var feature = FeatureInfo.features[i - 1].id;
+            var title = FeatureInfo.features[i - 1].title;
+            var description = FeatureInfo.features[i - 1].description;
+            var imageUrl = FeatureInfo.features[i - 1].image_url;
+            var level = FeatureInfo.features[i - 1].level;
 
 
-        //title
-        $("#titleItemFeature"+feature).text(truncate(title, 10));
-        $("#titleContainerFeature"+feature).text(title);
-        //description
-        $("#descriptionContainerFeature"+feature).text(description);
-        //image
-        $("#imageContainerFeature"+feature).attr("src", imageUrl);
-        $("#imageItemFeature"+feature).attr("src", imageUrl);
-        //level
-        $("#levelItemFeature"+feature).text(level);
-        $("#levelContainerFeature"+feature).text("уровень "+level);
+            //title
+            $("#titleItemFeature" + feature).text(truncate(title, 10));
+            $("#titleContainerFeature" + feature).text(title);
+            //description
+            $("#descriptionContainerFeature" + feature).text(description);
+            //image
+            $("#imageContainerFeature" + feature).attr("src", imageUrl);
+            $("#imageItemFeature" + feature).attr("src", imageUrl);
+            //level
+            $("#levelItemFeature" + feature).text(level);
+            $("#levelContainerFeature" + feature).text("уровень " + level);
 
-
-
-
+        }
     }
 };
 

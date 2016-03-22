@@ -348,8 +348,6 @@
 <script>
 
 
-
-
     var templateList = $("#templateList");
     var templateColumn = $("#templateColumn");
 
@@ -362,11 +360,11 @@
     var buttonRefresh = $("#buttonRefresh");
     var buttonLeftMenu = $("#buttonLeftMenu");
 
-    buttonLeftMenu.click(function(){
+    buttonLeftMenu.click(function () {
         $('.ui.sidebar').sidebar({
                     dimPage: false,
                     closable: false
-        })
+                })
                 .sidebar('toggle')
         ;
     });
@@ -378,34 +376,31 @@
     ;
 
 
-
-
     var template = Handlebars.compile($('#templateFeature').html());
     var template2 = Handlebars.compile($('#templateContainerUpSegment').html());
     var template3 = Handlebars.compile($('#templateContainerDownSegment').html());
 
 
-    function Spiner(){
+    function Spiner() {
         var count;
-        this.up = function(){
+        this.up = function () {
             count++;
         };
-        this.down = function(){
+        this.down = function () {
             count--;
         };
-        this.count = function(){
+        this.count = function () {
             return count;
         };
-        this.drop = function(){
+        this.drop = function () {
             count = 0;
         };
     }
     var spiner = new Spiner();
 
 
-
-    var statusBar = function(){
-        if (spiner.count()>0){
+    var statusBar = function () {
+        if (spiner.count() > 0) {
             $("#statusBar").show();
         }
         else {
@@ -421,14 +416,14 @@
         var AuthInfo;
         var FeatureInfo;
         var UserInfo;
-        var QuestInfo ={};
+        var QuestInfo = {};
         this.setQuestInfo = function (feature, QuestInfoObject) {
-            QuestInfo["feature"+feature] = QuestInfoObject;
+            QuestInfo["feature" + feature] = QuestInfoObject;
         };
         this.QuestInfo = function (feature) {
-            return QuestInfo["feature"+feature];
+            return QuestInfo["feature" + feature];
         };
-        this.QuestInfoAll = function(){
+        this.QuestInfoAll = function () {
             return QuestInfo;
         };
         this.setAuthInfo = function (AuthInfoObject) {
@@ -449,17 +444,17 @@
         this.FeatureInfo = function () {
             return FeatureInfo;
         };
-        this.featureOrder = function(feature){
-            for(var i=0; i<apiClient.FeatureInfo().features.length; i++){
-                if (apiClient.FeatureInfo().features[i].id == feature){
+        this.featureOrder = function (feature) {
+            for (var i = 0; i < apiClient.FeatureInfo().features.length; i++) {
+                if (apiClient.FeatureInfo().features[i].id == feature) {
                     return i;
                 }
             }
             return -1;
         };
-        this.questOrder = function(feature, quest){
-            for(var i=0; i<apiClient.QuestInfo(feature).quests.length; i++){
-                if (apiClient.QuestInfo(feature).quests[i].id == quest){
+        this.questOrder = function (feature, quest) {
+            for (var i = 0; i < apiClient.QuestInfo(feature).quests.length; i++) {
+                if (apiClient.QuestInfo(feature).quests[i].id == quest) {
                     return i;
                 }
             }
@@ -502,7 +497,7 @@
             return ((this.AuthInfo() !== undefined) && (this.AuthInfo() !== null));
         };
         this.getAuthorizationHeaders = function () {
-                return {Authorization: 'Bearer ' + this.AuthInfo().access_token};
+            return {Authorization: 'Bearer ' + this.AuthInfo().access_token};
         };
         this.getFeatures = function () {
             spiner.up();
@@ -614,7 +609,7 @@
                 headers: this.getAuthorizationHeaders()
             })
         };
-        this.postStep = function(feature, quest, comment){
+        this.postStep = function (feature, quest, comment) {
             spiner.up();
             statusBar();
             return $.ajax({
@@ -653,7 +648,7 @@
             if (this.QuestInfo(feature) !== undefined) {
                 return true;
             }
-            this.setQuestInfo(feature, JSON.parse(localStorage.getItem('QuestInfo'+feature)));
+            this.setQuestInfo(feature, JSON.parse(localStorage.getItem('QuestInfo' + feature)));
             return this.QuestInfo(feature) !== null;
         };
         this.authFail = function (xhr, func, arg1, arg2, arg3, arg4, arg5) {
@@ -666,7 +661,7 @@
                                     apiClient.setAuthInfo(a);
                                     localStorage.setItem('AuthInfo', JSON.stringify(apiClient.AuthInfo()));
                                     spiner.down();
-                            statusBar();
+                                    statusBar();
                                     return func(arg1, arg2, arg3, arg4, arg5);
                                 }
                         )
@@ -685,16 +680,15 @@
     var apiClient = new ApiClient();
 
 
-
     buttonRefresh.click(function () {
-        var refresh = function() {
+        var refresh = function () {
             apiClient.getUser().success(function (UserInfo) {
                 spiner.down();
                 statusBar();
                 apiClient.setUserInfo(UserInfo);
                 localStorage.setItem('UserInfo', JSON.stringify(apiClient.UserInfo()));
                 synchronizeFeaturesAndFill();
-                apiClient.FeatureInfo().features.forEach(function(item){
+                apiClient.FeatureInfo().features.forEach(function (item) {
                     synchronizeQuestsAndFill(item.id);
                 });
                 //$('.item.feature').first().click();
@@ -706,7 +700,6 @@
     });
 
 
-
     //срабатывает при обновлении страницы
     if (apiClient.isAuthorized()) {
         spiner.drop();
@@ -715,18 +708,18 @@
             dimPage: false,
             closable: false
         }).sidebar('show');
-        if(apiClient.isFeaturized()){
+        if (apiClient.isFeaturized()) {
             featuresRender();
             $(".item.feature").first().click();
         }
-        else{
+        else {
             synchronizeFeaturesAndFill();
             $(".item.feature").first().click();
         }
-        if(apiClient.isUserized()){
+        if (apiClient.isUserized()) {
             userInfoFill(apiClient.UserInfo());
         }
-        else{
+        else {
             synchronizeUserInfoAndFill();
         }
     }
@@ -740,7 +733,7 @@
     //инициализируем реактивную переменную(данные фич)
     var reactiveFeatureInfo = new ReactiveVar(apiClient.FeatureInfo());
 
-    Tracker(function(){
+    Tracker(function () {
         var FeatureInfo = reactiveFeatureInfo.get(); // начинаем отслеживание изменений переменной
         featuresFill(FeatureInfo); //Заполняем поля данными в связи с изменением нашей переменной
     });
@@ -748,7 +741,7 @@
     //инициализируем реактивную переменную(данные пользователя)
     var reactiveUserInfo = new ReactiveVar(apiClient.UserInfo());
 
-    Tracker(function(){
+    Tracker(function () {
         var UserInfo = reactiveUserInfo.get(); // начинаем отслеживание изменений переменной
         userInfoFill(UserInfo); //Заполняем поля данными в связи с изменением нашей переменной
     });
@@ -757,12 +750,10 @@
     //инициализируем реактивную переменную(данные пользователя)
     var reactiveQuestInfo = new ReactiveVar(apiClient.QuestInfoAll());
 
-    Tracker(function(){
+    Tracker(function () {
         var QuestInfo = reactiveQuestInfo.get(); // начинаем отслеживание изменений переменной
         questsFill(QuestInfo); //Заполняем поля данными в связи с изменением нашей переменной
     });
-
-
 
 
 </script>

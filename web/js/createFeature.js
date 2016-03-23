@@ -51,8 +51,8 @@ formCreateFeature
                         prompt: 'Please enter a title'
                     },
                     {
-                        type   : 'minLength[2]',
-                        prompt : 'Title must be at least {ruleValue} characters'
+                        type: 'minLength[2]',
+                        prompt: 'Title must be at least {ruleValue} characters'
                     }
                 ]
             },
@@ -64,8 +64,8 @@ formCreateFeature
                         prompt: 'Please enter a description'
                     },
                     {
-                        type   : 'minLength[2]',
-                        prompt : 'Description must be at least {ruleValue} characters'
+                        type: 'minLength[2]',
+                        prompt: 'Description must be at least {ruleValue} characters'
                     }
                 ]
             },
@@ -73,8 +73,8 @@ formCreateFeature
                 identifier: 'imageUrlCreateFeature',
                 rules: [
                     {
-                        type   : 'url',
-                        prompt : 'Please enter a url'
+                        type: 'url',
+                        prompt: 'Please enter a url'
                     }
                 ]
             }
@@ -96,12 +96,12 @@ var featureAdd = function (FeatureInfo) {
     templateColumn.append(template2(FeatureInfo));
 
     //объясняем элементу слева, что он открывает контейнер кликом и сразу кликаем на новую фичу
-    $('#itemFeature'+FeatureInfo.id)
+    $('#itemFeature' + FeatureInfo.id)
         .tab().click()
     ;
 
     $('#templateListQuests' + FeatureInfo.id).append("Квестов пока нет");
 
     apiClient.setQuestInfo(FeatureInfo.id, JSON.parse('{"quests":[]}'));
-    localStorage.setItem('QuestInfo'+FeatureInfo.id, JSON.stringify(apiClient.QuestInfo(FeatureInfo.id)));
+    localStorage.setItem('QuestInfo' + FeatureInfo.id, JSON.stringify(apiClient.QuestInfo(FeatureInfo.id)));
 };

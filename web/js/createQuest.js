@@ -28,7 +28,7 @@ var requestCreateQuest = function (feature, title, description, maxLevel) {
         spiner.down();
         statusBar();
         questAdd(feature, NewQuestInfo.quest);
-    }).fail(function(xhr){
+    }).fail(function (xhr) {
         apiClient.authFail(xhr, requestCreateQuest, feature, title, description, maxLevel);
     });
 };
@@ -48,40 +48,40 @@ formCreateQuest
         },
         fields: {
             titleCreateQuest: {
-                identifier  : 'titleCreateQuest',
+                identifier: 'titleCreateQuest',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter a title'
+                        type: 'empty',
+                        prompt: 'Please enter a title'
                     },
                     {
-                        type   : 'minLength[2]',
-                        prompt : 'Title must be at least {ruleValue} characters'
+                        type: 'minLength[2]',
+                        prompt: 'Title must be at least {ruleValue} characters'
                     }
                 ]
             },
             descriptionCreateQuest: {
-                identifier  : 'descriptionCreateQuest',
+                identifier: 'descriptionCreateQuest',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter a description'
+                        type: 'empty',
+                        prompt: 'Please enter a description'
                     },
                     {
-                        type   : 'minLength[2]',
-                        prompt : 'Description must be at least {ruleValue} characters'
+                        type: 'minLength[2]',
+                        prompt: 'Description must be at least {ruleValue} characters'
                     }
                 ]
             },
             maxLevelCreateQuest: {
-                identifier  : 'maxLevelCreateQuest',
+                identifier: 'maxLevelCreateQuest',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter how much steps you need'
+                        type: 'empty',
+                        prompt: 'Please enter how much steps you need'
                     },
                     {
-                        type : 'number',
+                        type: 'number',
                         prompt: 'maxLevel must be a number'
                     }
                 ]
@@ -96,7 +96,7 @@ var questAdd = function (feature, QuestInfo) {
     apiClient.QuestInfo(feature).quests.push(QuestInfo);
     localStorage.setItem('QuestInfo' + feature, JSON.stringify(apiClient.QuestInfo(feature)));
 
-    if(apiClient.questOrder(feature, QuestInfo.id)==0){
+    if (apiClient.questOrder(feature, QuestInfo.id) == 0) {
         $('#templateListQuests' + feature).empty();
     }
 

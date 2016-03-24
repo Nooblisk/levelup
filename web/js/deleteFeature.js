@@ -16,23 +16,23 @@ var requestDeleteFeature = function (feature) {
             spiner.down();
             statusBar();
 
-            var index = $("#itemFeature"+feature).index();
+            var index = $("#itemFeature" + feature).index();
             if (index > 0) {
                 $("#itemFeature" + feature).prev().click();
             }
-            else{
-                $('.item.feature').eq(index+1).click();
+            else {
+                $('.item.feature').eq(index + 1).click();
             }
-            $("#itemFeature"+feature).remove();
-            $("#containerFeature"+feature).remove();
+            $("#itemFeature" + feature).remove();
+            $("#containerFeature" + feature).remove();
 
-            apiClient.FeatureInfo().features.splice(apiClient.featureOrder(feature),1);
+            apiClient.FeatureInfo().features.splice(apiClient.featureOrder(feature), 1);
             localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
 
             apiClient.QuestInfo(feature).quests.splice(0, apiClient.QuestInfo(feature).quests.length);
-            localStorage.removeItem("QuestInfo"+feature);
+            localStorage.removeItem("QuestInfo" + feature);
 
-        }).fail(function(xhr){
+        }).fail(function (xhr) {
             apiClient.authFail(xhr, requestDeleteFeature, feature);
         });
     }

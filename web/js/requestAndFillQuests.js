@@ -56,7 +56,7 @@ var synchronizeQuests = function (feature) {
 
 //заполняет квесты данными
 var questsFill = function (QuestInfoAll) {
-    if(QuestInfoAll != undefined) {
+    if (QuestInfoAll != undefined) {
         for (var key in QuestInfoAll) {
             var QuestInfo = QuestInfoAll[key];
             for (var i = 0; i < QuestInfo.quests.length; i++) {

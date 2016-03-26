@@ -9,10 +9,10 @@ templateColumn.on("click", ".ui.quest.update.button", function () {
     var questOrder = apiClient.questOrder(feature, quest);
     formUpdateQuest.form('set values',
         {
-            featureIdUpdateQuest : feature,
-            questIdUpdateQuest : quest,
-            titleUpdateQuest : apiClient.QuestInfo(feature).quests[questOrder].title,
-            descriptionUpdateQuest : apiClient.QuestInfo(feature).quests[questOrder].description,
+            featureIdUpdateQuest: feature,
+            questIdUpdateQuest: quest,
+            titleUpdateQuest: apiClient.QuestInfo(feature).quests[questOrder].title,
+            descriptionUpdateQuest: apiClient.QuestInfo(feature).quests[questOrder].description,
             maxLevelUpdateQuest: apiClient.QuestInfo(feature).quests[questOrder].max_level
 
         }
@@ -25,7 +25,7 @@ templateColumn.on("click", ".ui.quest.update.button", function () {
                 formUpdateQuest.form('reset');
             },
             onApprove: function () {
-             formUpdateQuest.submit();
+                formUpdateQuest.submit();
                 return false;
             }
         })
@@ -37,7 +37,7 @@ var requestUpdateQuest = function (feature, quest, title, description, maxLevel)
         spiner.down();
         statusBar();
         questChange(feature, quest, title, description, maxLevel);
-    }).fail(function(xhr){
+    }).fail(function (xhr) {
         apiClient.authFail(xhr, requestUpdateQuest, feature, quest, title, description, maxLevel);
     });
 };
@@ -59,40 +59,40 @@ formUpdateQuest
         },
         fields: {
             titleUpdateQuest: {
-                identifier  : 'titleUpdateQuest',
+                identifier: 'titleUpdateQuest',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter a title'
+                        type: 'empty',
+                        prompt: 'Please enter a title'
                     },
                     {
-                        type   : 'minLength[2]',
-                        prompt : 'Title must be at least {ruleValue} characters'
+                        type: 'minLength[2]',
+                        prompt: 'Title must be at least {ruleValue} characters'
                     }
                 ]
             },
             descriptionUpdateQuest: {
-                identifier  : 'descriptionUpdateQuest',
+                identifier: 'descriptionUpdateQuest',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter a description'
+                        type: 'empty',
+                        prompt: 'Please enter a description'
                     },
                     {
-                        type   : 'minLength[2]',
-                        prompt : 'Description must be at least {ruleValue} characters'
+                        type: 'minLength[2]',
+                        prompt: 'Description must be at least {ruleValue} characters'
                     }
                 ]
             },
             maxLevelUpdateQuest: {
-                identifier  : 'maxLevelUpdateQuest',
+                identifier: 'maxLevelUpdateQuest',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter a maxLevel'
+                        type: 'empty',
+                        prompt: 'Please enter a maxLevel'
                     },
                     {
-                        type : 'number',
+                        type: 'number',
                         prompt: 'maxLevel must be a number'
                     }
                 ]
@@ -102,12 +102,12 @@ formUpdateQuest
 ;
 
 
-var questChange = function(feature, quest, title, description, maxLevel){
+var questChange = function (feature, quest, title, description, maxLevel) {
     var questOrder = apiClient.questOrder(feature, quest);
     apiClient.QuestInfo(feature).quests[questOrder].title = title;
     apiClient.QuestInfo(feature).quests[questOrder].description = description;
     apiClient.QuestInfo(feature).quests[questOrder].max_level = maxLevel;
-    localStorage.setItem('QuestInfo'+feature, JSON.stringify(apiClient.QuestInfo(feature)));
+    localStorage.setItem('QuestInfo' + feature, JSON.stringify(apiClient.QuestInfo(feature)));
     reactiveQuestInfo.set(apiClient.QuestInfoAll());
 
 };

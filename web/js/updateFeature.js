@@ -32,7 +32,7 @@ var requestUpdateFeature = function (feature, title, description, imageUrl) {
         spiner.down();
         statusBar();
         featureChange(feature, title, description, imageUrl);
-    }).fail(function(xhr){
+    }).fail(function (xhr) {
         apiClient.authFail(xhr, requestUpdateFeature, feature, title, description, imageUrl);
     });
 };
@@ -52,37 +52,37 @@ formUpdateFeature
         },
         fields: {
             titleUpdateFeature: {
-                identifier  : 'titleUpdateFeature',
+                identifier: 'titleUpdateFeature',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter a title'
+                        type: 'empty',
+                        prompt: 'Please enter a title'
                     },
                     {
-                        type   : 'minLength[2]',
-                        prompt : 'Title must be at least {ruleValue} characters'
+                        type: 'minLength[2]',
+                        prompt: 'Title must be at least {ruleValue} characters'
                     }
                 ]
             },
             descriptionUpdateFeature: {
-                identifier  : 'descriptionUpdateFeature',
+                identifier: 'descriptionUpdateFeature',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter a description'
+                        type: 'empty',
+                        prompt: 'Please enter a description'
                     },
                     {
-                        type   : 'minLength[2]',
-                        prompt : 'Description must be at least {ruleValue} characters'
+                        type: 'minLength[2]',
+                        prompt: 'Description must be at least {ruleValue} characters'
                     }
                 ]
             },
             imageUrlUpdateFeature: {
-                identifier  : 'imageUrlUpdateFeature',
+                identifier: 'imageUrlUpdateFeature',
                 rules: [
                     {
-                        type   : 'url',
-                        prompt : 'Please enter a url'
+                        type: 'url',
+                        prompt: 'Please enter a url'
                     }
                 ]
             }
@@ -92,8 +92,7 @@ formUpdateFeature
 ;
 
 
-
-var featureChange = function(feature, title, description, imageUrl){
+var featureChange = function (feature, title, description, imageUrl) {
 
     var featureOrder = apiClient.featureOrder(feature);
     apiClient.FeatureInfo().features[featureOrder].title = title;

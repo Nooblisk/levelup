@@ -27,11 +27,11 @@ var requestStepUp = function (feature, quest, comment, questOrder) {
             localStorage.setItem('QuestInfo' + feature, JSON.stringify(apiClient.QuestInfo(feature)));
             reactiveQuestInfo.set(apiClient.QuestInfoAll());
 
-            apiClient.FeatureInfo().features[apiClient.featureOrder(feature)].level+=1;
+            apiClient.FeatureInfo().features[apiClient.featureOrder(feature)].level += 1;
             localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
             reactiveFeatureInfo.set(apiClient.FeatureInfo());
 
-            apiClient.UserInfo().user.level+=1;
+            apiClient.UserInfo().user.level += 1;
             localStorage.setItem('UserInfo', JSON.stringify(apiClient.UserInfo()));
             reactiveUserInfo.set(apiClient.UserInfo());
 
@@ -79,7 +79,7 @@ var requestStepDown = function (feature, quest, questOrder) {
                 statusBar();
 
 
-                apiClient.QuestInfo(feature).quests[questOrder].steps.splice(len-1, 1);
+                apiClient.QuestInfo(feature).quests[questOrder].steps.splice(len - 1, 1);
 
                 apiClient.QuestInfo(feature).quests[questOrder].level = maxLevel - 1;
                 localStorage.setItem('QuestInfo' + feature, JSON.stringify(apiClient.QuestInfo(feature)));
@@ -105,7 +105,7 @@ var requestStepDown = function (feature, quest, questOrder) {
                 statusBar();
 
 
-                apiClient.QuestInfo(feature).quests[questOrder].steps.splice(len-1, 1);
+                apiClient.QuestInfo(feature).quests[questOrder].steps.splice(len - 1, 1);
 
                 apiClient.QuestInfo(feature).quests[questOrder].level -= 1;
                 localStorage.setItem('QuestInfo' + feature, JSON.stringify(apiClient.QuestInfo(feature)));

@@ -26,24 +26,24 @@ formAuthorization
         },
         fields: {
             login: {
-                identifier  : 'login',
+                identifier: 'login',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter a login'
+                        type: 'empty',
+                        prompt: 'Please enter a login'
                     }
                 ]
             },
             password: {
-                identifier  : 'password',
+                identifier: 'password',
                 rules: [
                     {
-                        type   : 'empty',
-                        prompt : 'Please enter a password'
+                        type: 'empty',
+                        prompt: 'Please enter a password'
                     },
                     {
-                        type   : 'minLength[4]',
-                        prompt : 'Please enter at least 4 characters'
+                        type: 'minLength[4]',
+                        prompt: 'Please enter at least 4 characters'
                     }
                 ]
             }
@@ -68,7 +68,6 @@ var firstAuthorization = function (username, password) {
         buttonRefresh.show();
         synchronizeFeaturesAndFill();
         synchronizeUserInfoAndFill();
-
 
 
         $('.ui.sidebar').sidebar({

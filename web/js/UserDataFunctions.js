@@ -2,7 +2,7 @@
  * Created by Nooblisk on 05.03.2016.
  */
 
-$("#buttonLogOut").click(function() {
+$("#buttonLogOut").click(function () {
     localStorage.clear();
     location.reload();
 });
@@ -15,7 +15,7 @@ var synchronizeUserInfoAndFill = function () {
             apiClient.setUserInfo(UserInfo);
             localStorage.setItem('UserInfo', JSON.stringify(apiClient.UserInfo()));
             userInfoFill(apiClient.UserInfo());
-        }).fail(function(xhr){
+        }).fail(function (xhr) {
             apiClient.authFail(xhr, synchronizeUserInfo);
         })
     }
@@ -29,15 +29,15 @@ var synchronizeUserInfo = function () {
             apiClient.setUserInfo(UserInfo);
             localStorage.setItem('UserInfo', JSON.stringify(apiClient.UserInfo()));
             reactiveUserInfo.set(UserInfo);
-        }).fail(function(xhr){
+        }).fail(function (xhr) {
             apiClient.authFail(xhr, synchronizeUserInfo);
         })
     }
     ;
 
 //Заполняет поля данными
-var userInfoFill = function(UserInfo){
-    if(UserInfo != undefined) {
+var userInfoFill = function (UserInfo) {
+    if (UserInfo != undefined) {
         $("#userUsername").text("Пользователь " + UserInfo.user.username);
         $("#userLevel").text("Уровень " + UserInfo.user.level);
         $("#userEmail").text("E-mail " + UserInfo.user.email);

@@ -90,7 +90,9 @@ var featureAdd = function (FeatureInfo) {
     localStorage.setItem('FeatureInfo', JSON.stringify(apiClient.FeatureInfo()));
 
     //рисуем новый элемент в меню слева
-    $(".item.feature").last().after(template(FeatureInfo));
+
+    $( template(FeatureInfo)).insertBefore( $( "#buttonCreateFeature" ) );
+
 
     //рисуем новый контейнер ему соответствующий
     templateColumn.append(template2(FeatureInfo));

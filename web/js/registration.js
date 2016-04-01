@@ -10,13 +10,25 @@ $("#buttonRegister").click(function () {
                 formRegistration.submit();
                 return false;
             },
-        onDeny: function(){
-            formRegistration.form('reset');
-        }
+            onDeny: function () {
+                formRegistration.form('reset');
+            }
         })
         .modal('show')
     ;
 });
+
+
+
+var registration = function (email, username, firstPassword, secondPassword){
+apiClient.postRegistration(email, username, firstPassword, secondPassword).success(function(){
+    spiner.drop();
+    statusBar();
+    firstAuthorization(username, firstPassword);
+})
+
+};
+
 
 //правила для формы регистрации
 formRegistration.form({
@@ -24,8 +36,9 @@ formRegistration.form({
         var emailRegister = formRegistration.form('get value', "emailRegister");
         var usernameRegister = formRegistration.form('get value', "usernameRegister");
         var passwordRegister = formRegistration.form('get value', "passwordRegister");
-
-        console.log(emailRegister, usernameRegister, passwordRegister);
+        var passwordRepeatRegister = formRegistration.form('get value', "passwordRepeatRegister");
+        registration(emailRegister, usernameRegister, passwordRegister, passwordRepeatRegister);
+        //console.log(emailRegister, usernameRegister, passwordRegister, passwordRepeatRegister);
         $("#modalRegistration").modal('hide');
         formRegistration.form('reset');
         return false;

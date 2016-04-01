@@ -38,7 +38,7 @@
                 </div>
             </div>
             <a id="buttonSignIn" class="item" style="display: none">Login</a>
-            <!--<a id="buttonRegister" class="item" style="display: none">Register</a>-->
+            <a id="buttonRegister" class="item" style="display: none">Register</a>
             <a id="buttonRefresh" class="item">
                 <i class="refresh icon"></i>
             </a>
@@ -381,25 +381,22 @@
 
 
     function Spiner() {
-        var count;
+        this.count=0;
         this.up = function () {
-            count++;
+            this.count++;
         };
         this.down = function () {
-            count--;
-        };
-        this.count = function () {
-            return count;
+            this.count--;
         };
         this.drop = function () {
-            count = 0;
+            this.count = 0;
         };
     }
     var spiner = new Spiner();
 
 
     var statusBar = function () {
-        if (spiner.count() > 0) {
+        if (spiner.count > 0) {
             $("#statusBar").show();
         }
         else {
@@ -458,6 +455,20 @@
                 }
             }
             return -1;
+        };
+        this.postRegistration = function(email, username, firstPassword, secondPassword){
+            spiner.up();
+            statusBar();
+            return $.ajax({
+                method: "POST",
+                url: baseUrl + "/users",
+                data: {
+                    'fos_user_registration_form[email]': email,
+                    'fos_user_registration_form[username]': username,
+                    'fos_user_registration_form[plainPassword][first]': firstPassword,
+                    'fos_user_registration_form[plainPassword][second]': secondPassword
+                }
+            })
         };
         this.postAuthorization = function (username, password) {
             spiner.up();

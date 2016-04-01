@@ -50,7 +50,7 @@ var featuresRender = function () {
         templateList.append("<a id='buttonCreateFeature' class='item'><i class='plus icon'></i>Add new feature</a>");
     }
     else {
-        templateList.append("<a id=\"buttonCreateFeature\" class=\"item\">Add new feature</a>");
+        templateList.append("<a id='buttonCreateFeature' class='item'><i class='plus icon'></i>Add new feature</a>");
     }
 
     //навешиваем событие на клик по фиче из списка слева

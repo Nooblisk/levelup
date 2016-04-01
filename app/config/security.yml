@@ -26,6 +26,7 @@ security:
             security: false
         api_user:                                       #User API
             pattern: ^/api/user
+            methods: [POST, PATCH]
             security: false
         api:
             pattern: ^/api                              # All API URLs are protected

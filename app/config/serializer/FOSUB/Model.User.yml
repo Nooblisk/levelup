@@ -7,3 +7,5 @@ FOS\UserBundle\Model\User:
       expose: true
     lastLogin:
       expose: true
+    confirmationToken:
+      expose: true

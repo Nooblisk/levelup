@@ -18,22 +18,25 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        oauth_token:                                   # Everyone can access the access token URL.
+        oauth_token:                                    # Everyone can access the access token URL.
             pattern: ^/api/oauth/v2/token
             security: false
-        api_doc:                                   # Everyone can access the access token URL.
+        api_doc:                                        # API Documentation
             pattern: ^/api/doc
             security: false
+        api_user:                                       #User API
+            pattern: ^/api/user
+            security: false
         api:
-            pattern: ^/api                                # All URLs are protected
-            fos_oauth: true                            # OAuth2 protected resource
-            stateless: true                            # Do no set session cookies
-            anonymous: false                           # Anonymous access is not allowed
+            pattern: ^/api                              # All API URLs are protected
+            fos_oauth: true                             # OAuth2 protected resource
+            stateless: true                             # Do no set session cookies
+            anonymous: false                            # Anonymous access is not allowed
         main:
             pattern: ^/
             form_login:
                 provider: fos_userbundle
-                csrf_token_generator: security.csrf.token_manager
+#                csrf_token_generator: security.csrf.token_manager
             logout:       true
             anonymous:    true
 

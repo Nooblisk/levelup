@@ -1,5 +1,5 @@
 AppBundle\Entity\Client:
     client1:
         randomId: <{oauth_client_id}>
-        secret: <{oauth_client_secret}}>
+        secret: <{oauth_client_secret}>
         allowedGrantTypes: [password,refresh_token]
